@@ -138,11 +138,16 @@ public class Menu extends CommonHandler {
 				picGraphics.drawString("Special", 128, 0, 15, 0);
 				// Show background image (for overdrawing).
 				if (barOption != oldBarOption) {
-					picGraphics.drawFilledBox(120, 8, 223, 32, 15);
-					picGraphics.drawBox(122, 9, 221, 31, 0);
-					picGraphics.drawBox(123, 9, 220, 31, 0);
+					picGraphics.drawFilledBox(120, 8, 223, 40, 15);
+					picGraphics.drawBox(122, 9, 221, 39, 0);
+					picGraphics.drawBox(123, 9, 220, 39, 0);
 				}
 				picGraphics.drawString("Background", 136, 16, 0, 15);
+				if (editStatus.isBandsOn()) {
+				  picGraphics.drawString("Bands Off", 136, 24, 0, 15);
+				} else {
+				  picGraphics.drawString("Bands On", 136, 24, 0, 15);
+				}
 				switch (itemOption) {
 				case 0:
 					picGraphics.drawString("Background", 136, 16, 15, 0);
@@ -150,6 +155,13 @@ public class Menu extends CommonHandler {
 						picGraphics.drawChar((char) 7, 126, 16, 4, 15);
 					}
 					break;
+				case 1:
+	        if (editStatus.isBandsOn()) {
+	          picGraphics.drawString("Bands Off", 136, 24, 15, 0);
+	        } else {
+	          picGraphics.drawString("Bands On", 136, 24, 15, 0);
+	        }
+				  break;
 				}
 				break;
 		}

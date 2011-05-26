@@ -115,6 +115,11 @@ public class EditStatus {
 	private int zoomFactor;
 	
 	/**
+	 * Whether the priority bands are currently on or not.
+	 */
+	private boolean bandsOn;
+	
+	/**
 	 * Constructor for EditStatus.
 	 */
 	public EditStatus() {
@@ -631,7 +636,15 @@ public class EditStatus {
 		this.pictureType = pictureType;
 	}
 
-	/**
+	public boolean isBandsOn() {
+    return bandsOn;
+  }
+
+  public void setBandsOn(boolean bandsOn) {
+    this.bandsOn = bandsOn;
+  }
+
+  /**
 	 * Adjusts the mouse point to the coordinate system of the AGI 
 	 * picture canvas. The EditStatus doesn't care about anything outside
 	 * of the canvas, and it also doesn't care about what the actual
