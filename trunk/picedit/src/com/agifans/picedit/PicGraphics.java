@@ -7,11 +7,12 @@ import java.util.Map;
 
 /**
  * The graphics routines with which the application draws the screen. There
- * are three different images held in this object. The first is the main 
+ * are four different images held in this object. The first is the main 
  * PICEDIT screen. The second is the text image shown for the "Help" screen
  * and the "View data" screen. The third image is the background image, which
- * is drawn behind the main PICEDIT screen. The graphics routines in this 
- * class act upon the main PICEDIT screen image.
+ * is drawn behind the main PICEDIT screen. The fourth image is the priority
+ * bands image that is drawn when bands is enabled. The graphics routines in
+ * this class act upon the main PICEDIT screen image.
  * 
  * @author Lance Ewing
  */
@@ -31,6 +32,11 @@ public final class PicGraphics {
 	 * The Image for the PICEDIT screen.
 	 */
 	private Image screenImage;
+	
+	/**
+	 * The Image that is drawn for the priority bands when activated.
+	 */
+	private Image bandsImage;
 	
 	/**
 	 * The RGB data array for the PICEDIT screen.
@@ -98,8 +104,48 @@ public final class PicGraphics {
 		blankCursor = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 		
 		textImage = component.createImage(640, 480);
+		createPriorityBandsImage(PictureType.AGI);
 	}
 
+	/**
+	 * Creates the Image that is displayed when the show priority bands feature
+	 * is turned on.
+	 * 
+	 * @param pictureType The type of picture being edited (AGI/SCI0).
+	 */
+	public void createPriorityBandsImage(PictureType pictureType) {
+	    bandsImage = new BufferedImage(320, 200, BufferedImage.TYPE_INT_ARGB);
+	    
+	    Graphics bandsGraphics = bandsImage.getGraphics();
+	    
+	    // Draw the bands onto the image so it is ready to be displayed when needed.
+	    if (pictureType.equals(PictureType.SCI0)) {
+	        // For SCI0, the top 42 lines are for priority 0. The other 14 bands
+	        // get an even share of the 148 remaining lines (which, btw, doesn't
+	        // divide evenly, so the bands are not even as then are in AGI).
+	        for (int y=0; y<200; y++) {
+	            int priorityBand = ((int)((y - 42) / ((190-42)/14))) + 1;
+	            bandsGraphics.setColor(EgaPalette.COLOR_OBJECTS[priorityBand]);
+	            bandsGraphics.drawLine(0, y, 319, y);
+	        }
+	        
+	    } else if (pictureType.equals(PictureType.AGI)) {
+	        for (int y=0; y<168; y++) {
+	            // For AGI it is evenly split, 168 lines split 14 ways.
+	            int priorityBand = (y / 12) + 1;
+
+	            // Make sure priority band is 4 or above for AGI since the bottom
+	            // four priority colours are reserved as control lines.
+	            if (priorityBand < 4) {
+	                priorityBand = 4;
+	            }
+	            
+                bandsGraphics.setColor(EgaPalette.COLOR_OBJECTS[priorityBand]);
+                bandsGraphics.drawLine(0, y, 319, y);
+	        }
+	    }
+	}
+	
 	/**
 	 * Changes the mouse cursor to be a cross hair cursor.
 	 */
@@ -650,5 +696,14 @@ public final class PicGraphics {
 	 */
 	public void setBackgroundImage(Image backgroundImage) {
 		this.backgroundImage = backgroundImage;
+	}
+	
+	/**
+	 * Gets the priority bands image.
+	 * 
+	 * @return the priority bands image.
+	 */
+	public Image getPriorityBandsImage() {
+	    return bandsImage;
 	}
 }
