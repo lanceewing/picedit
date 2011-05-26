@@ -22,7 +22,9 @@ public enum MenuOption {
 	ZOOMX3("Zoom x3", 2, 2, 5, null, new Rectangle(88, 32, 72, 8)),
 	ZOOMX4("Zoom x4", 2, 3, 5, null, new Rectangle(88, 40, 72, 8)),
 	ZOOMX5("Zoom x5", 2, 4, 5, null, new Rectangle(88, 48, 72, 8)),
-	BACKGROUND("Background", 3, 0, 1, new Rectangle(124, 0, 196, 8), new Rectangle(136, 16, 80, 8));
+	BACKGROUND("Background", 3, 0, 2, new Rectangle(124, 0, 196, 8), new Rectangle(136, 16, 80, 8)),
+	BANDS("Bands", 3, 1, 2, null, new Rectangle(136, 24, 80, 8))
+	;
 
 	private String displayName;
 	private int barOption;
@@ -133,6 +135,9 @@ public enum MenuOption {
 			case 0x30:
 				menuOption = BACKGROUND;
 				break;
+			case 0x31:
+			  menuOption = BANDS;
+			  break;
 		}
 		
 		return menuOption;
