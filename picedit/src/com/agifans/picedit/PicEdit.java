@@ -45,7 +45,7 @@ public final class PicEdit extends Applet {
 	@SuppressWarnings("unchecked")
 	public PicEdit() {
 		this.editStatus = new EditStatus();
-		this.editStatus.setZoomFactor(1);
+		this.editStatus.setZoomFactor(2);
 		
 		Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
 		this.setPreferredSize(appDimension);
