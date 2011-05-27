@@ -140,7 +140,12 @@ public final class PicEdit extends Applet {
 			}
 			
 			// Draw the  PICEDIT screen to the offscreen image (transparent pixels will show the background).
-			offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
+			if (editStatus.isPriorityShowing()) {
+			    // TODO: Change to getPriorityImage
+			    offScreenGC.drawImage(picGraphics.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
+			} else {
+			    offScreenGC.drawImage(picGraphics.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
+			}
 		}
 		
 		// Now display the screen to the user.

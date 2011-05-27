@@ -29,9 +29,9 @@ public final class PicGraphics {
     private Image textImage;
 
     /**
-     * The Image for the PICEDIT screen.
+     * The Image for the PICEDIT visual screen.
      */
-    private Image screenImage;
+    private Image visualImage;
 
     /**
      * The Image that is drawn for the priority bands when activated.
@@ -41,7 +41,7 @@ public final class PicGraphics {
     /**
      * The RGB data array for the PICEDIT screen.
      */
-    private int screen[];
+    private int visualScreen[];
 
     /**
      * The parent component, i.e. the PICEDIT JFrame.
@@ -93,7 +93,7 @@ public final class PicGraphics {
     public PicGraphics(Component component, int framesPerSecond) {
         this.component = component;
 
-        createScreenImage();
+        createVisualImage();
 
         this.frameDuration = (1000 / framesPerSecond);
         this.nextTime = System.currentTimeMillis() + this.frameDuration;
@@ -142,8 +142,9 @@ public final class PicGraphics {
                 if (priorityBand < 4) {
                     priorityBand = 4;
                 }
-
-                bandsGraphics.setColor(EgaPalette.COLOR_OBJECTS[priorityBand]);
+                
+                Color priorityColor = new Color(EgaPalette.colours[priorityBand] & 0x7FFFFFFF, true);
+                bandsGraphics.setColor(priorityColor);
                 bandsGraphics.drawLine(0, y, 319, y);
             }
         }
@@ -171,13 +172,23 @@ public final class PicGraphics {
     }
 
     /**
-     * Creates the image for the screen on which all of the graphics routines
+     * Creates the image for the visual screen on which all of the visual graphics routines
      * will operate on.
      */
-    private void createScreenImage() {
-        this.screen = new int[320 * 200];
+    private void createVisualImage() {
+        this.visualScreen = new int[320 * 200];
+        this.visualImage = createImage(this.visualScreen);
+    }
 
-        DataBufferInt dataBuffer = new DataBufferInt(this.screen, this.screen.length);
+    /**
+     * Creates an Image backed by the given data array. 
+     * 
+     * @param dataArray the array containing the image data.
+     * 
+     * @return the created Image.
+     */
+    private Image createImage(int[] dataArray) {
+        DataBufferInt dataBuffer = new DataBufferInt(dataArray, dataArray.length);
         ColorModel colorModel = ColorModel.getRGBdefault();
         int[] bandMasks = new int[] { 
                 0x00ff0000,   // red mask
@@ -185,10 +196,9 @@ public final class PicGraphics {
                 0x000000ff,   // blue mask
                 0xff000000 }; // alpha mask
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, 320, 200, 320, bandMasks, null);
-
-        this.screenImage = new BufferedImage(colorModel, raster, false, null);
+        return new BufferedImage(colorModel, raster, false, null);
     }
-
+    
     /**
      * Builds the Map that holds the mapping between RGB colours values and
      * their EGA palette index value, e.g. red is 4, brown is 6. Used for
@@ -211,22 +221,22 @@ public final class PicGraphics {
      */
     public void drawDoubleRGBData(int offset, int[] rgbData) {
         for (int i = 0; i < 26880;) {
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = visualScreen[offset++] = rgbData[i++];
         }
     }
 
@@ -238,22 +248,22 @@ public final class PicGraphics {
      */
     public void drawRGBData(int offset, int[] rgbData) {
         for (int i = 0; i < 60800;) {
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
+            visualScreen[offset++] = rgbData[i++];
         }
     }
 
@@ -282,7 +292,7 @@ public final class PicGraphics {
      * @return the underlying screen data array.
      */
     public int[] getScreen() {
-        return screen;
+        return visualScreen;
     }
 
     /**
@@ -294,7 +304,7 @@ public final class PicGraphics {
      * @return the colour of the pixel.
      */
     public int getPixel(int x, int y) {
-        return colourMap.get(screen[(y << 8) + (y << 6) + x]);
+        return colourMap.get(visualScreen[(y << 8) + (y << 6) + x]);
     }
 
     /**
@@ -324,7 +334,7 @@ public final class PicGraphics {
             rgbCode = colours[c];
 
             for (; index <= endIndex; index += 320) {
-                screen[index] = rgbCode;
+                visualScreen[index] = rgbCode;
             }
         }
         // Horizontal Line.
@@ -340,7 +350,7 @@ public final class PicGraphics {
             rgbCode = colours[c];
 
             for (; index <= endIndex; index++) {
-                screen[index] = rgbCode;
+                visualScreen[index] = rgbCode;
             }
 
         } else {
@@ -380,7 +390,7 @@ public final class PicGraphics {
             index = (y1 << 8) + (y1 << 6) + x1;
             rgbCode = colours[c];
 
-            screen[index] = rgbCode;
+            visualScreen[index] = rgbCode;
 
             do {
                 errorY = (errorY + deltaY);
@@ -396,12 +406,12 @@ public final class PicGraphics {
                 }
 
                 index = (y << 8) + (y << 6) + x;
-                screen[index] = rgbCode;
+                visualScreen[index] = rgbCode;
                 count--;
             } while (count > 0);
 
             index = (y << 8) + (y << 6) + x;
-            screen[index] = rgbCode;
+            visualScreen[index] = rgbCode;
         }
     }
 
@@ -436,7 +446,7 @@ public final class PicGraphics {
         for (int y = top; y <= bottom; y++) {
             int pos = (y << 8) + (y << 6) + left;
             for (int x = left; x <= right; x++) {
-                screen[pos++] = colorRGB;
+                visualScreen[pos++] = colorRGB;
             }
         }
     }
@@ -459,14 +469,14 @@ public final class PicGraphics {
 
         for (int line = 0; line < 8; line++) {
             int lineData = charData[line];
-            screen[index++] = ((lineData & 0x80) > 0 ? foreColourRGB : backColourRGB);
-            screen[index++] = ((lineData & 0x40) > 0 ? foreColourRGB : backColourRGB);
-            screen[index++] = ((lineData & 0x20) > 0 ? foreColourRGB : backColourRGB);
-            screen[index++] = ((lineData & 0x10) > 0 ? foreColourRGB : backColourRGB);
-            screen[index++] = ((lineData & 0x08) > 0 ? foreColourRGB : backColourRGB);
-            screen[index++] = ((lineData & 0x04) > 0 ? foreColourRGB : backColourRGB);
-            screen[index++] = ((lineData & 0x02) > 0 ? foreColourRGB : backColourRGB);
-            screen[index++] = ((lineData & 0x01) > 0 ? foreColourRGB : backColourRGB);
+            visualScreen[index++] = ((lineData & 0x80) > 0 ? foreColourRGB : backColourRGB);
+            visualScreen[index++] = ((lineData & 0x40) > 0 ? foreColourRGB : backColourRGB);
+            visualScreen[index++] = ((lineData & 0x20) > 0 ? foreColourRGB : backColourRGB);
+            visualScreen[index++] = ((lineData & 0x10) > 0 ? foreColourRGB : backColourRGB);
+            visualScreen[index++] = ((lineData & 0x08) > 0 ? foreColourRGB : backColourRGB);
+            visualScreen[index++] = ((lineData & 0x04) > 0 ? foreColourRGB : backColourRGB);
+            visualScreen[index++] = ((lineData & 0x02) > 0 ? foreColourRGB : backColourRGB);
+            visualScreen[index++] = ((lineData & 0x01) > 0 ? foreColourRGB : backColourRGB);
             index += 312;
         }
     }
@@ -493,14 +503,14 @@ public final class PicGraphics {
 
             for (int line = 0; line < 8; line++) {
                 int lineData = charData[line];
-                screen[index++] = ((lineData & 0x80) > 0 ? foreColourRGB : backColourRGB);
-                screen[index++] = ((lineData & 0x40) > 0 ? foreColourRGB : backColourRGB);
-                screen[index++] = ((lineData & 0x20) > 0 ? foreColourRGB : backColourRGB);
-                screen[index++] = ((lineData & 0x10) > 0 ? foreColourRGB : backColourRGB);
-                screen[index++] = ((lineData & 0x08) > 0 ? foreColourRGB : backColourRGB);
-                screen[index++] = ((lineData & 0x04) > 0 ? foreColourRGB : backColourRGB);
-                screen[index++] = ((lineData & 0x02) > 0 ? foreColourRGB : backColourRGB);
-                screen[index++] = ((lineData & 0x01) > 0 ? foreColourRGB : backColourRGB);
+                visualScreen[index++] = ((lineData & 0x80) > 0 ? foreColourRGB : backColourRGB);
+                visualScreen[index++] = ((lineData & 0x40) > 0 ? foreColourRGB : backColourRGB);
+                visualScreen[index++] = ((lineData & 0x20) > 0 ? foreColourRGB : backColourRGB);
+                visualScreen[index++] = ((lineData & 0x10) > 0 ? foreColourRGB : backColourRGB);
+                visualScreen[index++] = ((lineData & 0x08) > 0 ? foreColourRGB : backColourRGB);
+                visualScreen[index++] = ((lineData & 0x04) > 0 ? foreColourRGB : backColourRGB);
+                visualScreen[index++] = ((lineData & 0x02) > 0 ? foreColourRGB : backColourRGB);
+                visualScreen[index++] = ((lineData & 0x01) > 0 ? foreColourRGB : backColourRGB);
                 index += 312;
             }
 
@@ -543,7 +553,7 @@ public final class PicGraphics {
         int bgLineLength = bgLineData[0];
         for (int i = 1; i < bgLineLength;) {
             index = bgLineData[i++];
-            screen[index + 1] = screen[index] = bgLineData[i++];
+            visualScreen[index + 1] = visualScreen[index] = bgLineData[i++];
         }
 
         // Start storing at index 1. We'll use 0 for the length.
@@ -563,9 +573,9 @@ public final class PicGraphics {
 
             for (; index <= endIndex; index += 320) {
                 bgLineData[bgIndex++] = index;
-                bgLineData[bgIndex++] = screen[index];
-                screen[index] = rgbCode;
-                screen[index + 1] = rgbCode;
+                bgLineData[bgIndex++] = visualScreen[index];
+                visualScreen[index] = rgbCode;
+                visualScreen[index + 1] = rgbCode;
             }
         }
         // Horizontal Line.
@@ -582,9 +592,9 @@ public final class PicGraphics {
 
             for (; index <= endIndex; index += 2) {
                 bgLineData[bgIndex++] = index;
-                bgLineData[bgIndex++] = screen[index];
-                screen[index] = rgbCode;
-                screen[index + 1] = rgbCode;
+                bgLineData[bgIndex++] = visualScreen[index];
+                visualScreen[index] = rgbCode;
+                visualScreen[index + 1] = rgbCode;
             }
 
         } else {
@@ -625,9 +635,9 @@ public final class PicGraphics {
             rgbCode = colours[c];
 
             bgLineData[bgIndex++] = index;
-            bgLineData[bgIndex++] = screen[index];
-            screen[index] = rgbCode;
-            screen[index + 1] = rgbCode;
+            bgLineData[bgIndex++] = visualScreen[index];
+            visualScreen[index] = rgbCode;
+            visualScreen[index + 1] = rgbCode;
 
             do {
                 errorY = (errorY + deltaY);
@@ -644,9 +654,9 @@ public final class PicGraphics {
 
                 index = (y << 8) + (y << 6) + (x << 1) + 2880;
                 bgLineData[bgIndex++] = index;
-                bgLineData[bgIndex++] = screen[index];
-                screen[index] = rgbCode;
-                screen[index + 1] = rgbCode;
+                bgLineData[bgIndex++] = visualScreen[index];
+                visualScreen[index] = rgbCode;
+                visualScreen[index + 1] = rgbCode;
                 count--;
             } while (count > 0);
         }
@@ -656,12 +666,12 @@ public final class PicGraphics {
     }
 
     /**
-     * Returns the image to be drawn on the screen.
+     * Returns the visual image to be drawn on the screen.
      * 
-     * @return the image to be drawn on the screen.
+     * @return the visual image to be drawn on the screen.
      */
-    public Image getScreenImage() {
-        return screenImage;
+    public Image getVisualImage() {
+        return visualImage;
     }
 
     /**
