@@ -45,7 +45,7 @@ public final class PicEdit extends Applet {
 	@SuppressWarnings("unchecked")
 	public PicEdit() {
 		this.editStatus = new EditStatus();
-		this.editStatus.setZoomFactor(3);
+		this.editStatus.setZoomFactor(1);
 		
 		Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
 		this.setPreferredSize(appDimension);
@@ -132,6 +132,11 @@ public final class PicEdit extends Applet {
 					offScreenGC.setColor(EgaPalette.WHITE);
 				}
 				offScreenGC.fillRect(0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
+			}
+			
+			// TODO: Currently this conflicts with background image. Need to make bands translucent.
+			if (editStatus.isBandsOn()) {
+			  offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 			}
 			
 			// Draw the  PICEDIT screen to the offscreen image (transparent pixels will show the background).
