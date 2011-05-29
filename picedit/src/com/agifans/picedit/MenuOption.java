@@ -132,6 +132,18 @@ public enum MenuOption {
 			case 0x20:
 				menuOption = VIEWDATA;
 				break;
+			case 0x21:
+			    menuOption = ZOOMX2;
+			    break;
+			case 0x22:
+			    menuOption = ZOOMX3;
+			    break;
+			case 0x23:
+			    menuOption = ZOOMX4;
+			    break;
+			case 0x24:
+			    menuOption = ZOOMX5;
+			    break;
 			case 0x30:
 				menuOption = BACKGROUND;
 				break;

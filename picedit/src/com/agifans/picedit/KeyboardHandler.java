@@ -43,9 +43,7 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
 			}
 			if (key == KeyEvent.VK_TAB) {
 				// Switches between the two screens.
-			   editStatus.toggleScreen();
-			   editStatus.setTool(ToolType.NONE);
-			   picture.updateScreen();
+			    processTogglePriorityScreen();
 			}
 			
 			// Handle picture buffer navigation keys.

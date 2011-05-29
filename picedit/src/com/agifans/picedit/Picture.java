@@ -1,5 +1,11 @@
 package com.agifans.picedit;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.DataBufferInt;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +41,21 @@ public class Picture {
 	 */
 	private int controlScreen[];
 	
+    /**
+     * The Image for the visual screen.
+     */
+    private Image visualImage;
+
+    /**
+     * The Image for the priority screen.
+     */
+    private Image priorityImage;
+    
+    /**
+     * The Image for the control screen.
+     */
+    private Image controlImage;
+	
 	/**
 	 * Holds the editing status of the PICEDIT application.
 	 */
@@ -52,13 +73,16 @@ public class Picture {
      * @param picGraphics the PicGraphics for drawing on the actual PICEDIT screen.
      */
     public Picture(EditStatus editStatus, PicGraphics picGraphics) {
-    	if (editStatus.getPictureType().equals(PictureType.SCI0)) {
-	        visualScreen = new int[320 * 190];
-	        priorityScreen = new int[320 * 190];
-	        controlScreen = new int[320 * 190];
-    	} else if (editStatus.getPictureType().equals(PictureType.AGI)) {
-	        visualScreen = new int[160 * 168];
-	        priorityScreen = new int[160 * 168];
+        PictureType pictureType = editStatus.getPictureType();
+        
+        this.visualScreen = new int[pictureType.getNumberOfPixels()];
+        this.visualImage = createScreenImage(pictureType.getWidth(), pictureType.getHeight(), visualScreen);
+        this.priorityScreen = new int[pictureType.getNumberOfPixels()];
+        this.priorityImage = createScreenImage(pictureType.getWidth(), pictureType.getHeight(), priorityScreen);
+        
+    	if (pictureType.equals(PictureType.SCI0)) {
+    	    this.controlScreen = new int[pictureType.getNumberOfPixels()];
+    	    this.controlImage = createScreenImage(pictureType.getWidth(), pictureType.getHeight(), controlScreen);
     	}
 
         this.editStatus = editStatus;
@@ -67,6 +91,24 @@ public class Picture {
         clearPicture();
         updateScreen();
 	}
+    
+    /**
+     * Creates a BufferedImage of the given size using the given data array to hold
+     * the pixel data.
+     * 
+     * @param width the width of the Image to create.
+     * @param height the height of the Image to create.
+     * @param screenDataArray the int array that will hold the pixel data for this Image.
+     * 
+     * @return the created Image.
+     */
+    public Image createScreenImage(int width, int height, int[] screenDataArray) {
+        DataBufferInt dataBuffer = new DataBufferInt(screenDataArray, screenDataArray.length);
+        ColorModel colorModel = ColorModel.getRGBdefault();
+        int[] bandMasks = new int[] { 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000 };
+        WritableRaster raster = Raster.createPackedRaster(dataBuffer, width, height, width, bandMasks, null);
+        return new BufferedImage(colorModel, raster, false, null);
+    }
     
     /**
      * Clears the visual and priority screens.
@@ -84,6 +126,8 @@ public class Picture {
      * picture's internal visual or priority buffer.
      */
     public void updateScreen() {
+        // TODO: These calls are not required when we moved to using the actual data arrays in this class.
+        // TODO: Decide if the clearDrawingArea method should be called from here.
     	if (editStatus.getPictureType().equals(PictureType.SCI0)) {
     		if (editStatus.isPriorityShowing()) {
     			picGraphics.drawRGBData(PICTURE_OFFSET, priorityScreen);
@@ -99,6 +143,33 @@ public class Picture {
     	}
 	}
 
+    /**
+     * Returns the visual image to be drawn on the screen.
+     * 
+     * @return the visual image to be drawn on the screen.
+     */
+    public Image getVisualImage() {
+        return visualImage;
+    }
+
+    /**
+     * Returns the priority image to be drawn on the screen.
+     * 
+     * @return the priority image to be drawn on the screen.
+     */
+    public Image getPriorityImage() {
+        return priorityImage;
+    }
+    
+    /**
+     * Returns the control image to be drawn on the screen.
+     * 
+     * @return the control image to be drawn on the screen.
+     */
+    public Image getControlImage() {
+        return controlImage;
+    }
+    
     /**
      * Draws the picture from the beginning up to the current picture position.
      */

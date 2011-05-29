@@ -134,18 +134,14 @@ public final class PicEdit extends Applet {
 				offScreenGC.fillRect(0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
 			}
 			
-			// TODO: Currently this conflicts with background image. Need to make bands translucent.
 			if (editStatus.isBandsOn()) {
 			  offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 			}
 			
+			//offScreenGC.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
+			
 			// Draw the  PICEDIT screen to the offscreen image (transparent pixels will show the background).
-			if (editStatus.isPriorityShowing()) {
-			    // TODO: Change to getPriorityImage
-			    offScreenGC.drawImage(picGraphics.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
-			} else {
-			    offScreenGC.drawImage(picGraphics.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
-			}
+			offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
 		}
 		
 		// Now display the screen to the user.
