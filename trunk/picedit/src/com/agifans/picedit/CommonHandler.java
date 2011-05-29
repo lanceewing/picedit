@@ -231,6 +231,15 @@ public abstract class CommonHandler {
 	}
 	
 	/**
+	 * Toggles the display of the priority screen.
+	 */
+	public void processTogglePriorityScreen() {
+        editStatus.toggleScreen();
+        editStatus.setTool(ToolType.NONE);
+        picture.updateScreen();
+	}
+	
+	/**
 	 * Processes toggling of the display of the background tracking image.
 	 */
 	protected void processToggleBackground() {
