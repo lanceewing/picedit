@@ -126,10 +126,12 @@ public final class PicEdit extends Applet {
 				offScreenGC.drawImage(picGraphics.getBackgroundImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), 168 * editStatus.getZoomFactor(), this);
 			} else {
 				// Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
-				if (editStatus.isPriorityShowing()) {
-					offScreenGC.setColor(EgaPalette.RED);
+			    if (!editStatus.isPriorityShowing()) {
+			        offScreenGC.setColor(EgaPalette.WHITE);
+			    } else if (editStatus.isBandsOn()) {
+					offScreenGC.setColor(EgaPalette.DARKGREY);
 				} else {
-					offScreenGC.setColor(EgaPalette.WHITE);
+					offScreenGC.setColor(EgaPalette.RED);
 				}
 				offScreenGC.fillRect(0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
 			}
@@ -138,7 +140,11 @@ public final class PicEdit extends Applet {
 			  offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 			}
 			
-			//offScreenGC.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
+			if (editStatus.isPriorityShowing()) {
+			    offScreenGC.drawImage(picture.getPriorityImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+			} else {
+			    offScreenGC.drawImage(picture.getVisualImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+			}
 			
 			// Draw the  PICEDIT screen to the offscreen image (transparent pixels will show the background).
 			offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
