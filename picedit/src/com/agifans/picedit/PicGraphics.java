@@ -20,6 +20,11 @@ import java.util.Map;
 public final class PicGraphics {
 
     /**
+     * The offset into the main PICEDIT screen where the picture starts.
+     */
+    private static final int PICTURE_OFFSET = 2880;
+    
+    /**
      * The Image for the background image.
      */
     private Image backgroundImage;
@@ -175,10 +180,13 @@ public final class PicGraphics {
         component.setCursor(blankCursor);
     }
 
-    public void clearDrawingArea() {
-        // TODO: Implement this method. Should clear only the drawing area.
-        // TODO: Investigate where this should be called from. After menu, etc.
-        // TODO: Is it required after temporary line is moved?
+    /**
+     * Clears the picture part of the PICEDIT editor screen.
+     * 
+     * @param pictureType The type of picture currently being edited.
+     */
+    public void clearDrawingArea(PictureType pictureType) {
+        Arrays.fill(this.screen, PICTURE_OFFSET, pictureType.getNumberOfEGAPixels() + PICTURE_OFFSET, EgaPalette.transparent);
     }
     
     /**
