@@ -60,106 +60,111 @@ public class Menu extends CommonHandler {
 
         // Draw the selected menu drop down and item.
         switch (barOption) {
-        case 0:
-            picGraphics.drawString("Info", 8, 0, 15, 0);
-            if (barOption != oldBarOption) {
-                picGraphics.drawFilledBox(0, 8, 55, 39, 15);
-                picGraphics.drawBox(2, 9, 53, 38, 0);
-                picGraphics.drawBox(3, 9, 52, 38, 0);
-            }
-            picGraphics.drawString("About", 8, 16, 0, 15);
-            picGraphics.drawString("Help", 8, 24, 0, 15);
-            switch (itemOption) {
             case 0:
-                picGraphics.drawString("About", 8, 16, 15, 0);
+                picGraphics.drawString("Info", 8, 0, 15, 0);
+                if (barOption != oldBarOption) {
+                    picGraphics.drawFilledBox(0, 8, 55, 39, 15);
+                    picGraphics.drawBox(2, 9, 53, 38, 0);
+                    picGraphics.drawBox(3, 9, 52, 38, 0);
+                }
+                picGraphics.drawString("About", 8, 16, 0, 15);
+                picGraphics.drawString("Help", 8, 24, 0, 15);
+                switch (itemOption) {
+                    case 0:
+                        picGraphics.drawString("About", 8, 16, 15, 0);
+                        break;
+                    case 1:
+                        picGraphics.drawString("Help", 8, 24, 15, 0);
+                        break;
+                }
                 break;
             case 1:
-                picGraphics.drawString("Help", 8, 24, 15, 0);
-                break;
-            }
-            break;
-        case 1:
-            picGraphics.drawString("File", 48, 0, 15, 0);
-            if (barOption != oldBarOption) {
-                picGraphics.drawFilledBox(40, 8, 151, 55, 15);
-                picGraphics.drawBox(42, 9, 149, 54, 0);
-                picGraphics.drawBox(43, 9, 148, 54, 0);
-            }
-            picGraphics.drawString("New Picture", 48, 16, 0, 15);
-            picGraphics.drawString("Save Picture", 48, 24, 0, 15);
-            picGraphics.drawString("Load Picture", 48, 32, 0, 15);
-            picGraphics.drawString("Quit", 48, 40, 0, 15);
-            switch (itemOption) {
-            case 0:
-                picGraphics.drawString("New Picture", 48, 16, 15, 0);
-                break;
-            case 1:
-                picGraphics.drawString("Save Picture", 48, 24, 15, 0);
+                picGraphics.drawString("File", 48, 0, 15, 0);
+                if (barOption != oldBarOption) {
+                    picGraphics.drawFilledBox(40, 8, 151, 55, 15);
+                    picGraphics.drawBox(42, 9, 149, 54, 0);
+                    picGraphics.drawBox(43, 9, 148, 54, 0);
+                }
+                picGraphics.drawString("New Picture", 48, 16, 0, 15);
+                picGraphics.drawString("Save Picture", 48, 24, 0, 15);
+                picGraphics.drawString("Load Picture", 48, 32, 0, 15);
+                picGraphics.drawString("Quit", 48, 40, 0, 15);
+                switch (itemOption) {
+                    case 0:
+                        picGraphics.drawString("New Picture", 48, 16, 15, 0);
+                        break;
+                    case 1:
+                        picGraphics.drawString("Save Picture", 48, 24, 15, 0);
+                        break;
+                    case 2:
+                        picGraphics.drawString("Load Picture", 48, 32, 15, 0);
+                        break;
+                    case 3:
+                        picGraphics.drawString("Quit", 48, 40, 15, 0);
+                        break;
+                }
                 break;
             case 2:
-                picGraphics.drawString("Load Picture", 48, 32, 15, 0);
+                picGraphics.drawString("View", 88, 0, 15, 0);
+                // View data option.
+                if (barOption != oldBarOption) {
+                    picGraphics.drawFilledBox(80, 8, 167, 64, 15);
+                    picGraphics.drawBox(82, 9, 165, 63, 0);
+                    picGraphics.drawBox(83, 9, 164, 63, 0);
+                }
+                picGraphics.drawString("View Data", 88, 16, 0, 15);
+                picGraphics.drawString("Zoom x2", 88, 24, 0, 15);
+                picGraphics.drawString("Zoom x3", 88, 32, 0, 15);
+                picGraphics.drawString("Zoom x4", 88, 40, 0, 15);
+                picGraphics.drawString("Zoom x5", 88, 48, 0, 15);
+                switch (itemOption) {
+                    case 0:
+                        picGraphics.drawString("View Data", 88, 16, 15, 0);
+                        break;
+                    case 1:
+                        picGraphics.drawString("Zoom x2", 88, 24, 15, 0);
+                        break;
+                    case 2:
+                        picGraphics.drawString("Zoom x3", 88, 32, 15, 0);
+                        break;
+                    case 3:
+                        picGraphics.drawString("Zoom x4", 88, 40, 15, 0);
+                        break;
+                    case 4:
+                        picGraphics.drawString("Zoom x5", 88, 48, 15, 0);
+                        break;
+                }
                 break;
             case 3:
-                picGraphics.drawString("Quit", 48, 40, 15, 0);
+                picGraphics.drawString("Special", 128, 0, 15, 0);
+                if (barOption != oldBarOption) {
+                    picGraphics.drawFilledBox(120, 8, 223, 48, 15);
+                    picGraphics.drawBox(122, 9, 221, 47, 0);
+                    picGraphics.drawBox(123, 9, 220, 47, 0);
+                }
+                picGraphics.drawString("Background", 136, 16, 0, 15);
+                if (editStatus.isBackgroundEnabled()) {
+                    picGraphics.drawChar((char) 7, 126, 16, 4, 15);
+                }
+                picGraphics.drawString("Bands", 136, 24, 0, 15);
+                if (editStatus.isBandsOn()) {
+                    picGraphics.drawChar((char) 7, 126, 24, 4, 15);
+                }
+                picGraphics.drawString("Dual Mode", 136, 32, 0, 15);
+                if (editStatus.isDualModeEnabled()) {
+                    picGraphics.drawChar((char) 7, 126, 32, 4, 15);
+                }
+                switch (itemOption) {
+                    case 0:
+                        picGraphics.drawString("Background", 136, 16, 15, 0);
+                        break;
+                    case 1:
+                        picGraphics.drawString("Bands", 136, 24, 15, 0);
+                        break;
+                    case 2:
+                        picGraphics.drawString("Dual Mode", 136, 32, 15, 0);
+                }
                 break;
-            }
-            break;
-        case 2:
-            picGraphics.drawString("View", 88, 0, 15, 0);
-            // View data option.
-            if (barOption != oldBarOption) {
-                picGraphics.drawFilledBox(80, 8, 167, 64, 15);
-                picGraphics.drawBox(82, 9, 165, 63, 0);
-                picGraphics.drawBox(83, 9, 164, 63, 0);
-            }
-            picGraphics.drawString("View Data", 88, 16, 0, 15);
-            picGraphics.drawString("Zoom x2", 88, 24, 0, 15);
-            picGraphics.drawString("Zoom x3", 88, 32, 0, 15);
-            picGraphics.drawString("Zoom x4", 88, 40, 0, 15);
-            picGraphics.drawString("Zoom x5", 88, 48, 0, 15);
-            switch (itemOption) {
-            case 0:
-                picGraphics.drawString("View Data", 88, 16, 15, 0);
-                break;
-            case 1:
-                picGraphics.drawString("Zoom x2", 88, 24, 15, 0);
-                break;
-            case 2:
-                picGraphics.drawString("Zoom x3", 88, 32, 15, 0);
-                break;
-            case 3:
-                picGraphics.drawString("Zoom x4", 88, 40, 15, 0);
-                break;
-            case 4:
-                picGraphics.drawString("Zoom x5", 88, 48, 15, 0);
-                break;
-            }
-            break;
-        case 3:
-            picGraphics.drawString("Special", 128, 0, 15, 0);
-            // Show background image (for overdrawing).
-            if (barOption != oldBarOption) {
-                picGraphics.drawFilledBox(120, 8, 223, 40, 15);
-                picGraphics.drawBox(122, 9, 221, 39, 0);
-                picGraphics.drawBox(123, 9, 220, 39, 0);
-            }
-            picGraphics.drawString("Background", 136, 16, 0, 15);
-            if (editStatus.isBackgroundEnabled()) {
-                picGraphics.drawChar((char) 7, 126, 16, 4, 15);
-            }
-            picGraphics.drawString("Bands", 136, 24, 0, 15);
-            if (editStatus.isBandsOn()) {
-                picGraphics.drawChar((char) 7, 126, 24, 4, 15);
-            }
-            switch (itemOption) {
-            case 0:
-                picGraphics.drawString("Background", 136, 16, 15, 0);
-                break;
-            case 1:
-                picGraphics.drawString("Bands", 136, 24, 15, 0);
-                break;
-            }
-            break;
         }
 
         lastMenuOption = menuOption;
@@ -281,84 +286,97 @@ public class Menu extends CommonHandler {
      * @param menuOption the selected MenuOption to process.
      */
     private void processMenuSelection(MenuOption menuOption) {
-        if (menuOption.equals(MenuOption.NEWPIC)) {
-            Object[] options = { "New", "Cancel" };
-            int answer = JOptionPane.showOptionDialog(application,
-                    "Are you sure you want to create a new picture?", "",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-                    null, options, options[0]);
-            if (answer == JOptionPane.YES_OPTION) {
-                editStatus.clear();
-                picture.drawPicture();
-                picture.updateScreen();
-                picGraphics.setBackgroundImage(null);
-            }
-        }
-        if (menuOption.equals(MenuOption.LOADPIC)) {
-            JFileChooser fc = new JFileChooser();
-            if (fc.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fc.getSelectedFile();
-                if (selectedFile != null) {
-                    loadPicture(selectedFile);
+        switch (menuOption) {
+
+            case NEWPIC:
+                Object[] newOptions = { "New", "Cancel" };
+                int newAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to create a new picture?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, newOptions, newOptions[0]);
+                if (newAnswer == JOptionPane.YES_OPTION) {
+                    editStatus.clear();
+                    picture.drawPicture();
+                    picture.updateScreen();
+                    picGraphics.setBackgroundImage(null);
                 }
-            }
-        }
-        if (menuOption.equals(MenuOption.SAVEPIC)) {
-            JFileChooser fc = new JFileChooser();
-            if (fc.showSaveDialog(this.application) == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fc.getSelectedFile();
-                if (selectedFile != null) {
-                    savePicture(selectedFile);
-                }
-            }
-        }
-        if (menuOption.equals(MenuOption.QUIT)) {
-            Object[] options = { "Quit", "Cancel" };
-            int answer = JOptionPane.showOptionDialog(application,
-                    "Are you sure you want to Quit?", "",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
-                    null, options, options[0]);
-            if (answer == JOptionPane.YES_OPTION) {
-                System.exit(0);
-            }
-        }
-        if (menuOption.equals(MenuOption.ABOUT)) {
-            showAboutMessage();
-        }
-        if (menuOption.equals(MenuOption.HELP)) {
-            showHelp();
-        }
-        if (menuOption.equals(MenuOption.VIEWDATA)) {
-            showHexData();
-        }
-        if (menuOption.equals(MenuOption.ZOOMX2)) {
-            application.resizeScreen(2);
-        }
-        if (menuOption.equals(MenuOption.ZOOMX3)) {
-            application.resizeScreen(3);
-        }
-        if (menuOption.equals(MenuOption.ZOOMX4)) {
-            application.resizeScreen(4);
-        }
-        if (menuOption.equals(MenuOption.ZOOMX5)) {
-            application.resizeScreen(5);
-        }
-        if (menuOption.equals(MenuOption.BACKGROUND)) {
-            if (editStatus.isBackgroundEnabled()) {
-                processToggleBackground();
-                picGraphics.setBackgroundImage(null);
-            } else {
-                JFileChooser fc = new JFileChooser();
-                if (fc.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fc.getSelectedFile();
+                break;
+
+            case LOADPIC:
+                JFileChooser loadFc = new JFileChooser();
+                if (loadFc.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = loadFc.getSelectedFile();
                     if (selectedFile != null) {
-                        loadBackgroundImage(selectedFile);
+                        loadPicture(selectedFile);
                     }
                 }
-            }
-        }
-        if (menuOption.equals(MenuOption.BANDS)) {
-            editStatus.setBandsOn(!editStatus.isBandsOn());
+                break;
+
+            case SAVEPIC:
+                JFileChooser saveFc = new JFileChooser();
+                if (saveFc.showSaveDialog(this.application) == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = saveFc.getSelectedFile();
+                    if (selectedFile != null) {
+                        savePicture(selectedFile);
+                    }
+                }
+                break;
+
+            case QUIT:
+                Object[] quitOptions = { "Quit", "Cancel" };
+                int quitAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to Quit?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, quitOptions, quitOptions[0]);
+                if (quitAnswer == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
+                break;
+
+            case ABOUT:
+                showAboutMessage();
+                break;
+
+            case HELP:
+                showHelp();
+                break;
+
+            case VIEWDATA:
+                showHexData();
+                break;
+
+            case ZOOMX2:
+                application.resizeScreen(2);
+                break;
+
+            case ZOOMX3:
+                application.resizeScreen(3);
+                break;
+
+            case ZOOMX4:
+                application.resizeScreen(4);
+                break;
+
+            case ZOOMX5:
+                application.resizeScreen(5);
+                break;
+
+            case BACKGROUND:
+                if (editStatus.isBackgroundEnabled()) {
+                    processToggleBackground();
+                    picGraphics.setBackgroundImage(null);
+                } else {
+                    JFileChooser fc = new JFileChooser();
+                    if (fc.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fc.getSelectedFile();
+                        if (selectedFile != null) {
+                            loadBackgroundImage(selectedFile);
+                        }
+                    }
+                }
+                break;
+
+            case BANDS:
+                editStatus.setBandsOn(!editStatus.isBandsOn());
+                break;
+
+            case DUALMODE:
+                editStatus.setDualModeEnabled(!editStatus.isDualModeEnabled());
+                break;
         }
     }
 }
