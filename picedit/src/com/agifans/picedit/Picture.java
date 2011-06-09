@@ -126,23 +126,8 @@ public class Picture {
      * picture's internal visual or priority buffer.
      */
     public void updateScreen() {
-        // TODO: These calls are not required when we moved to using the actual data arrays in this class.
-        // TODO: Decide if the clearDrawingArea method should be called from here.
+        // TODO: Replace all Picture updateScreen calls with a call to clearDrawingArea.
         picGraphics.clearDrawingArea(editStatus.getPictureType());
-        
-    	if (editStatus.getPictureType().equals(PictureType.SCI0)) {
-    		if (editStatus.isPriorityShowing()) {
-    			picGraphics.drawRGBData(PICTURE_OFFSET, priorityScreen);
-    		} else {
-    			picGraphics.drawRGBData(PICTURE_OFFSET, visualScreen);
-    		}
-    	} else if (editStatus.getPictureType().equals(PictureType.AGI)) {
-    		if (editStatus.isPriorityShowing()) {
-    			//picGraphics.drawDoubleRGBData(PICTURE_OFFSET, priorityScreen);
-    		} else {
-    			//picGraphics.drawDoubleRGBData(PICTURE_OFFSET, visualScreen);
-    		}
-    	}
 	}
 
     /**
