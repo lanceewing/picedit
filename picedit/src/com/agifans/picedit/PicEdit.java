@@ -17,6 +17,11 @@ public final class PicEdit extends Applet {
     private static final long serialVersionUID = 1L;
 
     /**
+     * Constant for the name of the current version of PICEDIT.
+     */
+    private static final String PICEDIT_NAME = "PICEDIT v1.2.1";
+    
+    /**
      * The graphics routines with which the application draws the screen.
      */
     private PicGraphics picGraphics;
@@ -177,6 +182,9 @@ public final class PicEdit extends Applet {
 
         // Now display the screen to the user.
         g.drawImage(offScreenImage, 0, 0, this);
+        
+        // Make sure picture title is correct.
+        ((JFrame) SwingUtilities.getRoot(this)).setTitle(PICEDIT_NAME + " - " + editStatus.getPictureName());
     }
 
     /**

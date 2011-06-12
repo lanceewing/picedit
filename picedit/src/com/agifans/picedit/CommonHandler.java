@@ -563,6 +563,9 @@ public abstract class CommonHandler {
             // Make sure we start with a clean picture.
             editStatus.clear();
 
+            // Store file name for display on title bar.
+            editStatus.setPictureName(pictureFile.getName());
+            
             // Open the file for reading.
             in = new BufferedInputStream(new FileInputStream(pictureFile));
 
@@ -606,6 +609,9 @@ public abstract class CommonHandler {
         BufferedOutputStream out = null;
 
         try {
+            // Store file name for display on title bar.
+            editStatus.setPictureName(pictureFile.getName());
+            
             // Open the file for reading.
             out = new BufferedOutputStream(new FileOutputStream(pictureFile));
 
