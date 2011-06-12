@@ -127,19 +127,24 @@ public final class PicGraphics {
         // Draw the bands onto the image so it is ready to be displayed when
         // needed.
         if (pictureType.equals(PictureType.SCI0)) {
+            int currentPriorityBand = 0;
+            
             // For SCI0, the top 42 lines are for priority 0. The other 14 bands
             // get an even share of the 148 remaining lines (which, btw, doesn't
             // divide evenly, so the bands are not even as then are in AGI).
             for (int y = 0; y < 200; y++) {
                 int priorityBand = ((int) ((y - 42) / ((190 - 42) / 14))) + 1;
 
-                Color priorityColor = new Color(EgaPalette.colours[priorityBand] & 0x7FFFFFFF, true);
-
-                bandsGraphics.setColor(priorityColor);
-                bandsGraphics.drawLine(0, y, 319, y);
+                if (priorityBand != currentPriorityBand) {
+                    currentPriorityBand = priorityBand;
+                    bandsGraphics.setColor(EgaPalette.COLOR_OBJECTS[priorityBand]);
+                    bandsGraphics.drawLine(0, y, 319, y);
+                }
             }
 
         } else if (pictureType.equals(PictureType.AGI)) {
+            int currentPriorityBand = 4;
+            
             for (int y = 0; y < 168; y++) {
                 // For AGI it is evenly split, 168 lines split 14 ways.
                 int priorityBand = (y / 12) + 1;
@@ -150,9 +155,11 @@ public final class PicGraphics {
                     priorityBand = 4;
                 }
 
-                Color priorityColor = new Color(EgaPalette.colours[priorityBand] & 0x7FFFFFFF, true);
-                bandsGraphics.setColor(priorityColor);
-                bandsGraphics.drawLine(0, y, 319, y);
+                if (priorityBand != currentPriorityBand) {
+                    currentPriorityBand = priorityBand;
+                    bandsGraphics.setColor(EgaPalette.COLOR_OBJECTS[priorityBand]);
+                    bandsGraphics.drawLine(0, y, 319, y);
+                }
             }
         }
     }
