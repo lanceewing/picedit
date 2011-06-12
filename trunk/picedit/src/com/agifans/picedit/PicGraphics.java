@@ -23,7 +23,7 @@ public final class PicGraphics {
      * The offset into the main PICEDIT screen where the picture starts.
      */
     private static final int PICTURE_OFFSET = 2880;
-    
+
     /**
      * The Image for the background image.
      */
@@ -38,7 +38,7 @@ public final class PicGraphics {
      * The Image for the PICEDIT screen.
      */
     private Image screenImage;
-    
+
     /**
      * The Image that is drawn for the priority bands when activated.
      */
@@ -48,7 +48,7 @@ public final class PicGraphics {
      * The RGB data array for the PICEDIT screen.
      */
     private int screen[];
-    
+
     /**
      * The parent component, i.e. the PICEDIT JFrame.
      */
@@ -108,9 +108,7 @@ public final class PicGraphics {
 
         crossHairCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
         defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-        blankCursor = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(
-                new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB),
-                new Point(0, 0), "blank cursor");
+        blankCursor = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 
         textImage = component.createImage(640, 480);
         createPriorityBandsImage(PictureType.AGI);
@@ -134,9 +132,9 @@ public final class PicGraphics {
             // divide evenly, so the bands are not even as then are in AGI).
             for (int y = 0; y < 200; y++) {
                 int priorityBand = ((int) ((y - 42) / ((190 - 42) / 14))) + 1;
-                
+
                 Color priorityColor = new Color(EgaPalette.colours[priorityBand] & 0x7FFFFFFF, true);
-                
+
                 bandsGraphics.setColor(priorityColor);
                 bandsGraphics.drawLine(0, y, 319, y);
             }
@@ -151,7 +149,7 @@ public final class PicGraphics {
                 if (priorityBand < 4) {
                     priorityBand = 4;
                 }
-                
+
                 Color priorityColor = new Color(EgaPalette.colours[priorityBand] & 0x7FFFFFFF, true);
                 bandsGraphics.setColor(priorityColor);
                 bandsGraphics.drawLine(0, y, 319, y);
@@ -188,7 +186,7 @@ public final class PicGraphics {
     public void clearDrawingArea(PictureType pictureType) {
         Arrays.fill(this.screen, PICTURE_OFFSET, pictureType.getNumberOfEGAPixels() + PICTURE_OFFSET, EgaPalette.transparent);
     }
-    
+
     /**
      * Creates the image for the editor screen on which the editor panel, menu and temporary
      * lines are drawn.
@@ -198,15 +196,14 @@ public final class PicGraphics {
         Arrays.fill(this.screen, EgaPalette.transparent);
         DataBufferInt dataBuffer = new DataBufferInt(this.screen, this.screen.length);
         ColorModel colorModel = ColorModel.getRGBdefault();
-        int[] bandMasks = new int[] { 
-                0x00ff0000,   // red mask
-                0x0000ff00,   // green mask
-                0x000000ff,   // blue mask
-                0xff000000 }; // alpha mask
+        int[] bandMasks = new int[] { 0x00ff0000, // red mask
+        0x0000ff00, // green mask
+        0x000000ff, // blue mask
+        0xff000000 }; // alpha mask
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, 320, 200, 320, bandMasks, null);
         this.screenImage = new BufferedImage(colorModel, raster, false, null);
     }
-    
+
     /**
      * Builds the Map that holds the mapping between RGB colours values and
      * their EGA palette index value, e.g. red is 4, brown is 6. Used for
@@ -681,7 +678,7 @@ public final class PicGraphics {
     public Image getScreenImage() {
         return screenImage;
     }
-    
+
     /**
      * Gets the text image to display.
      * 
