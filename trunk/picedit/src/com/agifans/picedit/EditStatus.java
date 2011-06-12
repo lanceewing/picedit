@@ -146,11 +146,15 @@ public class EditStatus {
         brushShape = BrushShape.CIRCLE;
         brushTexture = BrushTexture.SOLID;
         if (clearPictureCodes) {
+            // These are the bits that get cleared for a new picture.
             pictureCodes = new LinkedList<PictureCode>();
             pictureCodes.add(new PictureCode(0xFF));
             picturePosition = 0;
             priorityShowing = false;
             pictureType = PictureType.AGI;
+            backgroundEnabled = false;
+            dualModeEnabled = false;
+            bandsOn = false;
         }
         clearLastRenderedState();
         clearTool();
