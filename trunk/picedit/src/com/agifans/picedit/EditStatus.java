@@ -123,6 +123,11 @@ public class EditStatus {
      * Whether the dual visual/priority mode is enabled or not.
      */
     private boolean dualModeEnabled;
+    
+    /**
+     * The name of the picture being edited.
+     */
+    private String pictureName;
 
     /**
      * Constructor for EditStatus.
@@ -155,6 +160,7 @@ public class EditStatus {
             backgroundEnabled = false;
             dualModeEnabled = false;
             bandsOn = false;
+            pictureName = "Untitled";
         }
         clearLastRenderedState();
         clearTool();
@@ -663,6 +669,14 @@ public class EditStatus {
         this.dualModeEnabled = dualModeEnabled;
     }
 
+    public String getPictureName() {
+        return this.pictureName;
+    }
+    
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
+    }
+    
     /**
      * Adjusts the mouse point to the coordinate system of the AGI 
      * picture canvas. The EditStatus doesn't care about anything outside
