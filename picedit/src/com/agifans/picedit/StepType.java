@@ -12,6 +12,6 @@ package com.agifans.picedit;
  */
 public enum StepType {
 
-    XCORNER,
+    XCORNER, 
     YCORNER;
 }

@@ -29,12 +29,12 @@ public enum PictureType {
      * The number of EGA pixels in this picture type.
      */
     private int numberOfEGAPixels;
-    
+
     /**
      * The number of EGA pixels per AGI/SCI pixel.
      */
     private int egaPixelsPerGamePixel;
-    
+
     /**
      * Constructor for PictureType.
      * 

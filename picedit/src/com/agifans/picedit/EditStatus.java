@@ -654,11 +654,11 @@ public class EditStatus {
     public boolean isDualModeEnabled() {
         return this.dualModeEnabled;
     }
-    
+
     public void setDualModeEnabled(boolean dualModeEnabled) {
         this.dualModeEnabled = dualModeEnabled;
     }
-    
+
     /**
      * Adjusts the mouse point to the coordinate system of the AGI 
      * picture canvas. The EditStatus doesn't care about anything outside

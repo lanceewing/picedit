@@ -97,7 +97,7 @@ public final class PicEdit extends Applet {
         // Create the offscreen image the first time.
         if (offScreenImage == null) {
             offScreenImage = createImage(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
-            offScreenGC = (Graphics2D)offScreenImage.getGraphics();
+            offScreenGC = (Graphics2D) offScreenImage.getGraphics();
         }
 
         // If we're in text mode ("Help" and "View Data"), then just display the image.
@@ -145,16 +145,16 @@ public final class PicEdit extends Applet {
             if (editStatus.isDualModeEnabled()) {
                 // Dual mode is when the priority and visual screens mix.
                 offScreenGC.drawImage(picture.getPriorityImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-                
+
                 BufferedImage tmpVisualImage = new BufferedImage(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), BufferedImage.TYPE_INT_ARGB);
                 tmpVisualImage.getGraphics().drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-                
+
                 float[] scales = { 1f, 1f, 1f, 0.5f };
                 float[] offsets = new float[4];
                 RescaleOp rop = new RescaleOp(scales, offsets, null);
-                
+
+                // Draw the visual screen on top of the priority screen with 50% transparency.
                 offScreenGC.drawImage(tmpVisualImage, rop, 0, 9 * editStatus.getZoomFactor());
-                
 
             } else {
                 if (editStatus.isPriorityShowing()) {
