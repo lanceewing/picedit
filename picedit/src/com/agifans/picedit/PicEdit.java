@@ -128,7 +128,9 @@ public final class PicEdit extends Applet {
                 offScreenGC.drawImage(picGraphics.getBackgroundImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), 168 * editStatus.getZoomFactor(), this);
             } else {
                 // Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
-                if (!editStatus.isPriorityShowing()) {
+                if (editStatus.isDualModeEnabled()) {
+                    offScreenGC.setColor(EgaPalette.RED);
+                } else if (!editStatus.isPriorityShowing()) {
                     offScreenGC.setColor(EgaPalette.WHITE);
                 } else if (editStatus.isBandsOn()) {
                     offScreenGC.setColor(EgaPalette.DARKGREY);
@@ -146,9 +148,14 @@ public final class PicEdit extends Applet {
                 // Dual mode is when the priority and visual screens mix.
                 offScreenGC.drawImage(picture.getPriorityImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 
+                // To create the effect demonstrated by Joakim in APE, we need a solid white.
                 BufferedImage tmpVisualImage = new BufferedImage(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), BufferedImage.TYPE_INT_ARGB);
-                tmpVisualImage.getGraphics().drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+                Graphics tmpVisualGraphics = tmpVisualImage.getGraphics();
+                tmpVisualGraphics.setColor(EgaPalette.WHITE);
+                tmpVisualGraphics.fillRect(0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
+                tmpVisualGraphics.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 
+                // Build a RescapeOp to perform the 50% transparency.
                 float[] scales = { 1f, 1f, 1f, 0.5f };
                 float[] offsets = new float[4];
                 RescaleOp rop = new RescaleOp(scales, offsets, null);
