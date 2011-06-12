@@ -140,10 +140,6 @@ public final class PicEdit extends Applet {
                 offScreenGC.fillRect(0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
             }
 
-            if (editStatus.isBandsOn()) {
-                offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-            }
-
             if (editStatus.isDualModeEnabled()) {
                 // Dual mode is when the priority and visual screens mix.
                 offScreenGC.drawImage(picture.getPriorityImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
@@ -171,6 +167,10 @@ public final class PicEdit extends Applet {
                 }
             }
 
+            if (editStatus.isBandsOn()) {
+                offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+            }
+            
             // Draw the  PICEDIT screen to the offscreen image (transparent pixels will show the background).
             offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
         }
