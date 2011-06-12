@@ -26,6 +26,11 @@ public class Menu extends CommonHandler {
     private MenuOption lastMenuOption;
 
     /**
+     * File chooser used by all open and save dialogs.
+     */
+    private JFileChooser fileChooser;
+    
+    /**
      * Constructor for Menu.
      * 
      * @param editStatus the EditStatus object holding the current picture editor state.
@@ -35,6 +40,11 @@ public class Menu extends CommonHandler {
      */
     public Menu(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
         super(editStatus, picGraphics, picture, null, application);
+        
+        // Set up a single JFileChooser for use with all open and save dialogs. This
+        // allows the directory to be remembered between uses. Default to the current
+        // directory.
+        this.fileChooser = new JFileChooser(new File(".").getAbsolutePath());
     }
 
     /**
@@ -300,9 +310,8 @@ public class Menu extends CommonHandler {
                 break;
 
             case LOADPIC:
-                JFileChooser loadFc = new JFileChooser();
-                if (loadFc.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = loadFc.getSelectedFile();
+                if (fileChooser.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
                     if (selectedFile != null) {
                         loadPicture(selectedFile);
                     }
@@ -310,9 +319,8 @@ public class Menu extends CommonHandler {
                 break;
 
             case SAVEPIC:
-                JFileChooser saveFc = new JFileChooser();
-                if (saveFc.showSaveDialog(this.application) == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = saveFc.getSelectedFile();
+                if (fileChooser.showSaveDialog(this.application) == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
                     if (selectedFile != null) {
                         savePicture(selectedFile);
                     }
@@ -360,9 +368,8 @@ public class Menu extends CommonHandler {
                     processToggleBackground();
                     picGraphics.setBackgroundImage(null);
                 } else {
-                    JFileChooser fc = new JFileChooser();
-                    if (fc.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fc.getSelectedFile();
+                    if (fileChooser.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
                         if (selectedFile != null) {
                             loadBackgroundImage(selectedFile);
                         }
