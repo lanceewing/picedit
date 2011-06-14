@@ -19,7 +19,7 @@ public final class PicEdit extends Applet {
     /**
      * Constant for the name of the current version of PICEDIT.
      */
-    private static final String PICEDIT_NAME = "PICEDIT v1.2.1";
+    private static final String PICEDIT_NAME = "PICEDIT v1.3M1";
     
     /**
      * The graphics routines with which the application draws the screen.
@@ -52,7 +52,7 @@ public final class PicEdit extends Applet {
     @SuppressWarnings("unchecked")
     public PicEdit() {
         this.editStatus = new EditStatus();
-        this.editStatus.setZoomFactor(2);
+        this.editStatus.setZoomFactor(3);
 
         Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
         this.setPreferredSize(appDimension);
