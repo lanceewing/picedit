@@ -408,11 +408,12 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 } else if (editStatus.isLineActive()) {
                     switch (editStatus.getNumOfClicks()) {
                         case 1:
-                            break;
-                        case 2:
                             editStatus.addPictureCode(0xF6);
-                            editStatus.addPictureCode(previousX);
-                            editStatus.addPictureCode(previousY);
+                            editStatus.addPictureCode(x);
+                            editStatus.addPictureCode(y);
+                            picture.putPixel(x, y);
+                            picture.updateScreen();
+                            break;
                         default:
                             editStatus.addPictureCode(x);
                             editStatus.addPictureCode(y);
@@ -427,11 +428,12 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
 
                     switch (editStatus.getNumOfClicks()) {
                         case 1:
-                            break;
-                        case 2:
                             editStatus.addPictureCode(0xF7);
-                            editStatus.addPictureCode(previousX);
-                            editStatus.addPictureCode(previousY);
+                            editStatus.addPictureCode(x);
+                            editStatus.addPictureCode(y);
+                            picture.putPixel(x, y);
+                            picture.updateScreen();
+                            break;
                         default:
                             dX = adjustForPen(x - previousX, 6);
                             dY = adjustForPen(y - previousY, 7);

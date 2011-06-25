@@ -241,6 +241,9 @@ public class Picture {
         x1 = pictureCodes.get(index++).getCode();
         y1 = pictureCodes.get(index++).getCode();
 
+        // A line must always have a least one point.
+        putPixel(x1, y1);
+        
         while (true) {
             y2 = pictureCodes.get(index++).getCode();
             if (y2 >= 0xF0) {
@@ -273,6 +276,9 @@ public class Picture {
         x1 = pictureCodes.get(index++).getCode();
         y1 = pictureCodes.get(index++).getCode();
 
+        // A line must always have a least one point.
+        putPixel(x1, y1);
+        
         while (true) {
             x2 = pictureCodes.get(index++).getCode();
             if (x2 >= 0xF0) {
@@ -300,11 +306,14 @@ public class Picture {
      * @return the index of the next picture action.
      */
     public int drawPictureAbsoluteLine(List<PictureCode> pictureCodes, int index) {
-        int x1, y1, x2, y2;
+        int x1, y1, x2, y2, lineCount=0;
 
         x1 = pictureCodes.get(index++).getCode();
         y1 = pictureCodes.get(index++).getCode();
 
+        // A line must always have a least one point.
+        putPixel(x1, y1);
+        
         while (true) {
             if ((x2 = pictureCodes.get(index++).getCode()) >= 0xF0) {
                 break;
@@ -315,6 +324,7 @@ public class Picture {
             drawLine(x1, y1, x2, y2);
             x1 = x2;
             y1 = y2;
+            lineCount++;
         }
 
         return (index - 1);
@@ -335,6 +345,9 @@ public class Picture {
         x1 = pictureCodes.get(index++).getCode();
         y1 = pictureCodes.get(index++).getCode();
 
+        // A line must always have a least one point.
+        putPixel(x1, y1);
+        
         while (true) {
             disp = pictureCodes.get(index++).getCode();
             if (disp >= 0xF0) {
@@ -412,6 +425,23 @@ public class Picture {
         return (index - 1);
     }
 
+    /**
+     * Draws a single pixel on the AGI picture.
+     * 
+     * @param x The X position of the pixel.
+     * @param y The Y position of the pixel.
+     */
+    public void putPixel(int x, int y) {
+        int index = (y << 7) + (y << 5) + x;
+        
+        if (editStatus.isVisualDrawEnabled()) {
+            visualScreen[index] = colours[editStatus.getVisualColour()];
+        }
+        if (editStatus.isPriorityDrawEnabled()) {
+            priorityScreen[index] = colours[editStatus.getPriorityColour()];
+        }
+    }
+    
     /**
      * Draw a line the most efficient way we can. Speed is preferred over
      * removal of duplicated code.
