@@ -594,6 +594,40 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         if (mouseButton == MouseEvent.BUTTON3) {
             // Right-clicking on the AGI picture will clear the current tool selection.
             if (picRect.contains(mousePoint)) {
+                if ((editStatus.getNumOfClicks() == 1) && (editStatus.isStepActive())) {
+                    // Single point line support for the Step tool.
+                    
+                    // Get the 'adjusted' X & Y position back from the edit status.
+                    editStatus.addClickPoint();
+                    Point pictureClickPoint = editStatus.getClickPoint();
+                    x = (int) pictureClickPoint.getX();
+                    y = (int) pictureClickPoint.getY();
+
+                    // Get the previous mouse click point for use with single point Step.
+                    int previousX = 0;
+                    int previousY = 0;
+                    Point previousClickPoint = editStatus.getPreviousClickPoint();
+                    if (previousClickPoint != null) {
+                        previousX = (int) previousClickPoint.getX();
+                        previousY = (int) previousClickPoint.getY();
+                    }
+                    
+                    // The X/Y corner decision for single point is based on where right click was.
+                    int dX = x - previousX;
+                    int dY = y - previousY;
+                    if (Math.abs(dX) > Math.abs(dY)) { /* X or Y corner */
+                        editStatus.addPictureCode(0xF5);
+                        editStatus.addPictureCode(previousX);
+                        editStatus.addPictureCode(previousY);
+                    } else {
+                        editStatus.addPictureCode(0xF4);
+                        editStatus.addPictureCode(previousX);
+                        editStatus.addPictureCode(previousY);
+                    }
+                    
+                    picture.putPixel(previousX, previousY);
+                    picture.updateScreen();
+                }
                 if (editStatus.getNumOfClicks() > 0) {
                     // If a tool is active (i.e. has a least one click) then right click resets 
                     // number of clicks, which allows the user to move to new location.
