@@ -44,7 +44,7 @@ public final class PicEdit extends JApplet {
     @SuppressWarnings("unchecked")
     public PicEdit() {
         this.editStatus = new EditStatus();
-        this.editStatus.setZoomFactor(1);
+        this.editStatus.setZoomFactor(3);
         this.picGraphics = new PicGraphics(this, 25);
         this.picture = new Picture(editStatus, picGraphics);
         this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, this);
@@ -52,47 +52,7 @@ public final class PicEdit extends JApplet {
         // This allows us to use TAB in the application (default within Java is that it traverses between fields).
         this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
-
-        // TODO: Build a proper menu.
-        JMenuBar menuBar = new JMenuBar();
-        JMenu infoMenu = new JMenu("Info");
-        JMenuItem aboutMenuItem = new JMenuItem("About");
-        JMenuItem helpMenuItem = new JMenuItem("Help");
-        infoMenu.add(aboutMenuItem);
-        infoMenu.add(helpMenuItem);
-        menuBar.add(infoMenu);
-        JMenu fileMenu = new JMenu("File");
-        JMenuItem newMenuItem = new JMenuItem("New");
-        JMenuItem loadMenuItem = new JMenuItem("Load");
-        JMenuItem saveMenuItem = new JMenuItem("Save");
-        JMenuItem quitMenuItem = new JMenuItem("Quit");
-        fileMenu.add(newMenuItem);
-        fileMenu.add(loadMenuItem);
-        fileMenu.add(saveMenuItem);
-        fileMenu.add(quitMenuItem);
-        menuBar.add(fileMenu);
-        JMenu viewMenu = new JMenu("View");
-        JMenuItem viewDataMenuItem = new JMenuItem("View Data");
-        JMenuItem zoomx2MenuItem = new JMenuItem("Zoom x2");
-        JMenuItem zoomx3MenuItem = new JMenuItem("Zoom x3");
-        JMenuItem zoomx4MenuItem = new JMenuItem("Zoom x4");
-        JMenuItem zoomx5MenuItem = new JMenuItem("Zoom x5");
-        viewMenu.add(viewDataMenuItem);
-        viewMenu.add(zoomx2MenuItem);
-        viewMenu.add(zoomx3MenuItem);
-        viewMenu.add(zoomx4MenuItem);
-        viewMenu.add(zoomx5MenuItem);
-        menuBar.add(viewMenu);
-        JMenu specialMenu = new JMenu("Special");
-        JMenuItem backgroundMenuItem = new JMenuItem("Background");
-        JMenuItem bandsMenuItem = new JMenuItem("Bands");
-        JMenuItem dualModeMenuItem = new JMenuItem("Dual Mode");
-        specialMenu.add(backgroundMenuItem);
-        specialMenu.add(bandsMenuItem);
-        specialMenu.add(dualModeMenuItem);
-        menuBar.add(specialMenu);
-        this.setJMenuBar(menuBar);
-        
+       
         this.add(picturePanel);
     }
 
