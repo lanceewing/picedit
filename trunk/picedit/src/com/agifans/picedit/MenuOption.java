@@ -2,6 +2,8 @@ package com.agifans.picedit;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An Enum presenting the possible menu selections.
@@ -13,19 +15,28 @@ public enum MenuOption {
     // This is effectively the menu system configuration.
     ABOUT("About", 0, 0, 2, new Rectangle(0, 0, 44, 8), new Rectangle(8, 16, 40, 8)), 
     HELP("Help", 0, 1, 2, null, new Rectangle(8, 24, 40, 8)), 
-    NEWPIC("New Picture", 1, 0, 4, new Rectangle(45, 0, 40, 8), new Rectangle(48, 16, 96, 8)), 
-    SAVEPIC("Save Picture", 1, 1, 4, null, new Rectangle(48, 24, 96, 8)), 
-    LOADPIC("Load Picture", 1, 2, 4, null, new Rectangle(48, 32, 96, 8)), 
+    NEW_PICTURE("New Picture", 1, 0, 4, new Rectangle(45, 0, 40, 8), new Rectangle(48, 16, 96, 8)), 
+    SAVE_PICTURE("Save Picture", 1, 1, 4, null, new Rectangle(48, 24, 96, 8)), 
+    LOAD_PICTURE("Load Picture", 1, 2, 4, null, new Rectangle(48, 32, 96, 8)), 
     QUIT("Quit", 1, 3, 4, null, new Rectangle(48, 40, 96, 8)), 
-    VIEWDATA("View Data", 2, 0, 5, new Rectangle(84, 0, 40, 8), new Rectangle(88, 16, 72, 8)), 
-    ZOOMX2("Zoom x2", 2, 1, 5, null, new Rectangle(88, 24, 72, 8)), 
-    ZOOMX3("Zoom x3", 2, 2, 5, null, new Rectangle(88, 32, 72, 8)), 
-    ZOOMX4("Zoom x4", 2, 3, 5, null, new Rectangle(88, 40, 72, 8)), 
-    ZOOMX5("Zoom x5", 2, 4, 5, null, new Rectangle(88, 48, 72, 8)), 
+    VIEW_DATA("View Data", 2, 0, 5, new Rectangle(84, 0, 40, 8), new Rectangle(88, 16, 72, 8)), 
+    ZOOM_X2("Zoom x2", 2, 1, 5, null, new Rectangle(88, 24, 72, 8)), 
+    ZOOM_X3("Zoom x3", 2, 2, 5, null, new Rectangle(88, 32, 72, 8)), 
+    ZOOM_X4("Zoom x4", 2, 3, 5, null, new Rectangle(88, 40, 72, 8)), 
+    ZOOM_X5("Zoom x5", 2, 4, 5, null, new Rectangle(88, 48, 72, 8)), 
     BACKGROUND("Background", 3, 0, 3, new Rectangle(124, 0, 196, 8), new Rectangle(136, 16, 80, 8)), 
     BANDS("Bands", 3, 1, 3, null, new Rectangle(136, 24, 80, 8)), 
-    DUALMODE("Dual Mode", 3, 2, 3, null, new Rectangle(136, 32, 80, 8));
+    DUAL_MODE("Dual Mode", 3, 2, 3, null, new Rectangle(136, 32, 80, 8));
 
+    // Holds mapping between the display values and the MenuOption it belongs to.
+    private static Map<String, MenuOption> displayValueMap;
+    static {
+        displayValueMap = new HashMap<String, MenuOption>();
+        for (MenuOption menuOption : MenuOption.values()) {
+            displayValueMap.put(menuOption.displayName, menuOption);
+        }
+    }
+    
     private String displayName;
     private int barOption;
     private int itemOption;
@@ -118,31 +129,31 @@ public enum MenuOption {
                 menuOption = HELP;
                 break;
             case 0x10:
-                menuOption = NEWPIC;
+                menuOption = NEW_PICTURE;
                 break;
             case 0x11:
-                menuOption = SAVEPIC;
+                menuOption = SAVE_PICTURE;
                 break;
             case 0x12:
-                menuOption = LOADPIC;
+                menuOption = LOAD_PICTURE;
                 break;
             case 0x13:
                 menuOption = QUIT;
                 break;
             case 0x20:
-                menuOption = VIEWDATA;
+                menuOption = VIEW_DATA;
                 break;
             case 0x21:
-                menuOption = ZOOMX2;
+                menuOption = ZOOM_X2;
                 break;
             case 0x22:
-                menuOption = ZOOMX3;
+                menuOption = ZOOM_X3;
                 break;
             case 0x23:
-                menuOption = ZOOMX4;
+                menuOption = ZOOM_X4;
                 break;
             case 0x24:
-                menuOption = ZOOMX5;
+                menuOption = ZOOM_X5;
                 break;
             case 0x30:
                 menuOption = BACKGROUND;
@@ -151,13 +162,24 @@ public enum MenuOption {
                 menuOption = BANDS;
                 break;
             case 0x32:
-                menuOption = DUALMODE;
+                menuOption = DUAL_MODE;
                 break;
         }
 
         return menuOption;
     }
 
+    /**
+     * Gets the MenuOption that has a display value that matches the given value.
+     * 
+     * @param displayValue The display value to get the MenuOption for.
+     * 
+     * @return The matching MenuOption.
+     */
+    public static MenuOption getMenuOption(String displayValue) {
+        return displayValueMap.get(displayValue);
+    }
+    
     public String toString() {
         return displayName;
     }
