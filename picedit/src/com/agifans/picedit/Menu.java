@@ -6,6 +6,9 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 /**
@@ -45,8 +48,54 @@ public class Menu extends CommonHandler {
         // allows the directory to be remembered between uses. Default to the current
         // directory.
         this.fileChooser = new JFileChooser(new File(".").getAbsolutePath());
+        
+        createMenuItems();
     }
 
+    /**
+     * Creates and configures the menu items used by PICEDIT.
+     */
+    private void createMenuItems() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu infoMenu = new JMenu("Info");
+        JMenuItem aboutMenuItem = new JMenuItem("About");
+        JMenuItem helpMenuItem = new JMenuItem("Help");
+        infoMenu.add(aboutMenuItem);
+        infoMenu.add(helpMenuItem);
+        menuBar.add(infoMenu);
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem newMenuItem = new JMenuItem("New");
+        JMenuItem loadMenuItem = new JMenuItem("Load");
+        JMenuItem saveMenuItem = new JMenuItem("Save");
+        JMenuItem quitMenuItem = new JMenuItem("Quit");
+        fileMenu.add(newMenuItem);
+        fileMenu.add(loadMenuItem);
+        fileMenu.add(saveMenuItem);
+        fileMenu.add(quitMenuItem);
+        menuBar.add(fileMenu);
+        JMenu viewMenu = new JMenu("View");
+        JMenuItem viewDataMenuItem = new JMenuItem("View Data");
+        JMenuItem zoomx2MenuItem = new JMenuItem("Zoom x2");
+        JMenuItem zoomx3MenuItem = new JMenuItem("Zoom x3");
+        JMenuItem zoomx4MenuItem = new JMenuItem("Zoom x4");
+        JMenuItem zoomx5MenuItem = new JMenuItem("Zoom x5");
+        viewMenu.add(viewDataMenuItem);
+        viewMenu.add(zoomx2MenuItem);
+        viewMenu.add(zoomx3MenuItem);
+        viewMenu.add(zoomx4MenuItem);
+        viewMenu.add(zoomx5MenuItem);
+        menuBar.add(viewMenu);
+        JMenu specialMenu = new JMenu("Special");
+        JMenuItem backgroundMenuItem = new JMenuItem("Background");
+        JMenuItem bandsMenuItem = new JMenuItem("Bands");
+        JMenuItem dualModeMenuItem = new JMenuItem("Dual Mode");
+        specialMenu.add(backgroundMenuItem);
+        specialMenu.add(bandsMenuItem);
+        specialMenu.add(dualModeMenuItem);
+        menuBar.add(specialMenu);
+        application.setJMenuBar(menuBar);
+    }
+    
     /**
      * Draws the menu bar and the currently selected drop down and menu item.
      */
