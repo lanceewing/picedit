@@ -57,6 +57,15 @@ public final class PicEdit extends JApplet {
     }
 
     /**
+     * Returns the panel that holds the picture.
+     * 
+     * @return The panel that holds the picture.
+     */
+    public PicturePanel getPicturePanel() {
+        return this.picturePanel;
+    }
+    
+    /**
      * Resizes the screen according to the new zoom factor.
      * 
      * @param zoomFactor the new zoom factor.

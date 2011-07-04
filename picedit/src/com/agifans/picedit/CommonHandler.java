@@ -53,7 +53,7 @@ public abstract class CommonHandler {
      * The PICEDIT application component.
      */
     protected PicEdit application;
-
+    
     /**
      * Constructor for CommonHandler.
      * 
@@ -110,14 +110,14 @@ public abstract class CommonHandler {
         picGraphics.drawString(inputLine.toString(), 231, 180, 7, 0);
 
         // Register a temporary KeyListener for getting the new position.
-        this.application.addKeyListener(new KeyAdapter() {
+        this.application.getPicturePanel().addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
 
                 if (key == KeyEvent.VK_ESCAPE) {
                     // Keep current position.
-                    application.removeKeyListener(this);
+                    application.getPicturePanel().removeKeyListener(this);
                     editStatus.setPaused(false);
                     picture.drawPicture();
                     picture.updateScreen();
@@ -130,7 +130,7 @@ public abstract class CommonHandler {
                     }
                 } else if (key == KeyEvent.VK_ENTER) {
                     // User has finished entering a position.
-                    application.removeKeyListener(this);
+                    application.getPicturePanel().removeKeyListener(this);
 
                     if (inputLine.length() > 0) {
                         // If the entered value is valid, apply the new position.
@@ -261,8 +261,8 @@ public abstract class CommonHandler {
         // Register a temporary key and mouse listener to wait for the key/mouse event. 
         keyListener[0] = new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
-                application.removeKeyListener(keyListener[0]);
-                application.removeMouseListener(mouseListener[0]);
+                application.getPicturePanel().removeKeyListener(keyListener[0]);
+                application.getPicturePanel().removeMouseListener(mouseListener[0]);
                 if (callback != null) {
                     callback.run();
                 } else {
@@ -273,8 +273,8 @@ public abstract class CommonHandler {
         };
         mouseListener[0] = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                application.removeKeyListener(keyListener[0]);
-                application.removeMouseListener(mouseListener[0]);
+                application.getPicturePanel().removeKeyListener(keyListener[0]);
+                application.getPicturePanel().removeMouseListener(mouseListener[0]);
                 if (callback != null) {
                     callback.run();
                 } else {
@@ -283,8 +283,8 @@ public abstract class CommonHandler {
                 }
             }
         };
-        application.addKeyListener(keyListener[0]);
-        application.addMouseListener(mouseListener[0]);
+        application.getPicturePanel().addKeyListener(keyListener[0]);
+        application.getPicturePanel().addMouseListener(mouseListener[0]);
 
         // The listeners are registered at this point. The method exits. The listeners
         // take care of the rest. They will unregister themselves once they've been
@@ -466,9 +466,9 @@ public abstract class CommonHandler {
 
                 if ((key == KeyEvent.VK_ESCAPE) || (key == KeyEvent.VK_ENTER)) {
                     // Exit the view data screen.
-                    application.removeKeyListener(keyListener[0]);
-                    application.removeMouseListener(mouseListener[0]);
-                    application.removeMouseWheelListener(mouseListener[0]);
+                    application.getPicturePanel().removeKeyListener(keyListener[0]);
+                    application.getPicturePanel().removeMouseListener(mouseListener[0]);
+                    application.getPicturePanel().removeMouseWheelListener(mouseListener[0]);
                     editStatus.setPaused(false);
                     editStatus.setTextMode(false);
                 } else if (key == KeyEvent.VK_UP) {
@@ -499,9 +499,9 @@ public abstract class CommonHandler {
         };
         mouseListener[0] = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                application.removeKeyListener(keyListener[0]);
-                application.removeMouseListener(mouseListener[0]);
-                application.removeMouseWheelListener(mouseListener[0]);
+                application.getPicturePanel().removeKeyListener(keyListener[0]);
+                application.getPicturePanel().removeMouseListener(mouseListener[0]);
+                application.getPicturePanel().removeMouseWheelListener(mouseListener[0]);
                 editStatus.setPaused(false);
                 editStatus.setTextMode(false);
             }
@@ -521,9 +521,9 @@ public abstract class CommonHandler {
                 showPageOfHexData(startPos[0]);
             }
         };
-        application.addKeyListener(keyListener[0]);
-        application.addMouseListener(mouseListener[0]);
-        application.addMouseWheelListener(mouseListener[0]);
+        application.getPicturePanel().addKeyListener(keyListener[0]);
+        application.getPicturePanel().addMouseListener(mouseListener[0]);
+        application.getPicturePanel().addMouseWheelListener(mouseListener[0]);
 
         // The listeners are registered at this point. The method exits. The listeners
         // take care of the rest. They will unregister themselves once they've been
