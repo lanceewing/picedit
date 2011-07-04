@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -109,9 +110,9 @@ public class Menu extends CommonHandler implements ActionListener {
         
         // Create the Special menu.
         JMenu specialMenu = new JMenu("Special");
-        JMenuItem backgroundMenuItem = new JMenuItem("Background");
-        JMenuItem bandsMenuItem = new JMenuItem("Bands");
-        JMenuItem dualModeMenuItem = new JMenuItem("Dual Mode");
+        JMenuItem backgroundMenuItem = new JCheckBoxMenuItem("Background");
+        JMenuItem bandsMenuItem = new JCheckBoxMenuItem("Bands");
+        JMenuItem dualModeMenuItem = new JCheckBoxMenuItem("Dual Mode");
         backgroundMenuItem.addActionListener(this);
         bandsMenuItem.addActionListener(this);
         dualModeMenuItem.addActionListener(this);
@@ -375,17 +376,27 @@ public class Menu extends CommonHandler implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent event) {
-        processMenuSelection(MenuOption.getMenuOption(event.getActionCommand()));
+        boolean success = processMenuSelection(MenuOption.getMenuOption(event.getActionCommand()));
+        if (!success) {
+            // If the selection was not successfully processed, and it was a checkbox
+            // menu item, then uncheck it.
+            if (event.getSource() instanceof JCheckBoxMenuItem) {
+                ((JCheckBoxMenuItem)event.getSource()).setState(false);
+            }
+        }
     }
 
     /**
      * Processes the selection of a menu item.
      * 
      * @param menuOption the selected MenuOption to process.
+     * 
+     * @return true if the MenuOption was successfully processed.
      */
-    private void processMenuSelection(MenuOption menuOption) {
+    private boolean processMenuSelection(MenuOption menuOption) {
+        boolean success = true;
+        
         switch (menuOption) {
-
             case NEW_PICTURE:
                 Object[] newOptions = { "New", "Cancel" };
                 int newAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to create a new picture?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, newOptions, newOptions[0]);
@@ -462,6 +473,7 @@ public class Menu extends CommonHandler implements ActionListener {
                             loadBackgroundImage(selectedFile);
                         }
                     }
+                    success = editStatus.isBackgroundEnabled();
                 }
                 break;
 
@@ -473,5 +485,7 @@ public class Menu extends CommonHandler implements ActionListener {
                 editStatus.setDualModeEnabled(!editStatus.isDualModeEnabled());
                 break;
         }
+        
+        return success;
     }
 }
