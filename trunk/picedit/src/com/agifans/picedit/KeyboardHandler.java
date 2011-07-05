@@ -33,14 +33,7 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
 
         if (editStatus.isPaused()) {
             // Ignore key events if the application is paused.
-        } else if (editStatus.isMenuActive()) {
-            // If menu system is active, send the event to the meny system to process.
-            menu.processKeyEvent(e);
         } else {
-            if (key == KeyEvent.VK_ESCAPE) {
-                // Activate menu system.
-                menu.processKeyEvent(e);
-            }
             if (key == KeyEvent.VK_TAB) {
                 // Switches between the two screens.
                 processTogglePriorityScreen();
