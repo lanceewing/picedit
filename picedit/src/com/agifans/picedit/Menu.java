@@ -2,6 +2,7 @@ package com.agifans.picedit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -10,6 +11,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 /**
  * This class manages the menu system.
@@ -48,22 +50,16 @@ public class Menu extends CommonHandler implements ActionListener {
     private void createMenuItems() {
         JMenuBar menuBar = new JMenuBar();
         
-        // Create the Info menu.
-        JMenu infoMenu = new JMenu("Info");
-        JMenuItem aboutMenuItem = new JMenuItem(MenuOption.ABOUT.getDisplayValue());
-        JMenuItem helpMenuItem = new JMenuItem(MenuOption.HELP.getDisplayValue());
-        aboutMenuItem.addActionListener(this);
-        helpMenuItem.addActionListener(this);
-        infoMenu.add(aboutMenuItem);
-        infoMenu.add(helpMenuItem);
-        menuBar.add(infoMenu);
-        
         // Create the File menu.
         JMenu fileMenu = new JMenu("File");
-        JMenuItem newMenuItem = new JMenuItem(MenuOption.NEW_PICTURE.getDisplayValue());
-        JMenuItem loadMenuItem = new JMenuItem(MenuOption.LOAD_PICTURE.getDisplayValue());
-        JMenuItem saveMenuItem = new JMenuItem(MenuOption.SAVE_PICTURE.getDisplayValue());
-        JMenuItem quitMenuItem = new JMenuItem(MenuOption.QUIT.getDisplayValue());
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        JMenuItem newMenuItem = new JMenuItem(MenuOption.NEW_PICTURE.getDisplayValue(), KeyEvent.VK_N);
+        newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+        JMenuItem loadMenuItem = new JMenuItem(MenuOption.OPEN_PICTURE.getDisplayValue(), KeyEvent.VK_O);
+        loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        JMenuItem saveMenuItem = new JMenuItem(MenuOption.SAVE_PICTURE.getDisplayValue(), KeyEvent.VK_S);
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        JMenuItem quitMenuItem = new JMenuItem(MenuOption.EXIT.getDisplayValue(), KeyEvent.VK_X);
         newMenuItem.addActionListener(this);
         loadMenuItem.addActionListener(this);
         saveMenuItem.addActionListener(this);
@@ -77,6 +73,7 @@ public class Menu extends CommonHandler implements ActionListener {
         
         // Create the View menu.
         JMenu viewMenu = new JMenu("View");
+        viewMenu.setMnemonic(KeyEvent.VK_V);
         JMenuItem viewDataMenuItem = new JMenuItem(MenuOption.VIEW_DATA.getDisplayValue());
         JMenuItem zoomx2MenuItem = new JMenuItem(MenuOption.ZOOM_X2.getDisplayValue());
         JMenuItem zoomx3MenuItem = new JMenuItem(MenuOption.ZOOM_X3.getDisplayValue());
@@ -97,6 +94,7 @@ public class Menu extends CommonHandler implements ActionListener {
         
         // Create the Special menu.
         JMenu specialMenu = new JMenu("Special");
+        specialMenu.setMnemonic(KeyEvent.VK_S);
         JMenuItem backgroundMenuItem = new JCheckBoxMenuItem(MenuOption.BACKGROUND.getDisplayValue());
         JMenuItem bandsMenuItem = new JCheckBoxMenuItem(MenuOption.BANDS.getDisplayValue());
         JMenuItem dualModeMenuItem = new JCheckBoxMenuItem(MenuOption.DUAL_MODE.getDisplayValue());
@@ -107,6 +105,18 @@ public class Menu extends CommonHandler implements ActionListener {
         specialMenu.add(bandsMenuItem);
         specialMenu.add(dualModeMenuItem);
         menuBar.add(specialMenu);
+
+        // Create the Info menu.
+        JMenu infoMenu = new JMenu("Help");
+        infoMenu.setMnemonic(KeyEvent.VK_H);
+        JMenuItem helpMenuItem = new JMenuItem(MenuOption.HELP.getDisplayValue(), KeyEvent.VK_H);
+        JMenuItem aboutMenuItem = new JMenuItem(MenuOption.ABOUT.getDisplayValue(), KeyEvent.VK_A);
+        helpMenuItem.addActionListener(this);
+        aboutMenuItem.addActionListener(this);
+        infoMenu.add(helpMenuItem);
+        infoMenu.addSeparator();
+        infoMenu.add(aboutMenuItem);
+        menuBar.add(infoMenu);
         
         application.setJMenuBar(menuBar);
     }
@@ -162,7 +172,7 @@ public class Menu extends CommonHandler implements ActionListener {
                 }
                 break;
 
-            case LOAD_PICTURE:
+            case OPEN_PICTURE:
                 if (fileChooser.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     if (selectedFile != null) {
@@ -180,7 +190,7 @@ public class Menu extends CommonHandler implements ActionListener {
                 }
                 break;
 
-            case QUIT:
+            case EXIT:
                 Object[] quitOptions = { "Quit", "Cancel" };
                 int quitAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to Quit?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, quitOptions, quitOptions[0]);
                 if (quitAnswer == JOptionPane.YES_OPTION) {
