@@ -10,12 +10,12 @@ import java.util.Map;
  */
 public enum MenuOption {
 
-    ABOUT("About"), 
-    HELP("Help"), 
+    ABOUT("About PICEDIT"), 
+    HELP("Help Pages"), 
     NEW_PICTURE("New Picture"), 
     SAVE_PICTURE("Save Picture"), 
-    LOAD_PICTURE("Load Picture"), 
-    QUIT("Quit"), 
+    OPEN_PICTURE("Open Picture..."), 
+    EXIT("Exit"), 
     VIEW_DATA("View Data"), 
     ZOOM_X2("Zoom x2"), 
     ZOOM_X3("Zoom x3"), 
