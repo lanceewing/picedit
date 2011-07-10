@@ -204,15 +204,18 @@ public class Menu extends CommonHandler implements ActionListener {
                 break;
 
             case SAVE_AS:
-                if (fileChooser.showSaveDialog(this.application) == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    if (selectedFile != null) {
-                        savePicture(selectedFile);
-                    }
-                }
-                break;
-                
             case SAVE:
+                if ((editStatus.getPictureName() == null) || MenuOption.SAVE_AS.equals(menuOption)) {
+                    if (fileChooser.showSaveDialog(this.application) == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        if (selectedFile != null) {
+                            savePicture(selectedFile);
+                        }
+                    }
+                } else {
+                    File selectedFile = new File(fileChooser.getCurrentDirectory(), editStatus.getPictureName());
+                    savePicture(selectedFile);
+                }
                 break;
 
             case EXIT:
