@@ -12,9 +12,10 @@ public enum MenuOption {
 
     ABOUT("About PICEDIT"), 
     HELP("Help Pages"), 
-    NEW_PICTURE("New Picture"), 
-    SAVE_PICTURE("Save Picture"), 
-    OPEN_PICTURE("Open Picture..."), 
+    NEW("New"), 
+    SAVE("Save"),
+    SAVE_AS("Save As..."), 
+    OPEN("Open..."), 
     EXIT("Exit"), 
     VIEW_DATA("View Data"), 
     ZOOM_X2("Zoom x2"), 
