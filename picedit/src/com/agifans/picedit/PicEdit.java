@@ -44,7 +44,7 @@ public final class PicEdit extends JApplet {
     @SuppressWarnings("unchecked")
     public PicEdit() {
         this.editStatus = new EditStatus();
-        this.editStatus.setZoomFactor(1);
+        this.editStatus.setZoomFactor(3);
         this.picGraphics = new PicGraphics(this, 25);
         this.picture = new Picture(editStatus, picGraphics);
         this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, this);
@@ -99,7 +99,14 @@ public final class PicEdit extends JApplet {
         
         // If we are in a window then update the title to show the current picture name.
         if (SwingUtilities.getRoot(this) instanceof JFrame) {
-            ((JFrame) SwingUtilities.getRoot(this)).setTitle(PICEDIT_NAME + " - " + editStatus.getPictureName());
+            StringBuilder title = new StringBuilder(PICEDIT_NAME);
+            title.append(" - ");
+            if (editStatus.getPictureName() == null) {
+                title.append("Untitled");
+            } else {
+                title.append(editStatus.getPictureName());
+            }
+            ((JFrame) SwingUtilities.getRoot(this)).setTitle(title.toString());
         }
     }
     

@@ -160,7 +160,7 @@ public class EditStatus {
             backgroundEnabled = false;
             dualModeEnabled = false;
             bandsOn = false;
-            pictureName = "Untitled";
+            pictureName = null;
         }
         clearLastRenderedState();
         clearTool();

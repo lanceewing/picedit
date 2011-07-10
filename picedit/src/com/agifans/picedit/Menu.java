@@ -1,5 +1,6 @@
 package com.agifans.picedit;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -50,31 +51,44 @@ public class Menu extends CommonHandler implements ActionListener {
     private void createMenuItems() {
         JMenuBar menuBar = new JMenuBar();
         
+        // Get the shortcut key for this platform (e.g. "cmd" key on the Mac).
+        int acceleratorKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        
         // Create the File menu.
         JMenu fileMenu = new JMenu("File");
         fileMenu.setMnemonic(KeyEvent.VK_F);
-        JMenuItem newMenuItem = new JMenuItem(MenuOption.NEW_PICTURE.getDisplayValue(), KeyEvent.VK_N);
-        newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-        JMenuItem loadMenuItem = new JMenuItem(MenuOption.OPEN_PICTURE.getDisplayValue(), KeyEvent.VK_O);
-        loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
-        JMenuItem saveMenuItem = new JMenuItem(MenuOption.SAVE_PICTURE.getDisplayValue(), KeyEvent.VK_S);
-        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        JMenuItem newMenuItem = new JMenuItem(MenuOption.NEW.getDisplayValue(), KeyEvent.VK_N);
+        newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, acceleratorKey));
+        JMenuItem loadMenuItem = new JMenuItem(MenuOption.OPEN.getDisplayValue(), KeyEvent.VK_O);
+        loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, acceleratorKey));
+        JMenuItem saveMenuItem = new JMenuItem(MenuOption.SAVE.getDisplayValue(), KeyEvent.VK_S);
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, acceleratorKey));
+        JMenuItem saveAsMenuItem = new JMenuItem(MenuOption.SAVE_AS.getDisplayValue(), KeyEvent.VK_A);
         JMenuItem quitMenuItem = new JMenuItem(MenuOption.EXIT.getDisplayValue(), KeyEvent.VK_X);
         newMenuItem.addActionListener(this);
         loadMenuItem.addActionListener(this);
         saveMenuItem.addActionListener(this);
+        saveAsMenuItem.addActionListener(this);
         quitMenuItem.addActionListener(this);
         fileMenu.add(newMenuItem);
         fileMenu.add(loadMenuItem);
+        fileMenu.addSeparator();
         fileMenu.add(saveMenuItem);
+        fileMenu.add(saveAsMenuItem);
         fileMenu.addSeparator();
         fileMenu.add(quitMenuItem);
         menuBar.add(fileMenu);
         
+        // Create the Edit menu.
+        JMenu editMenu = new JMenu("Edit");
+        editMenu.setMnemonic(KeyEvent.VK_E);
+        editMenu.setEnabled(false);
+        menuBar.add(editMenu);
+        
         // Create the View menu.
         JMenu viewMenu = new JMenu("View");
         viewMenu.setMnemonic(KeyEvent.VK_V);
-        JMenuItem viewDataMenuItem = new JMenuItem(MenuOption.VIEW_DATA.getDisplayValue());
+        JMenuItem viewDataMenuItem = new JMenuItem(MenuOption.VIEW_DATA.getDisplayValue(), KeyEvent.VK_V);
         JMenuItem zoomx2MenuItem = new JMenuItem(MenuOption.ZOOM_X2.getDisplayValue());
         JMenuItem zoomx3MenuItem = new JMenuItem(MenuOption.ZOOM_X3.getDisplayValue());
         JMenuItem zoomx4MenuItem = new JMenuItem(MenuOption.ZOOM_X4.getDisplayValue());
@@ -86,18 +100,26 @@ public class Menu extends CommonHandler implements ActionListener {
         zoomx5MenuItem.addActionListener(this);
         viewMenu.add(viewDataMenuItem);
         viewMenu.addSeparator();
-        viewMenu.add(zoomx2MenuItem);
-        viewMenu.add(zoomx3MenuItem);
-        viewMenu.add(zoomx4MenuItem);
-        viewMenu.add(zoomx5MenuItem);
+        JMenu zoomMenu = new JMenu("Zoom");
+        zoomMenu.setMnemonic(KeyEvent.VK_Z);
+        zoomMenu.add(zoomx2MenuItem);
+        zoomMenu.add(zoomx3MenuItem);
+        zoomMenu.add(zoomx4MenuItem);
+        zoomMenu.add(zoomx5MenuItem);
+        viewMenu.add(zoomMenu);
         menuBar.add(viewMenu);
         
         // Create the Special menu.
         JMenu specialMenu = new JMenu("Special");
         specialMenu.setMnemonic(KeyEvent.VK_S);
         JMenuItem backgroundMenuItem = new JCheckBoxMenuItem(MenuOption.BACKGROUND.getDisplayValue());
+        backgroundMenuItem.setMnemonic(KeyEvent.VK_G);
         JMenuItem bandsMenuItem = new JCheckBoxMenuItem(MenuOption.BANDS.getDisplayValue());
+        bandsMenuItem.setMnemonic(KeyEvent.VK_B);
+        bandsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, acceleratorKey));
         JMenuItem dualModeMenuItem = new JCheckBoxMenuItem(MenuOption.DUAL_MODE.getDisplayValue());
+        dualModeMenuItem.setMnemonic(KeyEvent.VK_D);
+        dualModeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, acceleratorKey));
         backgroundMenuItem.addActionListener(this);
         bandsMenuItem.addActionListener(this);
         dualModeMenuItem.addActionListener(this);
@@ -161,7 +183,7 @@ public class Menu extends CommonHandler implements ActionListener {
         boolean success = true;
         
         switch (menuOption) {
-            case NEW_PICTURE:
+            case NEW:
                 Object[] newOptions = { "New", "Cancel" };
                 int newAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to create a new picture?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, newOptions, newOptions[0]);
                 if (newAnswer == JOptionPane.YES_OPTION) {
@@ -172,7 +194,7 @@ public class Menu extends CommonHandler implements ActionListener {
                 }
                 break;
 
-            case OPEN_PICTURE:
+            case OPEN:
                 if (fileChooser.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     if (selectedFile != null) {
@@ -181,13 +203,16 @@ public class Menu extends CommonHandler implements ActionListener {
                 }
                 break;
 
-            case SAVE_PICTURE:
+            case SAVE_AS:
                 if (fileChooser.showSaveDialog(this.application) == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     if (selectedFile != null) {
                         savePicture(selectedFile);
                     }
                 }
+                break;
+                
+            case SAVE:
                 break;
 
             case EXIT:
