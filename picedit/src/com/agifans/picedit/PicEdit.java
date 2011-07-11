@@ -1,6 +1,8 @@
 package com.agifans.picedit;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.*;
 import javax.swing.*;
 
@@ -49,7 +51,6 @@ public final class PicEdit extends JApplet {
     @SuppressWarnings("unchecked")
     public PicEdit() {
         this.editStatus = new EditStatus();
-        this.editStatus.setZoomFactor(3);
         this.picGraphics = new PicGraphics(this, 25);
         this.picture = new Picture(editStatus, picGraphics);
         this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, this);
@@ -123,9 +124,14 @@ public final class PicEdit extends JApplet {
      * Run PICEDIT as a standalone Java application.
      */
     public static void main(String[] args) {
-        PicEdit app = new PicEdit();
+        final PicEdit app = new PicEdit();
 
         JFrame frame = new JFrame();
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent event) {
+                app.editStatus.savePreferences();
+            }
+        });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.getContentPane().add(app, BorderLayout.CENTER);
