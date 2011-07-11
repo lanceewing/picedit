@@ -13,13 +13,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 /**
  * This class manages the menu system.
  * 
  * @author Lance Ewing
  */
-public class Menu extends CommonHandler implements ActionListener {
+public class Menu extends CommonHandler implements ActionListener, MenuListener {
 
     /**
      * File chooser used by all open and save dialogs.
@@ -77,12 +79,14 @@ public class Menu extends CommonHandler implements ActionListener {
         fileMenu.add(saveAsMenuItem);
         fileMenu.addSeparator();
         fileMenu.add(quitMenuItem);
+        fileMenu.addMenuListener(this);
         menuBar.add(fileMenu);
         
         // Create the Edit menu.
         JMenu editMenu = new JMenu("Edit");
         editMenu.setMnemonic(KeyEvent.VK_E);
         editMenu.setEnabled(false);
+        editMenu.addMenuListener(this);
         menuBar.add(editMenu);
         
         // Create the View menu.
@@ -106,7 +110,9 @@ public class Menu extends CommonHandler implements ActionListener {
         zoomMenu.add(zoomx3MenuItem);
         zoomMenu.add(zoomx4MenuItem);
         zoomMenu.add(zoomx5MenuItem);
+        zoomMenu.addMenuListener(this);
         viewMenu.add(zoomMenu);
+        viewMenu.addMenuListener(this);
         menuBar.add(viewMenu);
         
         // Create the Special menu.
@@ -126,31 +132,44 @@ public class Menu extends CommonHandler implements ActionListener {
         specialMenu.add(backgroundMenuItem);
         specialMenu.add(bandsMenuItem);
         specialMenu.add(dualModeMenuItem);
+        specialMenu.addMenuListener(this);
         menuBar.add(specialMenu);
 
         // Create the Info menu.
-        JMenu infoMenu = new JMenu("Help");
-        infoMenu.setMnemonic(KeyEvent.VK_H);
+        JMenu helpMenu = new JMenu("Help");
+        helpMenu.setMnemonic(KeyEvent.VK_H);
         JMenuItem helpMenuItem = new JMenuItem(MenuOption.HELP.getDisplayValue(), KeyEvent.VK_H);
         JMenuItem aboutMenuItem = new JMenuItem(MenuOption.ABOUT.getDisplayValue(), KeyEvent.VK_A);
         helpMenuItem.addActionListener(this);
         aboutMenuItem.addActionListener(this);
-        infoMenu.add(helpMenuItem);
-        infoMenu.addSeparator();
-        infoMenu.add(aboutMenuItem);
-        menuBar.add(infoMenu);
+        helpMenu.add(helpMenuItem);
+        helpMenu.addSeparator();
+        helpMenu.add(aboutMenuItem);
+        helpMenu.addMenuListener(this);
+        menuBar.add(helpMenu);
         
         application.setJMenuBar(menuBar);
     }
 
     /**
-     * Closes the menu system.
+     * Invoked when one of the menus is cancelled.
      */
-    public void closeMenuSystem() {
-        editStatus.setMenuActive(false);
-        editStatus.clearLastRenderedState();
-        picture.updateScreen();
-        picGraphics.drawLine(0, 8, 319, 8, 1);
+    public void menuCanceled(MenuEvent e) {
+      editStatus.setMenuActive(false);
+    }
+
+    /**
+     * Invoked when one of the menus is deselected.
+     */
+    public void menuDeselected(MenuEvent e) {
+      editStatus.setMenuActive(false);
+    }
+
+    /**
+     * Invoked when one of the menus is selected.
+     */
+    public void menuSelected(MenuEvent e) {
+      editStatus.setMenuActive(true);
     }
 
     /**
