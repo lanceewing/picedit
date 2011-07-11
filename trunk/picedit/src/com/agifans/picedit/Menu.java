@@ -155,21 +155,19 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      * Invoked when one of the menus is cancelled.
      */
     public void menuCanceled(MenuEvent e) {
-      editStatus.setMenuActive(false);
     }
 
     /**
      * Invoked when one of the menus is deselected.
      */
     public void menuDeselected(MenuEvent e) {
-      editStatus.setMenuActive(false);
     }
 
     /**
      * Invoked when one of the menus is selected.
      */
     public void menuSelected(MenuEvent e) {
-      editStatus.setMenuActive(true);
+        editStatus.setMenuActive(true);
     }
 
     /**

@@ -229,8 +229,13 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     public void mousePressed(MouseEvent event) {
         Point mousePoint = getPoint();
 
-        if (editStatus.isPaused() || editStatus.isMenuActive()) {
-            // If paused or menu system active then ignore mouse clicks.
+        System.out.println("Mouse pressed");
+        
+        if (editStatus.isPaused()) {
+            // If paused then ignore mouse clicks.
+        } else if (editStatus.isMenuActive()) {
+            // If menu was active and we received a mouse click, then set menu active false again.
+            editStatus.setMenuActive(false);
         } else {
             if (statusRect.contains(mousePoint)) {
               // TODO: Now that the menu is not activated here, it opens up more possibilities for the status bar.
