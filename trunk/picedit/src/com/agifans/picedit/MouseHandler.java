@@ -64,11 +64,10 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param editStatus the EditStatus holding current picture editor state.
      * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
      * @param picture the AGI PICTURE currently being edited.
-     * @param menu the menu system used by PICEDIT.
      * @param application the PICEDIT application component.
      */
-    public MouseHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, Menu menu, PicEdit application) {
-        super(editStatus, picGraphics, picture, menu, application);
+    public MouseHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
+        super(editStatus, picGraphics, picture, application);
 
         // Create the bounding boxes for all of the UI buttons.
         createBoundingBoxes();

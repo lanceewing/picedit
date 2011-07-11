@@ -39,6 +39,11 @@ public final class PicEdit extends JApplet {
     private PicturePanel picturePanel;
 
     /**
+     * The PICEDIT menu handler.
+     */
+    private Menu menu;
+    
+    /**
      * Constructor for PicEdit.
      */
     @SuppressWarnings("unchecked")
@@ -53,6 +58,10 @@ public final class PicEdit extends JApplet {
         this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
        
+        // Create the menu and register the menu event listeners.
+        this.menu = new Menu(editStatus, picGraphics, picture, this);
+        
+        // Add the panel that holds the picture that is being edited.
         this.add(picturePanel);
     }
 

@@ -45,11 +45,6 @@ public abstract class CommonHandler {
     protected Picture picture;
 
     /**
-     * The PICEDIT menu system.
-     */
-    protected Menu menu;
-
-    /**
      * The PICEDIT application component.
      */
     protected PicEdit application;
@@ -60,14 +55,12 @@ public abstract class CommonHandler {
      * @param editStatus the EditStatus holding current picture editor state.
      * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
      * @param picture the AGI PICTURE currently being edited.
-     * @param menu the menu system used by PICEDIT.
      * @param application the PICEDIT application component.
      */
-    public CommonHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, Menu menu, PicEdit application) {
+    public CommonHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
         this.editStatus = editStatus;
         this.picGraphics = picGraphics;
         this.picture = picture;
-        this.menu = menu;
         this.application = application;
     }
 

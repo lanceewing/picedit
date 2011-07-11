@@ -29,6 +29,11 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
     private JFileChooser fileChooser;
     
     /**
+     * The underlying Swing menu bar component.
+     */
+    private JMenuBar menuBar;
+    
+    /**
      * Constructor for Menu.
      * 
      * @param editStatus the EditStatus object holding the current picture editor state.
@@ -37,7 +42,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      * @param application the PICEDIT application component (used for opening dialogs)
      */
     public Menu(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
-        super(editStatus, picGraphics, picture, null, application);
+        super(editStatus, picGraphics, picture, application);
         
         // Set up a single JFileChooser for use with all open and save dialogs. This
         // allows the directory to be remembered between uses. Default to the current
@@ -48,10 +53,19 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
     }
 
     /**
+     * Gets the underlying Swing menu bar component.
+     * 
+     * @return The underlying Swing menu bar component.
+     */
+    public JMenuBar getMenuBar() {
+        return this.menuBar;
+    }
+    
+    /**
      * Creates and configures the menu items used by PICEDIT.
      */
     private void createMenuItems() {
-        JMenuBar menuBar = new JMenuBar();
+        this.menuBar = new JMenuBar();
         
         // Get the shortcut key for this platform (e.g. "cmd" key on the Mac).
         int acceleratorKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
