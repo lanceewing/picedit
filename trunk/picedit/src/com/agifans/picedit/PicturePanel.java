@@ -112,9 +112,7 @@ public class PicturePanel extends JPanel {
             // Other display the PICEDIT screen.
 
             // Make sure we are displaying the latest status information.
-            if (!editStatus.isMenuActive()) {
-                drawStatusLine();
-            }
+            drawStatusLine();
 
             // Update the brush panel if required.
             if (editStatus.getLastRenderedBrushCode() != editStatus.getBrushCode()) {
