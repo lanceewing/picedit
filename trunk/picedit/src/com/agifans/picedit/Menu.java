@@ -47,7 +47,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         // Set up a single JFileChooser for use with all open and save dialogs. This
         // allows the directory to be remembered between uses. Default to the current
         // directory.
-        this.fileChooser = new JFileChooser(new File(".").getAbsolutePath());
+        this.fileChooser = new JFileChooser(editStatus.getLastUsedDirectory());
         
         createMenuItems();
     }
@@ -134,12 +134,15 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         specialMenu.setMnemonic(KeyEvent.VK_S);
         JMenuItem backgroundMenuItem = new JCheckBoxMenuItem(MenuOption.BACKGROUND.getDisplayValue());
         backgroundMenuItem.setMnemonic(KeyEvent.VK_G);
+        backgroundMenuItem.setSelected(editStatus.isBackgroundEnabled());
         JMenuItem bandsMenuItem = new JCheckBoxMenuItem(MenuOption.BANDS.getDisplayValue());
         bandsMenuItem.setMnemonic(KeyEvent.VK_B);
         bandsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, acceleratorKey));
+        bandsMenuItem.setSelected(editStatus.isBandsOn());
         JMenuItem dualModeMenuItem = new JCheckBoxMenuItem(MenuOption.DUAL_MODE.getDisplayValue());
         dualModeMenuItem.setMnemonic(KeyEvent.VK_D);
         dualModeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, acceleratorKey));
+        dualModeMenuItem.setSelected(editStatus.isDualModeEnabled());
         backgroundMenuItem.addActionListener(this);
         bandsMenuItem.addActionListener(this);
         dualModeMenuItem.addActionListener(this);
@@ -253,6 +256,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 Object[] quitOptions = { "Quit", "Cancel" };
                 int quitAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to Quit?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, quitOptions, quitOptions[0]);
                 if (quitAnswer == JOptionPane.YES_OPTION) {
+                    editStatus.savePreferences();
                     System.exit(0);
                 }
                 break;
@@ -308,6 +312,9 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 editStatus.setDualModeEnabled(!editStatus.isDualModeEnabled());
                 break;
         }
+        
+        // Store the current directory in the edit status so it is saved in preferences.
+        editStatus.setLastUsedDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
         
         return success;
     }

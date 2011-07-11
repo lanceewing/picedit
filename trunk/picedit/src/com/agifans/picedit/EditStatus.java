@@ -1,7 +1,9 @@
 package com.agifans.picedit;
 
 import java.awt.Point;
+import java.io.File;
 import java.util.LinkedList;
+import java.util.prefs.Preferences;
 
 /**
  * This class holds everything about the current picture editing status.
@@ -20,6 +22,8 @@ public class EditStatus {
 
     public static final int LAST_VALUE_NONE = Integer.MIN_VALUE;
 
+    private Preferences prefs;
+    
     private ToolType tool;
 
     private int visualColour;
@@ -128,14 +132,40 @@ public class EditStatus {
      * The name of the picture being edited.
      */
     private String pictureName;
+    
+    /**
+     * The name of the most recently used directory.
+     */
+    private String lastUsedDirectory;
 
     /**
      * Constructor for EditStatus.
      */
     public EditStatus() {
         clear();
+        loadPreferences();
     }
 
+    /**
+     * Loads and applies the user preferences related to the Edit Status.
+     */
+    public void loadPreferences() {
+        prefs = Preferences.userNodeForPackage(this.getClass());
+        
+        this.lastUsedDirectory = prefs.get("LAST_USED_DIRECTORY", new File(".").getAbsolutePath());
+        this.zoomFactor = prefs.getInt("ZOOM_FACTOR", 3);
+        this.bandsOn = prefs.getBoolean("BANDS_ON", false);
+    }
+    
+    /**
+     * Saves the user preferences related to the Edit Status.
+     */
+    public void savePreferences() {
+        prefs.put("LAST_USED_DIRECTORY", this.lastUsedDirectory);
+        prefs.putInt("ZOOM_FACTOR", this.zoomFactor);
+        prefs.putBoolean("BANDS_ON", this.bandsOn);
+    }
+    
     public void clear() {
         clear(true);
     }
@@ -676,6 +706,14 @@ public class EditStatus {
     
     public void setPictureName(String pictureName) {
         this.pictureName = pictureName;
+    }
+    
+    public String getLastUsedDirectory() {
+        return this.lastUsedDirectory;
+    }
+    
+    public void setLastUsedDirectory(String lastUsedDirectory) {
+        this.lastUsedDirectory = lastUsedDirectory;
     }
     
     /**
