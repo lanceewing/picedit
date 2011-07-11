@@ -229,8 +229,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     public void mousePressed(MouseEvent event) {
         Point mousePoint = getPoint();
 
-        System.out.println("Mouse pressed");
-        
         if (editStatus.isPaused()) {
             // If paused then ignore mouse clicks.
         } else if (editStatus.isMenuActive()) {

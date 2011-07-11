@@ -142,6 +142,7 @@ public class EditStatus {
 
     public void clear(boolean clearPictureCodes) {
         tool = ToolType.NONE;
+        menuActive = false;
         visualColour = VISUAL_OFF;
         priorityColour = PRIORITY_OFF;
         controlColour = CONTROL_OFF;
