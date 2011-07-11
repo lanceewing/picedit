@@ -73,9 +73,8 @@ public class PicturePanel extends JPanel {
         // Draws the PICEDIT interface.
         drawInterface();
         
-        Menu menu = new Menu(editStatus, picGraphics, picture, application);
-        MouseHandler mouseHandler = new MouseHandler(editStatus, picGraphics, picture, menu, application);
-        KeyboardHandler keyboardHandler = new KeyboardHandler(editStatus, picGraphics, picture, menu, application);
+        MouseHandler mouseHandler = new MouseHandler(editStatus, picGraphics, picture, application);
+        KeyboardHandler keyboardHandler = new KeyboardHandler(editStatus, picGraphics, picture, application);
         
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);

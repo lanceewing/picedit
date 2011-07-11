@@ -16,11 +16,10 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
      * @param editStatus the EditStatus holding current picture editor state.
      * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
      * @param picture the AGI PICTURE currently being edited.
-     * @param menu the menu system used by PICEDIT.
      * @param application the PICEDIT application component.
      */
-    public KeyboardHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, Menu menu, PicEdit application) {
-        super(editStatus, picGraphics, picture, menu, application);
+    public KeyboardHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
+        super(editStatus, picGraphics, picture, application);
     }
 
     /**
