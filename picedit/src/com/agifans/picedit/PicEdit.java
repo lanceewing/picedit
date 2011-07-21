@@ -18,7 +18,7 @@ public final class PicEdit extends JApplet {
     /**
      * Constant for the name of the current version of PICEDIT.
      */
-    private static final String PICEDIT_NAME = "PICEDIT v1.3M1";
+    private static final String PICEDIT_NAME = "PICEDIT v1.3M2";
     
     /**
      * The graphics routines with which the application draws the screen.
@@ -39,7 +39,7 @@ public final class PicEdit extends JApplet {
      * The panel containing the picture being edited.
      */
     private PicturePanel picturePanel;
-
+    
     /**
      * The PICEDIT menu handler.
      */
@@ -62,10 +62,21 @@ public final class PicEdit extends JApplet {
         // Create the menu and register the menu event listeners.
         this.menu = new Menu(editStatus, picGraphics, picture, this);
         
+        this.getContentPane().setLayout(new BorderLayout());
+        
         // Add the panel that holds the picture that is being edited.
-        this.add(picturePanel);
+        this.getContentPane().add(picturePanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Returns the Menu used by PICEDIT.
+     * 
+     * @return The Menu used by PICEDIT.
+     */
+    public Menu getMenu() {
+        return menu;
+    }
+    
     /**
      * Returns the panel that holds the picture.
      * 
