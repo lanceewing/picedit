@@ -34,6 +34,11 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
     private JMenuBar menuBar;
     
     /**
+     * The menu item used for toggling display of the background image.
+     */
+    private JCheckBoxMenuItem backgroundMenuItem;
+    
+    /**
      * Constructor for Menu.
      * 
      * @param editStatus the EditStatus object holding the current picture editor state.
@@ -62,6 +67,15 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
     }
     
     /**
+     * Gets the menu item that toggles the background image.
+     * 
+     * @return The menu item that toggles the background image.
+     */
+    public JCheckBoxMenuItem getBackgroundMenuItem() {
+        return this.backgroundMenuItem;
+    }
+    
+    /**
      * Creates and configures the menu items used by PICEDIT.
      */
     private void createMenuItems() {
@@ -80,17 +94,21 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         JMenuItem saveMenuItem = new JMenuItem(MenuOption.SAVE.getDisplayValue(), KeyEvent.VK_S);
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, acceleratorKey));
         JMenuItem saveAsMenuItem = new JMenuItem(MenuOption.SAVE_AS.getDisplayValue(), KeyEvent.VK_A);
+        JMenuItem loadBackgroundItem = new JMenuItem(MenuOption.LOAD_BACKGROUND.getDisplayValue(), KeyEvent.VK_B);
         JMenuItem quitMenuItem = new JMenuItem(MenuOption.EXIT.getDisplayValue(), KeyEvent.VK_X);
         newMenuItem.addActionListener(this);
         loadMenuItem.addActionListener(this);
         saveMenuItem.addActionListener(this);
         saveAsMenuItem.addActionListener(this);
+        loadBackgroundItem.addActionListener(this);
         quitMenuItem.addActionListener(this);
         fileMenu.add(newMenuItem);
         fileMenu.add(loadMenuItem);
         fileMenu.addSeparator();
         fileMenu.add(saveMenuItem);
         fileMenu.add(saveAsMenuItem);
+        fileMenu.addSeparator();
+        fileMenu.add(loadBackgroundItem);
         fileMenu.addSeparator();
         fileMenu.add(quitMenuItem);
         fileMenu.addMenuListener(this);
@@ -132,7 +150,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         // Create the Special menu.
         JMenu specialMenu = new JMenu("Special");
         specialMenu.setMnemonic(KeyEvent.VK_S);
-        JMenuItem backgroundMenuItem = new JCheckBoxMenuItem(MenuOption.BACKGROUND.getDisplayValue());
+        backgroundMenuItem = new JCheckBoxMenuItem(MenuOption.BACKGROUND.getDisplayValue());
         backgroundMenuItem.setMnemonic(KeyEvent.VK_G);
         backgroundMenuItem.setSelected(editStatus.isBackgroundEnabled());
         JMenuItem bandsMenuItem = new JCheckBoxMenuItem(MenuOption.BANDS.getDisplayValue());
@@ -252,6 +270,17 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 }
                 break;
 
+            case LOAD_BACKGROUND:
+                if (fileChooser.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    if (selectedFile != null) {
+                        loadBackgroundImage(selectedFile);
+                    }
+                }
+                success = editStatus.isBackgroundEnabled();
+                backgroundMenuItem.setSelected(success);
+                break;
+                
             case EXIT:
                 Object[] quitOptions = { "Quit", "Cancel" };
                 int quitAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to Quit?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, quitOptions, quitOptions[0]);
@@ -290,18 +319,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 break;
 
             case BACKGROUND:
-                if (editStatus.isBackgroundEnabled()) {
-                    processToggleBackground();
-                    picGraphics.setBackgroundImage(null);
-                } else {
-                    if (fileChooser.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        if (selectedFile != null) {
-                            loadBackgroundImage(selectedFile);
-                        }
-                    }
-                    success = editStatus.isBackgroundEnabled();
-                }
+                processToggleBackground();
                 break;
 
             case BANDS:

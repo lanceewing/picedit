@@ -237,6 +237,7 @@ public abstract class CommonHandler {
      */
     protected void processToggleBackground() {
         editStatus.setBackgroundEnabled(!editStatus.isBackgroundEnabled());
+        application.getMenu().getBackgroundMenuItem().setSelected(editStatus.isBackgroundEnabled());
     }
 
     /**
@@ -289,7 +290,7 @@ public abstract class CommonHandler {
      */
     protected void showAboutMessage() {
         picGraphics.drawMessageBox(64, 69, 255, 116);
-        picGraphics.drawString("    PICEDIT 1.3M1    ", 72, 77, 0, 15);
+        picGraphics.drawString("    PICEDIT 1.3M2    ", 72, 77, 0, 15);
         picGraphics.drawString("         by          ", 72, 89, 0, 15);
         picGraphics.drawString("     Lance Ewing     ", 72, 101, 0, 15);
         waitForKeyStrokeOrMouseClick(null);
@@ -309,7 +310,7 @@ public abstract class CommonHandler {
         graphics.fillRect(0, 0, 640, 400);
         graphics.setFont(font);
         graphics.setColor(new Color(0xAAAAAA));
-        graphics.drawString("                                  PICEDIT v1.3M1", 0, 16);
+        graphics.drawString("                                  PICEDIT v1.3M2", 0, 16);
         graphics.drawString(" ESC     Brings up the menu system. Use arrow keys to select.", 0, 48);
         graphics.drawString(" TAB     Switch between visual\\priority screens.", 0, 64);
         graphics.drawString(" PALETTE", 0, 96);
@@ -350,7 +351,7 @@ public abstract class CommonHandler {
         graphics.fillRect(0, 0, 640, 400);
         graphics.setFont(font);
         graphics.setColor(new Color(0xAAAAAA));
-        graphics.drawString("                                  PICEDIT v1.3M1", 0, 16);
+        graphics.drawString("                                  PICEDIT v1.3M2", 0, 16);
         graphics.drawString(" SHORTCUT KEYS", 0, 64);
         graphics.drawString(" L, l, F1: Activates line tool", 0, 96);
         graphics.drawString(" P, p, F2: Activates pen tool", 0, 112);
