@@ -543,6 +543,10 @@ public abstract class CommonHandler {
             picGraphics.setBackgroundImage(null);
             editStatus.setBackgroundEnabled(false);
         }
+        
+        // This will cause the offscreen image to be recreated, which will remove
+        // any rendering artifacts of the previous background.
+        application.getPicturePanel().resizeOffscreenImage();
     }
 
     /**
