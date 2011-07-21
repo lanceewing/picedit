@@ -152,6 +152,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         specialMenu.setMnemonic(KeyEvent.VK_S);
         backgroundMenuItem = new JCheckBoxMenuItem(MenuOption.BACKGROUND.getDisplayValue());
         backgroundMenuItem.setMnemonic(KeyEvent.VK_G);
+        backgroundMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
         backgroundMenuItem.setSelected(editStatus.isBackgroundEnabled());
         JMenuItem bandsMenuItem = new JCheckBoxMenuItem(MenuOption.BANDS.getDisplayValue());
         bandsMenuItem.setMnemonic(KeyEvent.VK_B);

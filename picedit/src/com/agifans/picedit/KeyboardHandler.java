@@ -69,11 +69,6 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
                 processToolSelect(ToolType.BRUSH);
             }
 
-            // F6 toggles the display of the current background image.
-            if (key == KeyEvent.VK_F6) {
-                processToggleBackground();
-            }
-
             // Handle picture action delete key.
             if (key == KeyEvent.VK_DELETE) {
                 processDeleteCurrentPictureAction();
