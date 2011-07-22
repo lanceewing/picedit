@@ -25,7 +25,12 @@ public enum MenuOption {
     ZOOM_X5("Zoom x5"), 
     BACKGROUND("Background"), 
     BANDS("Bands"), 
-    DUAL_MODE("Dual Mode");
+    DUAL_MODE("Dual Mode"),
+    LINE("Line"),
+    PEN("Pen"),
+    STEP("Step"),
+    FILL("Fill"),
+    BRUSH("Brush");
 
     // Holds mapping between the display values and the MenuOption it belongs to.
     private static Map<String, MenuOption> displayValueMap;
