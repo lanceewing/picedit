@@ -176,7 +176,26 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         // Create the Navigate menu.
         JMenu toolsMenu = new JMenu("Tools");
         toolsMenu.setMnemonic(KeyEvent.VK_T);
-        toolsMenu.setEnabled(false);
+        JMenuItem lineMenuItem = new JMenuItem(MenuOption.LINE.getDisplayValue(), KeyEvent.VK_L);
+        lineMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, 0));
+        JMenuItem penMenuItem = new JMenuItem(MenuOption.PEN.getDisplayValue(), KeyEvent.VK_P);
+        penMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
+        JMenuItem stepMenuItem = new JMenuItem(MenuOption.STEP.getDisplayValue(), KeyEvent.VK_S);
+        stepMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0));
+        JMenuItem fillMenuItem = new JMenuItem(MenuOption.FILL.getDisplayValue(), KeyEvent.VK_F);
+        fillMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, 0));
+        JMenuItem brushMenuItem = new JMenuItem(MenuOption.BRUSH.getDisplayValue(), KeyEvent.VK_B);
+        brushMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, 0));
+        lineMenuItem.addActionListener(this);
+        penMenuItem.addActionListener(this);
+        stepMenuItem.addActionListener(this);
+        fillMenuItem.addActionListener(this);
+        brushMenuItem.addActionListener(this);
+        toolsMenu.add(lineMenuItem);
+        toolsMenu.add(penMenuItem);
+        toolsMenu.add(stepMenuItem);
+        toolsMenu.add(fillMenuItem);
+        toolsMenu.add(brushMenuItem);
         toolsMenu.addMenuListener(this);
         menuBar.add(toolsMenu);
         
@@ -338,6 +357,26 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
 
             case DUAL_MODE:
                 editStatus.setDualModeEnabled(!editStatus.isDualModeEnabled());
+                break;
+                
+            case LINE:
+                processToolSelect(ToolType.LINE);
+                break;
+                
+            case PEN:
+                processToolSelect(ToolType.PEN);
+                break;
+                
+            case STEP:
+                processToolSelect(ToolType.STEP);
+                break;
+            
+            case FILL:
+                processToolSelect(ToolType.FILL);
+                break;
+            
+            case BRUSH:
+                processToolSelect(ToolType.BRUSH);
                 break;
         }
         
