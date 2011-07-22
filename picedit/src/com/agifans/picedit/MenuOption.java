@@ -30,7 +30,13 @@ public enum MenuOption {
     PEN("Pen"),
     STEP("Step"),
     FILL("Fill"),
-    BRUSH("Brush");
+    BRUSH("Brush"),
+    START("Start"),
+    NEXT("Next"),
+    PREV("Previous"),
+    END("End"),
+    GOTO("Goto...")
+    ;
 
     // Holds mapping between the display values and the MenuOption it belongs to.
     private static Map<String, MenuOption> displayValueMap;

@@ -169,11 +169,26 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         // Create the Navigate menu.
         JMenu navigateMenu = new JMenu("Navigate");
         navigateMenu.setMnemonic(KeyEvent.VK_N);
-        navigateMenu.setEnabled(false);
+        JMenuItem startMenuItem = new JMenuItem(MenuOption.START.getDisplayValue(), KeyEvent.VK_H);
+        startMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
+        JMenuItem prevMenuItem = new JMenuItem(MenuOption.PREV.getDisplayValue(), KeyEvent.VK_P);
+        prevMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
+        JMenuItem nextMenuItem = new JMenuItem(MenuOption.NEXT.getDisplayValue(), KeyEvent.VK_N);
+        nextMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
+        JMenuItem endMenuItem = new JMenuItem(MenuOption.END.getDisplayValue(), KeyEvent.VK_E);
+        endMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0));
+        JMenuItem gotoMenuItem = new JMenuItem(MenuOption.GOTO.getDisplayValue(), KeyEvent.VK_G);
+        gotoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, acceleratorKey));
+        navigateMenu.add(startMenuItem);
+        navigateMenu.add(prevMenuItem);
+        navigateMenu.add(nextMenuItem);
+        navigateMenu.add(endMenuItem);
+        navigateMenu.addSeparator();
+        navigateMenu.add(gotoMenuItem);
         navigateMenu.addMenuListener(this);
         menuBar.add(navigateMenu);
         
-        // Create the Navigate menu.
+        // Create the Tools menu.
         JMenu toolsMenu = new JMenu("Tools");
         toolsMenu.setMnemonic(KeyEvent.VK_T);
         JMenuItem lineMenuItem = new JMenuItem(MenuOption.LINE.getDisplayValue(), KeyEvent.VK_L);
