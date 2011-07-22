@@ -251,6 +251,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 ((JCheckBoxMenuItem)event.getSource()).setState(false);
             }
         }
+        editStatus.setMenuActive(false);
     }
 
     /**
