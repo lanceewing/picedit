@@ -124,32 +124,6 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         // Create the View menu.
         JMenu viewMenu = new JMenu("View");
         viewMenu.setMnemonic(KeyEvent.VK_V);
-        JMenuItem viewDataMenuItem = new JMenuItem(MenuOption.VIEW_DATA.getDisplayValue(), KeyEvent.VK_V);
-        JMenuItem zoomx2MenuItem = new JMenuItem(MenuOption.ZOOM_X2.getDisplayValue());
-        JMenuItem zoomx3MenuItem = new JMenuItem(MenuOption.ZOOM_X3.getDisplayValue());
-        JMenuItem zoomx4MenuItem = new JMenuItem(MenuOption.ZOOM_X4.getDisplayValue());
-        JMenuItem zoomx5MenuItem = new JMenuItem(MenuOption.ZOOM_X5.getDisplayValue());
-        viewDataMenuItem.addActionListener(this);
-        zoomx2MenuItem.addActionListener(this);
-        zoomx3MenuItem.addActionListener(this);
-        zoomx4MenuItem.addActionListener(this);
-        zoomx5MenuItem.addActionListener(this);
-        viewMenu.add(viewDataMenuItem);
-        viewMenu.addSeparator();
-        JMenu zoomMenu = new JMenu("Zoom");
-        zoomMenu.setMnemonic(KeyEvent.VK_Z);
-        zoomMenu.add(zoomx2MenuItem);
-        zoomMenu.add(zoomx3MenuItem);
-        zoomMenu.add(zoomx4MenuItem);
-        zoomMenu.add(zoomx5MenuItem);
-        zoomMenu.addMenuListener(this);
-        viewMenu.add(zoomMenu);
-        viewMenu.addMenuListener(this);
-        menuBar.add(viewMenu);
-        
-        // Create the Special menu.
-        JMenu specialMenu = new JMenu("Special");
-        specialMenu.setMnemonic(KeyEvent.VK_S);
         backgroundMenuItem = new JCheckBoxMenuItem(MenuOption.BACKGROUND.getDisplayValue());
         backgroundMenuItem.setMnemonic(KeyEvent.VK_G);
         backgroundMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
@@ -162,15 +136,50 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         dualModeMenuItem.setMnemonic(KeyEvent.VK_D);
         dualModeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, acceleratorKey));
         dualModeMenuItem.setSelected(editStatus.isDualModeEnabled());
+        JMenuItem viewDataMenuItem = new JMenuItem(MenuOption.VIEW_DATA.getDisplayValue(), KeyEvent.VK_V);
+        JMenuItem zoomx2MenuItem = new JMenuItem(MenuOption.ZOOM_X2.getDisplayValue());
+        JMenuItem zoomx3MenuItem = new JMenuItem(MenuOption.ZOOM_X3.getDisplayValue());
+        JMenuItem zoomx4MenuItem = new JMenuItem(MenuOption.ZOOM_X4.getDisplayValue());
+        JMenuItem zoomx5MenuItem = new JMenuItem(MenuOption.ZOOM_X5.getDisplayValue());
         backgroundMenuItem.addActionListener(this);
         bandsMenuItem.addActionListener(this);
         dualModeMenuItem.addActionListener(this);
-        specialMenu.add(backgroundMenuItem);
-        specialMenu.add(bandsMenuItem);
-        specialMenu.add(dualModeMenuItem);
-        specialMenu.addMenuListener(this);
-        menuBar.add(specialMenu);
+        viewDataMenuItem.addActionListener(this);
+        zoomx2MenuItem.addActionListener(this);
+        zoomx3MenuItem.addActionListener(this);
+        zoomx4MenuItem.addActionListener(this);
+        zoomx5MenuItem.addActionListener(this);
+        viewMenu.add(backgroundMenuItem);
+        viewMenu.add(bandsMenuItem);
+        viewMenu.add(dualModeMenuItem);
+        viewMenu.addSeparator();
+        viewMenu.add(viewDataMenuItem);
+        viewMenu.addSeparator();
+        JMenu zoomMenu = new JMenu("Zoom");
+        zoomMenu.setMnemonic(KeyEvent.VK_Z);
+        zoomMenu.add(zoomx2MenuItem);
+        zoomMenu.add(zoomx3MenuItem);
+        zoomMenu.add(zoomx4MenuItem);
+        zoomMenu.add(zoomx5MenuItem);
+        zoomMenu.addMenuListener(this);
+        viewMenu.add(zoomMenu);
+        viewMenu.addMenuListener(this);
+        menuBar.add(viewMenu);
 
+        // Create the Navigate menu.
+        JMenu navigateMenu = new JMenu("Navigate");
+        navigateMenu.setMnemonic(KeyEvent.VK_N);
+        navigateMenu.setEnabled(false);
+        navigateMenu.addMenuListener(this);
+        menuBar.add(navigateMenu);
+        
+        // Create the Navigate menu.
+        JMenu toolsMenu = new JMenu("Tools");
+        toolsMenu.setMnemonic(KeyEvent.VK_T);
+        toolsMenu.setEnabled(false);
+        toolsMenu.addMenuListener(this);
+        menuBar.add(toolsMenu);
+        
         // Create the Info menu.
         JMenu helpMenu = new JMenu("Help");
         helpMenu.setMnemonic(KeyEvent.VK_H);
