@@ -179,6 +179,11 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         endMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0));
         JMenuItem gotoMenuItem = new JMenuItem(MenuOption.GOTO.getDisplayValue(), KeyEvent.VK_G);
         gotoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, acceleratorKey));
+        startMenuItem.addActionListener(this);
+        prevMenuItem.addActionListener(this);
+        nextMenuItem.addActionListener(this);
+        endMenuItem.addActionListener(this);
+        gotoMenuItem.addActionListener(this);
         navigateMenu.add(startMenuItem);
         navigateMenu.add(prevMenuItem);
         navigateMenu.add(nextMenuItem);
@@ -393,6 +398,25 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
             
             case BRUSH:
                 processToolSelect(ToolType.BRUSH);
+                break;
+            
+            case START:
+                processMoveToStartOfPictureBuffer();
+                break;
+                
+            case PREV:
+                processMoveBackOnePictureAction();
+                break;
+                
+            case NEXT:
+                processMoveForwardOnePictureAction();
+                break;
+                
+            case END:
+                processMoveToEndOfPictureBuffer();
+                break;
+                
+            case GOTO:
                 break;
         }
         
