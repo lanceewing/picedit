@@ -35,7 +35,8 @@ public enum MenuOption {
     NEXT("Next"),
     PREV("Previous"),
     END("End"),
-    GOTO("Goto...")
+    GOTO("Goto..."),
+    DELETE("Delete")
     ;
 
     // Holds mapping between the display values and the MenuOption it belongs to.
