@@ -117,7 +117,10 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         // Create the Edit menu.
         JMenu editMenu = new JMenu("Edit");
         editMenu.setMnemonic(KeyEvent.VK_E);
-        editMenu.setEnabled(false);
+        JMenuItem deleteMenuItem = new JMenuItem(MenuOption.DELETE.getDisplayValue(), KeyEvent.VK_D);
+        deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+        deleteMenuItem.addActionListener(this);
+        editMenu.add(deleteMenuItem);
         editMenu.addMenuListener(this);
         menuBar.add(editMenu);
         
@@ -417,6 +420,10 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 break;
                 
             case GOTO:
+                break;
+                
+            case DELETE:
+                processDeleteCurrentPictureAction();
                 break;
         }
         
