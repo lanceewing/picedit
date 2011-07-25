@@ -134,6 +134,11 @@ public class EditStatus {
     private String pictureName;
     
     /**
+     * The most recently opened or saved pictures.
+     */
+    private String[] recentPictures;
+    
+    /**
      * The name of the most recently used directory.
      */
     private String lastUsedDirectory;
@@ -155,6 +160,12 @@ public class EditStatus {
         this.lastUsedDirectory = prefs.get("LAST_USED_DIRECTORY", new File(".").getAbsolutePath());
         this.zoomFactor = prefs.getInt("ZOOM_FACTOR", 3);
         this.bandsOn = prefs.getBoolean("BANDS_ON", false);
+        
+        this.recentPictures = new String[4];
+        this.recentPictures[0] = prefs.get("RECENT_PICTURE_1", "");
+        this.recentPictures[1] = prefs.get("RECENT_PICTURE_2", "");
+        this.recentPictures[2] = prefs.get("RECENT_PICTURE_3", "");
+        this.recentPictures[3] = prefs.get("RECENT_PICTURE_4", "");
     }
     
     /**
@@ -164,6 +175,10 @@ public class EditStatus {
         prefs.put("LAST_USED_DIRECTORY", this.lastUsedDirectory);
         prefs.putInt("ZOOM_FACTOR", this.zoomFactor);
         prefs.putBoolean("BANDS_ON", this.bandsOn);
+        prefs.put("RECENT_PICTURE_1", this.recentPictures[0]);
+        prefs.put("RECENT_PICTURE_2", this.recentPictures[1]);
+        prefs.put("RECENT_PICTURE_3", this.recentPictures[2]);
+        prefs.put("RECENT_PICTURE_4", this.recentPictures[3]);
     }
     
     public void clear() {
@@ -705,7 +720,15 @@ public class EditStatus {
     }
     
     public void setPictureName(String pictureName) {
-        this.pictureName = pictureName;
+        if (!pictureName.equals(this.pictureName)) {
+            this.pictureName = pictureName;
+            
+            // Rotate the recent picture name list.
+            this.recentPictures[3] = this.recentPictures[3];
+            this.recentPictures[2] = this.recentPictures[2];
+            this.recentPictures[1] = this.recentPictures[1];
+            this.recentPictures[0] = pictureName;
+        }
     }
     
     public String getLastUsedDirectory() {
