@@ -6,12 +6,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -37,6 +39,16 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      * The menu item used for toggling display of the background image.
      */
     private JCheckBoxMenuItem backgroundMenuItem;
+    
+    /**
+     * The menu item used for selecting the visual screen.
+     */
+    private JRadioButtonMenuItem visualMenuItem;
+
+    /**
+     * The menu item used for selecting the priority screen.
+     */
+    private JRadioButtonMenuItem priorityMenuItem;
     
     /**
      * Constructor for Menu.
@@ -73,6 +85,24 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      */
     public JCheckBoxMenuItem getBackgroundMenuItem() {
         return this.backgroundMenuItem;
+    }
+    
+    /**
+     * Gets the menu item that selects the visual screen.
+     * 
+     * @return The menu item that selects the visual screen.
+     */
+    public JRadioButtonMenuItem getVisualMenuItem() {
+        return this.visualMenuItem;
+    }
+    
+    /**
+     * Gets the menu item that selects the priority screen.
+     * 
+     * @return The menu item that selects the priority screen.
+     */
+    public JRadioButtonMenuItem getPriorityMenuItem() {
+        return this.priorityMenuItem;
     }
     
     /**
@@ -127,6 +157,12 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         // Create the View menu.
         JMenu viewMenu = new JMenu("View");
         viewMenu.setMnemonic(KeyEvent.VK_V);
+        ButtonGroup screenGroup = new ButtonGroup();
+        visualMenuItem = new JRadioButtonMenuItem(MenuOption.VISUAL.getDisplayValue());
+        screenGroup.add(visualMenuItem);
+        visualMenuItem.setSelected(true);
+        priorityMenuItem = new JRadioButtonMenuItem(MenuOption.PRIORITY.getDisplayValue());
+        screenGroup.add(priorityMenuItem);
         backgroundMenuItem = new JCheckBoxMenuItem(MenuOption.BACKGROUND.getDisplayValue());
         backgroundMenuItem.setMnemonic(KeyEvent.VK_G);
         backgroundMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
@@ -145,6 +181,8 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         JMenuItem zoomx4MenuItem = new JMenuItem(MenuOption.ZOOM_X4.getDisplayValue());
         JMenuItem zoomx5MenuItem = new JMenuItem(MenuOption.ZOOM_X5.getDisplayValue());
         backgroundMenuItem.addActionListener(this);
+        visualMenuItem.addActionListener(this);
+        priorityMenuItem.addActionListener(this);
         bandsMenuItem.addActionListener(this);
         dualModeMenuItem.addActionListener(this);
         viewDataMenuItem.addActionListener(this);
@@ -152,6 +190,9 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         zoomx3MenuItem.addActionListener(this);
         zoomx4MenuItem.addActionListener(this);
         zoomx5MenuItem.addActionListener(this);
+        viewMenu.add(visualMenuItem);
+        viewMenu.add(priorityMenuItem);
+        viewMenu.addSeparator();
         viewMenu.add(backgroundMenuItem);
         viewMenu.add(bandsMenuItem);
         viewMenu.add(dualModeMenuItem);
@@ -424,6 +465,18 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 
             case DELETE:
                 processDeleteCurrentPictureAction();
+                break;
+                
+            case VISUAL:
+                if (editStatus.isPriorityShowing()) {
+                    processTogglePriorityScreen();
+                }
+                break;
+                
+            case PRIORITY:
+                if (!editStatus.isPriorityShowing()) {
+                    processTogglePriorityScreen();
+                }
                 break;
         }
         

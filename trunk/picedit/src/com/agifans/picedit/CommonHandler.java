@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+import javax.swing.KeyStroke;
 
 /**
  * Handles processing that is common to both mouse and keyboard events.
@@ -228,6 +229,11 @@ public abstract class CommonHandler {
      */
     public void processTogglePriorityScreen() {
         editStatus.toggleScreen();
+        if (editStatus.isPriorityShowing()) {
+            application.getMenu().getPriorityMenuItem().setSelected(true);
+        } else {
+            application.getMenu().getVisualMenuItem().setSelected(true);
+        }
         editStatus.setTool(ToolType.NONE);
         picture.updateScreen();
     }
