@@ -129,9 +129,9 @@ public class EditStatus {
     private boolean dualModeEnabled;
     
     /**
-     * The name of the picture being edited.
+     * The picture File currently being edited.
      */
-    private String pictureName;
+    private File pictureFile;
     
     /**
      * The most recently opened or saved pictures.
@@ -206,7 +206,7 @@ public class EditStatus {
             backgroundEnabled = false;
             dualModeEnabled = false;
             bandsOn = false;
-            pictureName = null;
+            pictureFile = null;
         }
         clearLastRenderedState();
         clearTool();
@@ -715,19 +715,19 @@ public class EditStatus {
         this.dualModeEnabled = dualModeEnabled;
     }
 
-    public String getPictureName() {
-        return this.pictureName;
+    public File getPictureFile() {
+        return this.pictureFile;
     }
     
-    public void setPictureName(String pictureName) {
-        if (!pictureName.equals(this.pictureName)) {
-            this.pictureName = pictureName;
+    public void setPictureFile(File pictureFile) {
+        if (!pictureFile.equals(this.pictureFile)) {
+            this.pictureFile = pictureFile;
             
             // Rotate the recent picture name list.
-            this.recentPictures[3] = this.recentPictures[3];
-            this.recentPictures[2] = this.recentPictures[2];
-            this.recentPictures[1] = this.recentPictures[1];
-            this.recentPictures[0] = pictureName;
+            this.recentPictures[3] = this.recentPictures[2];
+            this.recentPictures[2] = this.recentPictures[1];
+            this.recentPictures[1] = this.recentPictures[0];
+            this.recentPictures[0] = pictureFile.getAbsolutePath();
         }
     }
     
