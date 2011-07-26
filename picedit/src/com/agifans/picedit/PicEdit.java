@@ -122,10 +122,10 @@ public final class PicEdit extends JApplet {
         if (SwingUtilities.getRoot(this) instanceof JFrame) {
             StringBuilder title = new StringBuilder(PICEDIT_NAME);
             title.append(" - ");
-            if (editStatus.getPictureName() == null) {
+            if (editStatus.getPictureFile() == null) {
                 title.append("Untitled");
             } else {
-                title.append(editStatus.getPictureName());
+                title.append(editStatus.getPictureFile().getName());
             }
             ((JFrame) SwingUtilities.getRoot(this)).setTitle(title.toString());
         }

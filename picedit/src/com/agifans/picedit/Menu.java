@@ -305,11 +305,11 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
     public void menuSelected(MenuEvent e) {
         editStatus.setMenuActive(true);
         if (openRecentMenu.equals(e.getSource())) {
-            for (int i=0; i<openRecentMenu.getItemCount(); i++) {
-                openRecentMenu.remove(i);
-            }
+            openRecentMenu.removeAll();
             for (String pictureName : editStatus.getRecentPictures()) {
-                openRecentMenu.add(new JMenuItem(pictureName));
+                if (!pictureName.equals("")) {
+                    openRecentMenu.add(new JMenuItem(pictureName));
+                }
             }
         }
     }
@@ -367,7 +367,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
 
             case SAVE_AS:
             case SAVE:
-                if ((editStatus.getPictureName() == null) || MenuOption.SAVE_AS.equals(menuOption)) {
+                if ((editStatus.getPictureFile() == null) || MenuOption.SAVE_AS.equals(menuOption)) {
                     if (fileChooser.showSaveDialog(this.application) == JFileChooser.APPROVE_OPTION) {
                         File selectedFile = fileChooser.getSelectedFile();
                         if (selectedFile != null) {
@@ -375,8 +375,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                         }
                     }
                 } else {
-                    File selectedFile = new File(fileChooser.getCurrentDirectory(), editStatus.getPictureName());
-                    savePicture(selectedFile);
+                    savePicture(editStatus.getPictureFile());
                 }
                 break;
 

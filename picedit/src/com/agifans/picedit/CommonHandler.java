@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
-import javax.swing.KeyStroke;
 
 /**
  * Handles processing that is common to both mouse and keyboard events.
@@ -568,7 +567,7 @@ public abstract class CommonHandler {
             editStatus.clear();
 
             // Store file name for display on title bar.
-            editStatus.setPictureName(pictureFile.getName());
+            editStatus.setPictureFile(pictureFile);
             
             // Open the file for reading.
             in = new BufferedInputStream(new FileInputStream(pictureFile));
@@ -614,7 +613,7 @@ public abstract class CommonHandler {
 
         try {
             // Store file name for display on title bar.
-            editStatus.setPictureName(pictureFile.getName());
+            editStatus.setPictureFile(pictureFile);
             
             // Open the file for reading.
             out = new BufferedOutputStream(new FileOutputStream(pictureFile));
