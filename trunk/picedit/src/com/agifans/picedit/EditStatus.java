@@ -731,6 +731,15 @@ public class EditStatus {
         }
     }
     
+    /**
+     * Gets the list of recently opened pictures.
+     * 
+     * @return The list of recently opened pictures.
+     */
+    public String[] getRecentPictures() {
+        return recentPictures;
+    }
+    
     public String getLastUsedDirectory() {
         return this.lastUsedDirectory;
     }
