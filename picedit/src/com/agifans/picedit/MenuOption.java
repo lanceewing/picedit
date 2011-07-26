@@ -16,6 +16,7 @@ public enum MenuOption {
     SAVE("Save"),
     SAVE_AS("Save As..."), 
     OPEN("Open..."), 
+    OPEN_RECENT("Open Recent"),
     LOAD_BACKGROUND("Load Background..."),
     EXIT("Exit"), 
     VIEW_DATA("View Data"), 

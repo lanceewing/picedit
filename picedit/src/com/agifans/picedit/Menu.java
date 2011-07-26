@@ -51,6 +51,11 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
     private JRadioButtonMenuItem priorityMenuItem;
     
     /**
+     * The Open Recent sub-menu item.
+     */
+    private JMenu openRecentMenu;
+    
+    /**
      * Constructor for Menu.
      * 
      * @param editStatus the EditStatus object holding the current picture editor state.
@@ -121,6 +126,8 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, acceleratorKey));
         JMenuItem loadMenuItem = new JMenuItem(MenuOption.OPEN.getDisplayValue(), KeyEvent.VK_O);
         loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, acceleratorKey));
+        openRecentMenu = new JMenu(MenuOption.OPEN_RECENT.getDisplayValue());
+        openRecentMenu.addMenuListener(this);
         JMenuItem saveMenuItem = new JMenuItem(MenuOption.SAVE.getDisplayValue(), KeyEvent.VK_S);
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, acceleratorKey));
         JMenuItem saveAsMenuItem = new JMenuItem(MenuOption.SAVE_AS.getDisplayValue(), KeyEvent.VK_A);
@@ -134,6 +141,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         quitMenuItem.addActionListener(this);
         fileMenu.add(newMenuItem);
         fileMenu.add(loadMenuItem);
+        fileMenu.add(openRecentMenu);
         fileMenu.addSeparator();
         fileMenu.add(saveMenuItem);
         fileMenu.add(saveAsMenuItem);
@@ -296,6 +304,14 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      */
     public void menuSelected(MenuEvent e) {
         editStatus.setMenuActive(true);
+        if (openRecentMenu.equals(e.getSource())) {
+            for (int i=0; i<openRecentMenu.getItemCount(); i++) {
+                openRecentMenu.remove(i);
+            }
+            for (String pictureName : editStatus.getRecentPictures()) {
+                openRecentMenu.add(new JMenuItem(pictureName));
+            }
+        }
     }
 
     /**
