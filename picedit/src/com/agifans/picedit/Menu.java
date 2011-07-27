@@ -308,7 +308,14 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
             openRecentMenu.removeAll();
             for (String pictureName : editStatus.getRecentPictures()) {
                 if (!pictureName.equals("")) {
-                    openRecentMenu.add(new JMenuItem(pictureName));
+                    final File pictureFile = new File(pictureName);
+                    JMenuItem pictureMenuItem = new JMenuItem(pictureFile.getName());
+                    pictureMenuItem.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            loadPicture(pictureFile);
+                        }
+                    });
+                    openRecentMenu.add(pictureMenuItem);
                 }
             }
         }
