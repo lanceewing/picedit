@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 /**
  * Handles processing that is common to both mouse and keyboard events.
@@ -87,6 +88,34 @@ public abstract class CommonHandler {
     }
 
     /**
+     * Processes the entered position. 
+     * 
+     * @param inputLine The String form of the position that the user has entered.
+     */
+    protected void processPositionEntered(String inputLine) {
+        if ((inputLine != null) && (!inputLine.trim().equals(""))) {
+            try {
+                // If the entered value is valid, apply the new position.
+                LinkedList<PictureCode> pictureCodes = editStatus.getPictureCodes();
+                int newPosition = Integer.parseInt(inputLine.toString());
+                if ((newPosition >= 0) && (newPosition < pictureCodes.size())) {
+                    if (newPosition < (pictureCodes.size() - 1)) {
+                        // Find the closest picture action to the entered position.
+                        while (pictureCodes.get(newPosition).getCode() < 0xF0) {
+                            newPosition = newPosition - 1;
+                        }
+                    }
+                    editStatus.setPicturePosition(newPosition);
+                    picture.drawPicture();
+                    picture.updateScreen();
+                }
+            } catch (NumberFormatException nfe) {
+                // Ignore. The user has entered a non-numeric value.
+            }
+        }
+    }
+    
+    /**
      * Allow the user to go to a position in the picture buffer immediately 
      * without having to use the navigation buttons. The position will be 
      * set to the start of the drawing action that the given position lies 
@@ -103,7 +132,7 @@ public abstract class CommonHandler {
         picGraphics.drawString(inputLine.toString(), 231, 180, 7, 0);
 
         // Register a temporary KeyListener for getting the new position.
-        this.application.getPicturePanel().addKeyListener(new KeyAdapter() {
+        this.application.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
@@ -124,25 +153,8 @@ public abstract class CommonHandler {
                 } else if (key == KeyEvent.VK_ENTER) {
                     // User has finished entering a position.
                     application.getPicturePanel().removeKeyListener(this);
-
-                    if (inputLine.length() > 0) {
-                        // If the entered value is valid, apply the new position.
-                        LinkedList<PictureCode> pictureCodes = editStatus.getPictureCodes();
-                        int newPosition = Integer.parseInt(inputLine.toString());
-                        if ((newPosition >= 0) && (newPosition < pictureCodes.size())) {
-                            if (newPosition < (pictureCodes.size() - 1)) {
-                                // Find the closest picture action to the entered position.
-                                while (pictureCodes.get(newPosition).getCode() < 0xF0) {
-                                    newPosition = newPosition - 1;
-                                }
-                            }
-                            editStatus.setPicturePosition(newPosition);
-                        }
-                    }
-
+                    processPositionEntered(inputLine.toString());
                     editStatus.setPaused(false);
-                    picture.drawPicture();
-                    picture.updateScreen();
                     inputLine.delete(0, inputLine.length());
                     inputLine.append(editStatus.getPicturePosition());
 
@@ -260,7 +272,7 @@ public abstract class CommonHandler {
         // Register a temporary key and mouse listener to wait for the key/mouse event. 
         keyListener[0] = new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
-                application.getPicturePanel().removeKeyListener(keyListener[0]);
+                application.removeKeyListener(keyListener[0]);
                 application.getPicturePanel().removeMouseListener(mouseListener[0]);
                 if (callback != null) {
                     callback.run();
@@ -272,7 +284,7 @@ public abstract class CommonHandler {
         };
         mouseListener[0] = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                application.getPicturePanel().removeKeyListener(keyListener[0]);
+                application.removeKeyListener(keyListener[0]);
                 application.getPicturePanel().removeMouseListener(mouseListener[0]);
                 if (callback != null) {
                     callback.run();
@@ -282,7 +294,7 @@ public abstract class CommonHandler {
                 }
             }
         };
-        application.getPicturePanel().addKeyListener(keyListener[0]);
+        application.addKeyListener(keyListener[0]);
         application.getPicturePanel().addMouseListener(mouseListener[0]);
 
         // The listeners are registered at this point. The method exits. The listeners
@@ -465,7 +477,7 @@ public abstract class CommonHandler {
 
                 if ((key == KeyEvent.VK_ESCAPE) || (key == KeyEvent.VK_ENTER)) {
                     // Exit the view data screen.
-                    application.getPicturePanel().removeKeyListener(keyListener[0]);
+                    application.removeKeyListener(keyListener[0]);
                     application.getPicturePanel().removeMouseListener(mouseListener[0]);
                     application.getPicturePanel().removeMouseWheelListener(mouseListener[0]);
                     editStatus.setPaused(false);
@@ -498,7 +510,7 @@ public abstract class CommonHandler {
         };
         mouseListener[0] = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                application.getPicturePanel().removeKeyListener(keyListener[0]);
+                application.removeKeyListener(keyListener[0]);
                 application.getPicturePanel().removeMouseListener(mouseListener[0]);
                 application.getPicturePanel().removeMouseWheelListener(mouseListener[0]);
                 editStatus.setPaused(false);
@@ -520,7 +532,7 @@ public abstract class CommonHandler {
                 showPageOfHexData(startPos[0]);
             }
         };
-        application.getPicturePanel().addKeyListener(keyListener[0]);
+        application.addKeyListener(keyListener[0]);
         application.getPicturePanel().addMouseListener(mouseListener[0]);
         application.getPicturePanel().addMouseWheelListener(mouseListener[0]);
 
@@ -587,8 +599,8 @@ public abstract class CommonHandler {
             picture.updateScreen();
 
         } catch (FileNotFoundException fnfe) {
-            System.out.printf("File not found : %s.\n", pictureFile.getPath());
-            System.exit(1);
+            // This can happen for files in the history.
+            JOptionPane.showMessageDialog(application, "That file no longer exists.", "File not found", JOptionPane.WARNING_MESSAGE);
         } catch (IOException ioe) {
             System.out.printf("Error loading picture : %s.\n", pictureFile.getPath());
             System.exit(1);
