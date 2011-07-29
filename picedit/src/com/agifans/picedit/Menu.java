@@ -483,6 +483,8 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 break;
                 
             case GOTO:
+                String positionStr = JOptionPane.showInputDialog(application, "Enter a picture position:", "Goto", JOptionPane.QUESTION_MESSAGE);
+                processPositionEntered(positionStr);
                 break;
                 
             case DELETE:
