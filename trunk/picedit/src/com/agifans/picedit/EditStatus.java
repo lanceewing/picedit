@@ -136,7 +136,7 @@ public class EditStatus {
     /**
      * The most recently opened or saved pictures.
      */
-    private String[] recentPictures;
+    private LinkedList<String> recentPictures;
     
     /**
      * The name of the most recently used directory.
@@ -161,11 +161,11 @@ public class EditStatus {
         this.zoomFactor = prefs.getInt("ZOOM_FACTOR", 3);
         this.bandsOn = prefs.getBoolean("BANDS_ON", false);
         
-        this.recentPictures = new String[4];
-        this.recentPictures[0] = prefs.get("RECENT_PICTURE_1", "");
-        this.recentPictures[1] = prefs.get("RECENT_PICTURE_2", "");
-        this.recentPictures[2] = prefs.get("RECENT_PICTURE_3", "");
-        this.recentPictures[3] = prefs.get("RECENT_PICTURE_4", "");
+        this.recentPictures = new LinkedList<String>();
+        this.recentPictures.add(0, prefs.get("RECENT_PICTURE_1", ""));
+        this.recentPictures.add(1,prefs.get("RECENT_PICTURE_2", ""));
+        this.recentPictures.add(2,prefs.get("RECENT_PICTURE_3", ""));
+        this.recentPictures.add(3,prefs.get("RECENT_PICTURE_4", ""));
     }
     
     /**
@@ -175,10 +175,10 @@ public class EditStatus {
         prefs.put("LAST_USED_DIRECTORY", this.lastUsedDirectory);
         prefs.putInt("ZOOM_FACTOR", this.zoomFactor);
         prefs.putBoolean("BANDS_ON", this.bandsOn);
-        prefs.put("RECENT_PICTURE_1", this.recentPictures[0]);
-        prefs.put("RECENT_PICTURE_2", this.recentPictures[1]);
-        prefs.put("RECENT_PICTURE_3", this.recentPictures[2]);
-        prefs.put("RECENT_PICTURE_4", this.recentPictures[3]);
+        prefs.put("RECENT_PICTURE_1", this.recentPictures.get(0));
+        prefs.put("RECENT_PICTURE_2", this.recentPictures.get(1));
+        prefs.put("RECENT_PICTURE_3", this.recentPictures.get(2));
+        prefs.put("RECENT_PICTURE_4", this.recentPictures.get(3));
     }
     
     public void clear() {
@@ -724,10 +724,16 @@ public class EditStatus {
             this.pictureFile = pictureFile;
             
             // Rotate the recent picture name list.
-            this.recentPictures[3] = this.recentPictures[2];
-            this.recentPictures[2] = this.recentPictures[1];
-            this.recentPictures[1] = this.recentPictures[0];
-            this.recentPictures[0] = pictureFile.getAbsolutePath();
+            if (recentPictures.contains(pictureFile.getAbsolutePath())) {
+              // If the list already contains this file, then remove it.
+              recentPictures.remove(pictureFile.getAbsolutePath());
+            } else {
+              // Otherwise remove the last item.
+              recentPictures.removeLast();
+            }
+            
+            // The most recent is always added as the first item.
+            recentPictures.add(0, pictureFile.getAbsolutePath());
         }
     }
     
@@ -736,7 +742,7 @@ public class EditStatus {
      * 
      * @return The list of recently opened pictures.
      */
-    public String[] getRecentPictures() {
+    public LinkedList<String> getRecentPictures() {
         return recentPictures;
     }
     
