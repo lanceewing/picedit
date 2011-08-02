@@ -1,6 +1,8 @@
 package com.agifans.picedit;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -11,6 +13,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -21,7 +25,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 /**
  * Handles processing that is common to both mouse and keyboard events.
@@ -49,6 +56,11 @@ public abstract class CommonHandler {
      * The PICEDIT application component.
      */
     protected PicEdit application;
+    
+    /**
+     * The help window.
+     */
+    private JFrame helpFrame;
     
     /**
      * Constructor for CommonHandler.
@@ -314,89 +326,43 @@ public abstract class CommonHandler {
     }
 
     /**
-     * Displays page 1 of the help.
-     */
-    private void showHelpPage1() {
-        editStatus.setPaused(true);
-
-        Font font = new Font("DialogInput", Font.BOLD, 14);
-        Image image = application.createImage(640, 400);
-
-        Graphics2D graphics = (Graphics2D) image.getGraphics();
-        graphics.setColor(Color.BLACK);
-        graphics.fillRect(0, 0, 640, 400);
-        graphics.setFont(font);
-        graphics.setColor(new Color(0xAAAAAA));
-        graphics.drawString("                                  PICEDIT v1.3M2", 0, 16);
-        graphics.drawString(" ESC     Brings up the menu system. Use arrow keys to select.", 0, 48);
-        graphics.drawString(" TAB     Switch between visual\\priority screens.", 0, 64);
-        graphics.drawString(" PALETTE", 0, 96);
-        graphics.drawString(" Right click: choose colour for visual screen.", 0, 128);
-        graphics.drawString(" Left click: choose colour for priority screen.", 0, 144);
-        graphics.drawString(" Off: Disable visual/priority drawing.", 0, 160);
-        graphics.drawString(" FEATURES", 0, 192);
-        graphics.drawString(" - Click on buffer position field to enter a specific position.", 0, 224);
-        graphics.drawString(" - Use navigation buttons to navigate through picture code buffer.", 0, 240);
-        graphics.drawString(" - Drawing actions can be inserted anywhere inside the picture.", 0, 256);
-        graphics.drawString(" - The delete button removes the drawing action that is currently being", 0, 272);
-        graphics.drawString("   shown in the data box (bottom right corner).", 0, 288);
-        graphics.drawString(" - The brush tool is set up using the buttons immediately to the right of", 0, 304);
-        graphics.drawString("   the off button.", 0, 320);
-        graphics.drawString(" - Right clicking on the picture surface once stops current tool.", 0, 336);
-        graphics.drawString(" - Right clicking on the picture surface twice switches tool to None.", 0, 352);
-        graphics.drawString(" - Use the background image option to enable tracing of PNG, JPG, etc.", 0, 368);
-
-        picGraphics.setTextImage(image);
-        editStatus.setTextMode(true);
-
-        waitForKeyStrokeOrMouseClick(new Runnable() {
-            public void run() {
-                showHelpPage2();
-            }
-        });
-    }
-
-    /**
-     * Displays page 2 of the help.
-     */
-    private void showHelpPage2() {
-        Font font = new Font("DialogInput", Font.BOLD, 14);
-        Image image = application.createImage(640, 400);
-
-        Graphics2D graphics = (Graphics2D) image.getGraphics();
-        graphics.setColor(Color.BLACK);
-        graphics.fillRect(0, 0, 640, 400);
-        graphics.setFont(font);
-        graphics.setColor(new Color(0xAAAAAA));
-        graphics.drawString("                                  PICEDIT v1.3M2", 0, 16);
-        graphics.drawString(" SHORTCUT KEYS", 0, 64);
-        graphics.drawString(" L, l, F1: Activates line tool", 0, 96);
-        graphics.drawString(" P, p, F2: Activates pen tool", 0, 112);
-        graphics.drawString(" S, s, F3: Activates step tool", 0, 128);
-        graphics.drawString(" F, f, F4: Activates fill tool", 0, 144);
-        graphics.drawString(" B, b, F5: Activates brush tool", 0, 160);
-        graphics.drawString(" F6: Toggles background picture", 0, 192);
-        graphics.drawString(" Home: Start of picture code buffer", 0, 224);
-        graphics.drawString(" Left arrow: Back one drawing action", 0, 240);
-        graphics.drawString(" Right arrow: Forward one drawing action", 0, 256);
-        graphics.drawString(" End: End of picture code buffer", 0, 272);
-        graphics.drawString(" Del: Remove drawing action at current buffer position", 0, 288);
-
-        picGraphics.setTextImage(image);
-
-        waitForKeyStrokeOrMouseClick(new Runnable() {
-            public void run() {
-                editStatus.setPaused(false);
-                editStatus.setTextMode(false);
-            }
-        });
-    }
-
-    /**
      * Displays the help message.
      */
     protected void showHelp() {
-        showHelpPage1();
+        if (helpFrame == null) {
+            helpFrame  = new JFrame("PICEDIT Help");
+            helpFrame.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent event) {
+                    helpFrame = null;
+                }
+            });
+            JEditorPane helpEditorPane = new JEditorPane();
+            helpEditorPane.setEditable(false);
+            java.net.URL helpURL = ClassLoader.getSystemResource("com/agifans/picedit/help/help.html");
+            try {
+                helpEditorPane.setPage(helpURL);
+            } catch (IOException e) {
+            }
+            JScrollPane helpScrollPane = new JScrollPane(helpEditorPane);
+            helpScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            helpScrollPane.setPreferredSize(application.getPreferredSize());
+            helpScrollPane.setMinimumSize(new Dimension(10, 10));
+            helpFrame.setLayout(new BorderLayout());
+            helpFrame.getContentPane().add(helpScrollPane, BorderLayout.CENTER);
+            helpFrame.pack();
+            helpFrame.setLocationRelativeTo(null);
+            helpFrame.setResizable(true);
+            helpFrame.setVisible(true);
+        } else {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    helpFrame.toFront();
+                    helpFrame.repaint();
+                    helpFrame.requestFocus();
+                }
+            });
+        }
     }
 
     /**
