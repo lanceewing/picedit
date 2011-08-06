@@ -108,11 +108,6 @@ public class PicturePanel extends JPanel {
         if (editStatus.isTextMode()) {
             offScreenGC.drawImage(picGraphics.getTextImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
         } else {
-            // Other display the PICEDIT screen.
-
-            // Make sure we are displaying the latest status information.
-            drawStatusLine();
-
             // Update the brush panel if required.
             if (editStatus.getLastRenderedBrushCode() != editStatus.getBrushCode()) {
                 editStatus.setLastRenderedBrushCode(editStatus.getBrushCode());
@@ -190,73 +185,6 @@ public class PicturePanel extends JPanel {
     public void update(Graphics g) {
         paint(g);
     }
-    
-    /**
-     * Draws the status line based on the editing state within the EditStatus.
-     */
-    public void drawStatusLine() {
-        int x = editStatus.getMouseX();
-        int y = editStatus.getMouseY();
-        int priorityBand = editStatus.getPriorityBand();
-        int controlOffColour = (editStatus.getPictureType().equals(PictureType.AGI) ? 7 : 0);
-
-        // Draw tool section.
-        if (!editStatus.getTool().equals(editStatus.getLastRenderedTool())) {
-            String toolStr = String.format("Tool:%-5s V", editStatus.getTool().toString());
-            picGraphics.drawString(toolStr, 0, 0, 0, 15);
-            editStatus.setLastRenderedTool(editStatus.getTool());
-        }
-
-        // Draw visual colour section.
-        int visualColour = (editStatus.getVisualColour() == EditStatus.TRANSPARENT ? 15 : editStatus.getVisualColour());
-        if (editStatus.getLastRenderedVisualColour() != visualColour) {
-            if (visualColour == EditStatus.VISUAL_OFF) {
-                picGraphics.drawFilledBox(96, 0, 99, 7, 15);
-                picGraphics.drawChar((char) 9, 100, 0, 0, 15);
-                picGraphics.drawFilledBox(108, 0, 111, 7, 15);
-            } else {
-                picGraphics.drawString("  ", 96, 0, 0, visualColour);
-            }
-            picGraphics.drawString(" P", 112, 0, 0, 15);
-            editStatus.setLastRenderedVisualColour(visualColour);
-        }
-
-        // Draw priority colour section.
-        int priorityColour = (editStatus.getPriorityColour() == EditStatus.TRANSPARENT ? 4 : editStatus.getPriorityColour());
-        if (editStatus.getLastRenderedPriorityColour() != priorityColour) {
-            if (priorityColour == EditStatus.PRIORITY_OFF) {
-                picGraphics.drawFilledBox(128, 0, 131, 7, 15);
-                picGraphics.drawChar((char) 9, 132, 0, 0, 15);
-                picGraphics.drawFilledBox(140, 0, 143, 7, 15);
-            } else {
-                picGraphics.drawString("  ", 128, 0, 0, priorityColour);
-            }
-            picGraphics.drawString(" C", 144, 0, controlOffColour, 15);
-            editStatus.setLastRenderedPriorityColour(priorityColour);
-        }
-
-        // Draw control colour section.
-        int controlColour = (editStatus.getControlColour() == EditStatus.TRANSPARENT ? 4 : editStatus.getControlColour());
-        if (editStatus.getLastRenderedControlColour() != controlColour) {
-            if (controlColour == EditStatus.CONTROL_OFF) {
-                picGraphics.drawFilledBox(160, 0, 163, 7, 15);
-                picGraphics.drawChar((char) 9, 164, 0, controlOffColour, 15);
-                picGraphics.drawFilledBox(172, 0, 175, 7, 15);
-            } else {
-                picGraphics.drawString("  ", 160, 0, 0, controlColour);
-            }
-            editStatus.setLastRenderedControlColour(controlColour);
-        }
-
-        // Draw X/Y position and priority band section.
-        if ((editStatus.getLastRenderedMouseX() != x) || (editStatus.getLastRenderedMouseY() != y)) {
-            String xyPriStr = String.format(" X=%-3d Y=%-3d Pri", x, y);
-            picGraphics.drawString(xyPriStr, 176, 0, 0, 15);
-            picGraphics.drawString("  ", 304, 0, 0, priorityBand);
-            editStatus.setLastRenderedMouseX(x);
-            editStatus.setLastRenderedMouseY(y);
-        }
-    }
 
     /**
      * Displays the current buffer position in the relevant field on the 
@@ -328,9 +256,6 @@ public class PicturePanel extends JPanel {
      */
     private void drawInterface() {
         int c;
-
-        // Draw the blue line between the status bar and the picture.
-        picGraphics.drawLine(0, 8, 319, 8, 1);
 
         // Draw the background for the tool panel.
         picGraphics.drawFilledBox(0, 177, 319, 199, 7);
