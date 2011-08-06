@@ -205,8 +205,6 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         viewMenu.add(bandsMenuItem);
         viewMenu.add(dualModeMenuItem);
         viewMenu.addSeparator();
-        viewMenu.add(viewDataMenuItem);
-        viewMenu.addSeparator();
         JMenu zoomMenu = new JMenu("Zoom");
         zoomMenu.setMnemonic(KeyEvent.VK_Z);
         zoomMenu.add(zoomx2MenuItem);
@@ -215,6 +213,8 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         zoomMenu.add(zoomx5MenuItem);
         zoomMenu.addMenuListener(this);
         viewMenu.add(zoomMenu);
+        viewMenu.addSeparator();
+        viewMenu.add(viewDataMenuItem);
         viewMenu.addMenuListener(this);
         menuBar.add(viewMenu);
 

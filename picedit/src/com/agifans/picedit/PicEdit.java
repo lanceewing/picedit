@@ -64,6 +64,10 @@ public final class PicEdit extends JApplet {
         
         this.getContentPane().setLayout(new BorderLayout());
         
+        StatusBarPanel statusbar = new StatusBarPanel(this.editStatus);
+        statusbar.setPreferredSize(new Dimension(320, 20));
+        this.getContentPane().add(statusbar, BorderLayout.NORTH);
+        
         // Add the panel that holds the picture that is being edited.
         this.getContentPane().add(picturePanel, BorderLayout.CENTER);
     }

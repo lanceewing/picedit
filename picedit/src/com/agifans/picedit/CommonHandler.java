@@ -61,7 +61,7 @@ public abstract class CommonHandler {
      * The help window.
      */
     private JFrame helpFrame;
-    
+     
     /**
      * Constructor for CommonHandler.
      * 

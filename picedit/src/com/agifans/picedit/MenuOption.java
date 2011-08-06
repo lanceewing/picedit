@@ -19,7 +19,7 @@ public enum MenuOption {
     OPEN_RECENT("Open Recent"),
     LOAD_BACKGROUND("Load Background..."),
     EXIT("Exit"), 
-    VIEW_DATA("View Data"), 
+    VIEW_DATA("View Data"),
     ZOOM_X2("Zoom x2"), 
     ZOOM_X3("Zoom x3"), 
     ZOOM_X4("Zoom x4"), 
