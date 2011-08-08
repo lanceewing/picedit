@@ -94,7 +94,8 @@ public final class PicGraphics {
      * Constructor for PicGraphics.
      */
     public PicGraphics() {
-        
+        createScreenImage();
+        buildColourMap();
     }
     
     /**
@@ -104,14 +105,11 @@ public final class PicGraphics {
      * @param framesPerSecond the maximum number of frames to display per second.
      */
     public PicGraphics(Component component, int framesPerSecond) {
+        this();
+        
         this.component = component;
-
-        createScreenImage();
-
         this.frameDuration = (1000 / framesPerSecond);
         this.nextTime = System.currentTimeMillis() + this.frameDuration;
-
-        buildColourMap();
 
         crossHairCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
         defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
