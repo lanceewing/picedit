@@ -30,8 +30,7 @@ public class StatusBarPanel extends JPanel {
     }
     
     /**
-     * Paints the status bar. A double buffering mechanism is implemented
-     * in order to reduce flicker as much as possible.
+     * Paints the status bar.
      * 
      * @param g the Graphics object to paint on.
      */

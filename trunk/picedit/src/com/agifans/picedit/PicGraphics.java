@@ -92,6 +92,13 @@ public final class PicGraphics {
 
     /**
      * Constructor for PicGraphics.
+     */
+    public PicGraphics() {
+        
+    }
+    
+    /**
+     * Constructor for PicGraphics.
      * 
      * @param component the GUI component that will create the image.
      * @param framesPerSecond the maximum number of frames to display per second.
