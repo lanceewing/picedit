@@ -1,6 +1,8 @@
 package com.agifans.picedit;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
@@ -25,11 +27,21 @@ public class ToolPanel extends JPanel {
     private PicGraphics picGraphics;
     
     /**
+     * The offscreen image used to prepare the toolbar panel before displaying it.
+     */
+    private Image offScreenImage;
+
+    /**
+     * The Graphics instance associated with the offscreen image.
+     */
+    private Graphics2D offScreenGC;
+    
+    /**
      * Constructor for ToolPanel.
      */
     public ToolPanel(EditStatus editStatus) {
         this.editStatus = editStatus;
-        this.picGraphics = new PicGraphics();
+        this.picGraphics = new PicGraphics(320, 23);
         
         drawInterface();
     }
@@ -39,8 +51,16 @@ public class ToolPanel extends JPanel {
      * 
      * @param g the Graphics object to paint on.
      */
-    public void paint(Graphics g) {
+    public void paint(Graphics graphics) {
+        // Create the offscreen image the first time.
+        if (offScreenImage == null) {
+            offScreenImage = createImage(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
+            offScreenGC = (Graphics2D) offScreenImage.getGraphics();
+        }
         
+        offScreenGC.drawImage(this.picGraphics.getScreenImage(), 0, 0, 640, 46, this);
+        
+        graphics.drawImage(offScreenImage, 0, 0, this);
     }
     
     /**
@@ -115,59 +135,59 @@ public class ToolPanel extends JPanel {
         int c;
 
         // Draw the background for the tool panel.
-        picGraphics.drawFilledBox(0, 177, 319, 199, 7);
+        picGraphics.drawFilledBox(0, 0, 319, 22, 7);
 
         // Draw each of the tool buttons.
-        picGraphics.drawString("Line", 3, 180, 8, 7);
-        picGraphics.drawBox(1, 178, 34, 189, 8);
-        picGraphics.drawString("Pen", 36, 180, 8, 7);
-        picGraphics.drawBox(34, 178, 59, 189, 8);
-        picGraphics.drawString("Step", 61, 180, 8, 7);
-        picGraphics.drawBox(59, 178, 93, 189, 8);
-        picGraphics.drawString("Fill", 95, 180, 8, 7);
-        picGraphics.drawBox(93, 178, 125, 189, 8);
-        picGraphics.drawString("Brush", 127, 180, 8, 7);
-        picGraphics.drawBox(125, 178, 167, 189, 8);
+        picGraphics.drawString("Line", 3, 3, 8, 7);
+        picGraphics.drawBox(1, 1, 34, 12, 8);
+        picGraphics.drawString("Pen", 36, 3, 8, 7);
+        picGraphics.drawBox(34, 1, 59, 12, 8);
+        picGraphics.drawString("Step", 61, 3, 8, 7);
+        picGraphics.drawBox(59, 1, 93, 12, 8);
+        picGraphics.drawString("Fill", 95, 3, 8, 7);
+        picGraphics.drawBox(93, 1, 125, 12, 8);
+        picGraphics.drawString("Brush", 127, 3, 8, 7);
+        picGraphics.drawBox(125, 1, 167, 12, 8);
 
         // Draw the colour part of the palette section.
-        picGraphics.drawBox(1, 189, 167, 198, 8);
-        picGraphics.drawLine(147, 189, 147, 198, 8);
+        picGraphics.drawBox(1, 12, 167, 21, 8);
+        picGraphics.drawLine(147, 12, 147, 21, 8);
         for (c = 0; c < 16; c++) {
-            picGraphics.drawFilledBox(2 + c * 9, 190, 11 + c * 9, 197, c);
+            picGraphics.drawFilledBox(2 + c * 9, 13, 11 + c * 9, 20, c);
         }
 
         // Draw the OFF button part of the palette section.
-        picGraphics.drawLine(151, 192, 152, 192, 8);
-        picGraphics.drawLine(151, 195, 152, 195, 8);
-        picGraphics.drawLine(150, 193, 150, 194, 8);
-        picGraphics.drawLine(153, 193, 153, 194, 8);
-        picGraphics.drawLine(155, 192, 158, 192, 8);
-        picGraphics.drawLine(155, 192, 155, 195, 8);
-        picGraphics.drawLine(155, 194, 157, 194, 8);
-        picGraphics.drawLine(160, 192, 163, 192, 8);
-        picGraphics.drawLine(160, 192, 160, 195, 8);
-        picGraphics.drawLine(160, 194, 162, 194, 8);
+        picGraphics.drawLine(151, 15, 152, 15, 8);
+        picGraphics.drawLine(151, 18, 152, 18, 8);
+        picGraphics.drawLine(150, 16, 150, 17, 8);
+        picGraphics.drawLine(153, 16, 153, 17, 8);
+        picGraphics.drawLine(155, 15, 158, 15, 8);
+        picGraphics.drawLine(155, 15, 155, 18, 8);
+        picGraphics.drawLine(155, 17, 157, 17, 8);
+        picGraphics.drawLine(160, 15, 163, 15, 8);
+        picGraphics.drawLine(160, 15, 160, 18, 8);
+        picGraphics.drawLine(160, 17, 162, 17, 8);
 
         // Draw border around the navigation section.
-        picGraphics.drawBox(209, 178, 294, 188, 8);
+        picGraphics.drawBox(209, 1, 294, 11, 8);
 
         // Draw the navigation buttons.
-        picGraphics.drawChar((char) 174, 211, 180, 8, 7);
-        picGraphics.drawChar((char) 60, 222, 180, 8, 7);
-        picGraphics.drawChar((char) 62, 276, 180, 8, 7);
-        picGraphics.drawChar((char) 175, 285, 180, 8, 7);
-        picGraphics.drawLine(220, 178, 220, 188, 8);
-        picGraphics.drawLine(229, 178, 229, 188, 8);
-        picGraphics.drawLine(283, 178, 283, 188, 8);
-        picGraphics.drawLine(274, 178, 274, 188, 8);
+        picGraphics.drawChar((char) 174, 211, 3, 8, 7);
+        picGraphics.drawChar((char) 60, 222, 3, 8, 7);
+        picGraphics.drawChar((char) 62, 276, 3, 8, 7);
+        picGraphics.drawChar((char) 175, 285, 3, 8, 7);
+        picGraphics.drawLine(220, 1, 220, 11, 8);
+        picGraphics.drawLine(229, 1, 229, 11, 8);
+        picGraphics.drawLine(283, 1, 283, 11, 8);
+        picGraphics.drawLine(274, 1, 274, 11, 8);
 
         // Draw the delete action button.
-        picGraphics.drawString("Del", 296, 180, 8, 7);
-        picGraphics.drawBox(294, 178, 318, 188, 8);
+        picGraphics.drawString("Del", 296, 3, 8, 7);
+        picGraphics.drawBox(294, 1, 318, 11, 8);
 
         // Draw 6 byte picture code section.
-        picGraphics.drawFilledBox(210, 189, 317, 197, 0);
-        picGraphics.drawBox(209, 188, 318, 198, 8);
-        picGraphics.drawFilledBox(230, 179, 273, 187, 0);
+        picGraphics.drawFilledBox(210, 12, 317, 20, 0);
+        picGraphics.drawBox(209, 11, 318, 21, 8);
+        picGraphics.drawFilledBox(230, 2, 273, 10, 0);
     }
 }

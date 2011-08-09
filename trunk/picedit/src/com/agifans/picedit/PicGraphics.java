@@ -92,9 +92,12 @@ public final class PicGraphics {
 
     /**
      * Constructor for PicGraphics.
+     * 
+     * @param width The width of the underlying image.
+     * @param heigth The height of the underlying image.
      */
-    public PicGraphics() {
-        createScreenImage();
+    public PicGraphics(int width, int height) {
+        createScreenImage(width, height);
         buildColourMap();
     }
     
@@ -105,7 +108,7 @@ public final class PicGraphics {
      * @param framesPerSecond the maximum number of frames to display per second.
      */
     public PicGraphics(Component component, int framesPerSecond) {
-        this();
+        this(320, 200);
         
         this.component = component;
         this.frameDuration = (1000 / framesPerSecond);
@@ -203,8 +206,8 @@ public final class PicGraphics {
      * Creates the image for the editor screen on which the editor panel, menu and temporary
      * lines are drawn.
      */
-    public void createScreenImage() {
-        this.screen = new int[320 * 200];
+    public void createScreenImage(int width, int height) {
+        this.screen = new int[width * height];
         Arrays.fill(this.screen, EgaPalette.transparent);
         DataBufferInt dataBuffer = new DataBufferInt(this.screen, this.screen.length);
         ColorModel colorModel = ColorModel.getRGBdefault();
@@ -212,7 +215,7 @@ public final class PicGraphics {
         0x0000ff00, // green mask
         0x000000ff, // blue mask
         0xff000000 }; // alpha mask
-        WritableRaster raster = Raster.createPackedRaster(dataBuffer, 320, 200, 320, bandMasks, null);
+        WritableRaster raster = Raster.createPackedRaster(dataBuffer, width, height, width, bandMasks, null);
         this.screenImage = new BufferedImage(colorModel, raster, false, null);
     }
 
