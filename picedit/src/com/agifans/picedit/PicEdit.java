@@ -72,14 +72,14 @@ public final class PicEdit extends JApplet {
         // Add the panel that holds the picture that is being edited.
         this.getContentPane().add(picturePanel, BorderLayout.CENTER);
         
-        // Add the tool panel below the picture.
+        // Add the tool panel centered below the picture.
         JPanel toolPanelContainer = new JPanel();
         toolPanelContainer.setBackground(EgaPalette.GREY);
         toolPanelContainer.setOpaque(true);
-        toolPanelContainer.setLayout(new BorderLayout());
+        toolPanelContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         ToolPanel toolPanel = new ToolPanel(this.editStatus);
-        toolPanel.setPreferredSize(new Dimension(320, 46));
-        toolPanelContainer.add(toolPanel, BorderLayout.CENTER);
+        toolPanel.setPreferredSize(new Dimension(640, 46));
+        toolPanelContainer.add(toolPanel);
         this.getContentPane().add(toolPanelContainer, BorderLayout.SOUTH);
     }
 
