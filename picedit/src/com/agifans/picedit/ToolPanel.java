@@ -3,7 +3,6 @@ package com.agifans.picedit;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
@@ -55,7 +54,7 @@ public class ToolPanel extends JPanel {
     public void paint(Graphics graphics) {
         // Create the offscreen image the first time.
         if (offScreenImage == null) {
-            offScreenImage = createImage(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
+            offScreenImage = createImage(640, 46);
             offScreenGC = (Graphics2D) offScreenImage.getGraphics();
         }
         
@@ -85,11 +84,11 @@ public class ToolPanel extends JPanel {
     public void updatePositionBox() {
         // Draw the current position on the control panel.
         String tempString = String.format("%5d", editStatus.getPicturePosition());
-        picGraphics.drawFilledBox(230, 179, 273, 187, 0);
-        picGraphics.drawString(tempString, 230, 180, 7, 0);
+        picGraphics.drawFilledBox(230, 2, 273, 10, 0);
+        picGraphics.drawString(tempString, 230, 3, 7, 0);
 
         // Clear the picture code data box.
-        picGraphics.drawFilledBox(210, 189, 317, 197, 0);
+        picGraphics.drawFilledBox(210, 12, 317, 20, 0);
 
         // Now draw the next six picture codes.
         LinkedList<PictureCode> pictureCodes = editStatus.getPictureCodes();
@@ -100,9 +99,9 @@ public class ToolPanel extends JPanel {
             int code = pictureCodes.get(index).getCode();
             tempString = String.format("%02X", code);
             if (code >= 0xF0) {
-                picGraphics.drawString(tempString, 211 + ((index - startIndex) * 16), 190, 4, 0);
+                picGraphics.drawString(tempString, 211 + ((index - startIndex) * 16), 13, 4, 0);
             } else {
-                picGraphics.drawString(tempString, 211 + ((index - startIndex) * 16), 190, 7, 0);
+                picGraphics.drawString(tempString, 211 + ((index - startIndex) * 16), 13, 7, 0);
             }
         }
     }
@@ -114,14 +113,14 @@ public class ToolPanel extends JPanel {
         int circleColour, squareColour, solidColour, sprayColour;
 
         // Draw up/down arrows for adjusting size of the brush.
-        picGraphics.drawChar((char) 24, 201, 180, 8, 7);
-        picGraphics.drawChar((char) 25, 201, 190, 8, 7);
-        picGraphics.drawLine(201, 188, 209, 188, 8);
-        picGraphics.drawLine(200, 178, 200, 198, 8);
+        picGraphics.drawChar((char) 24, 201, 3, 8, 7);
+        picGraphics.drawChar((char) 25, 201, 13, 8, 7);
+        picGraphics.drawLine(201, 11, 209, 11, 8);
+        picGraphics.drawLine(200, 1, 200, 21, 8);
 
         // Draw black area for the brush size and then draw the size value.
-        picGraphics.drawFilledBox(189, 179, 199, 197, 0);
-        picGraphics.drawChar((char) (0x30 + editStatus.getBrushSize()), 191, 184, 7, 0);
+        picGraphics.drawFilledBox(189, 2, 199, 20, 0);
+        picGraphics.drawChar((char) (0x30 + editStatus.getBrushSize()), 191, 7, 7, 0);
 
         // Work out the colours to use for the brush options.
         circleColour = (editStatus.isCircleBrush() ? 15 : 8);
@@ -130,15 +129,15 @@ public class ToolPanel extends JPanel {
         sprayColour = (editStatus.isSprayBrush() ? 15 : 8);
 
         // Draw the brush option icons.
-        picGraphics.drawChar((char) 7, 168, 180, circleColour, 7);
-        picGraphics.drawChar((char) 254, 168, 189, squareColour, 7);
-        picGraphics.drawChar((char) 176, 179, 180, sprayColour, 7);
-        picGraphics.drawChar((char) 219, 179, 189, solidColour, 7);
+        picGraphics.drawChar((char) 7, 168, 3, circleColour, 7);
+        picGraphics.drawChar((char) 254, 168, 12, squareColour, 7);
+        picGraphics.drawChar((char) 176, 179, 3, sprayColour, 7);
+        picGraphics.drawChar((char) 219, 179, 12, solidColour, 7);
 
         // Draw the boxes around the brush option icons.
-        picGraphics.drawBox(167, 178, 188, 198, 8);
-        picGraphics.drawBox(188, 178, 209, 198, 8);
-        picGraphics.drawLine(176, 178, 176, 198, 8);
+        picGraphics.drawBox(167, 1, 188, 21, 8);
+        picGraphics.drawBox(188, 1, 209, 21, 8);
+        picGraphics.drawLine(176, 1, 176, 21, 8);
     }
     
     /**
