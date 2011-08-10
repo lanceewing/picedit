@@ -3,6 +3,7 @@ package com.agifans.picedit;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
@@ -56,6 +57,18 @@ public class ToolPanel extends JPanel {
         if (offScreenImage == null) {
             offScreenImage = createImage(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
             offScreenGC = (Graphics2D) offScreenImage.getGraphics();
+        }
+        
+        // Update the brush panel if required.
+        if (editStatus.getLastRenderedBrushCode() != editStatus.getBrushCode()) {
+            editStatus.setLastRenderedBrushCode(editStatus.getBrushCode());
+            updateBrushPanel();
+        }
+
+        // Update the picture position.
+        if (editStatus.getLastRenderedPicturePosition() != editStatus.getPicturePosition()) {
+            editStatus.setLastRenderedPicturePosition(editStatus.getPicturePosition());
+            updatePositionBox();
         }
         
         offScreenGC.drawImage(this.picGraphics.getScreenImage(), 0, 0, 640, 46, this);
