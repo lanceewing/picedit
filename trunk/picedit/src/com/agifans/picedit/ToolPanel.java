@@ -3,6 +3,7 @@ package com.agifans.picedit;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
@@ -17,9 +18,9 @@ public class ToolPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Holds the current "editing" state of everything within PICEDIT.
+     * The PicEdit application that this ToolPanel belongs to.
      */
-    private EditStatus editStatus;
+    private PicEdit application;
     
     /**
      * The PicGraphics used by the tool panel (this is a temporary solution).
@@ -38,9 +39,11 @@ public class ToolPanel extends JPanel {
     
     /**
      * Constructor for ToolPanel.
+     * 
+     * @param application The PicEdit application that this ToolPanel belongs to.
      */
-    public ToolPanel(EditStatus editStatus) {
-        this.editStatus = editStatus;
+    public ToolPanel(PicEdit application) {
+        this.application = application;
         this.picGraphics = new PicGraphics(320, 23);
         
         drawInterface();
@@ -49,9 +52,11 @@ public class ToolPanel extends JPanel {
     /**
      * Paints the tool bar.
      * 
-     * @param g the Graphics object to paint on.
+     * @param graphics the Graphics object to paint on.
      */
     public void paint(Graphics graphics) {
+        EditStatus editStatus = application.getEditStatus();
+      
         // Create the offscreen image the first time.
         if (offScreenImage == null) {
             offScreenImage = createImage(640, 46);
@@ -82,6 +87,8 @@ public class ToolPanel extends JPanel {
      * picture. This is handy when deleting an action.
      */
     public void updatePositionBox() {
+        EditStatus editStatus = application.getEditStatus();
+      
         // Draw the current position on the control panel.
         String tempString = String.format("%5d", editStatus.getPicturePosition());
         picGraphics.drawFilledBox(230, 2, 273, 10, 0);
@@ -110,7 +117,7 @@ public class ToolPanel extends JPanel {
      * Draws/Updates the brush panel.
      */
     private void updateBrushPanel() {
-        int circleColour, squareColour, solidColour, sprayColour;
+        EditStatus editStatus = application.getEditStatus();
 
         // Draw up/down arrows for adjusting size of the brush.
         picGraphics.drawChar((char) 24, 201, 3, 8, 7);
@@ -123,10 +130,10 @@ public class ToolPanel extends JPanel {
         picGraphics.drawChar((char) (0x30 + editStatus.getBrushSize()), 191, 7, 7, 0);
 
         // Work out the colours to use for the brush options.
-        circleColour = (editStatus.isCircleBrush() ? 15 : 8);
-        squareColour = (editStatus.isSquareBrush() ? 15 : 8);
-        solidColour = (editStatus.isSolidBrush() ? 15 : 8);
-        sprayColour = (editStatus.isSprayBrush() ? 15 : 8);
+        int circleColour = (editStatus.isCircleBrush() ? 15 : 8);
+        int squareColour = (editStatus.isSquareBrush() ? 15 : 8);
+        int solidColour = (editStatus.isSolidBrush() ? 15 : 8);
+        int sprayColour = (editStatus.isSprayBrush() ? 15 : 8);
 
         // Draw the brush option icons.
         picGraphics.drawChar((char) 7, 168, 3, circleColour, 7);
@@ -201,5 +208,76 @@ public class ToolPanel extends JPanel {
         picGraphics.drawFilledBox(210, 12, 317, 20, 0);
         picGraphics.drawBox(209, 11, 318, 21, 8);
         picGraphics.drawFilledBox(230, 2, 273, 10, 0);
+    }
+    
+    /**
+     * Mouse handler for the Tool Panel.
+     */
+    class ToolPanelMouseHandler extends CommonHandler {
+      
+        // -------------------- Bound boxes for buttons --------------------
+        private Rectangle lineButton;
+        private Rectangle penButton;
+        private Rectangle stepButton;
+        private Rectangle fillButton;
+        private Rectangle brushButton;
+        private Rectangle paletteRect;
+        private Rectangle offButton;
+        private Rectangle circleRect;
+        private Rectangle squareRect;
+        private Rectangle sprayRect;
+        private Rectangle solidRect;
+        private Rectangle upButton;
+        private Rectangle downButton;
+        private Rectangle posRect;
+        private Rectangle statusRect;
+        private Rectangle delRect;
+        private Rectangle leftButton;
+        private Rectangle rightButton;
+        private Rectangle homeButton;
+        private Rectangle endButton;
+      
+        /**
+         * Constructor for ToolPanelMouseHandler.
+         * 
+         * @param editStatus
+         * @param picGraphics
+         * @param picture
+         * @param application
+         */
+        ToolPanelMouseHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
+            super(editStatus, picGraphics, picture, application);
+            
+            // Create the bounding boxes for all of the UI buttons.
+            createBoundingBoxes();
+        }
+      
+        /**
+         * Creates the bounding rectangles for each of the 'buttons' on 
+         * the PICEDIT screen.
+         */
+        private void createBoundingBoxes() {
+            // TODO: Adjust the dimensions to match ToolPanel size.
+            lineButton = new Rectangle(2, 179, 32, 10);
+            penButton = new Rectangle(35, 179, 24, 10);
+            stepButton = new Rectangle(60, 179, 33, 10);
+            fillButton = new Rectangle(94, 179, 31, 10);
+            brushButton = new Rectangle(126, 179, 41, 10);
+            paletteRect = new Rectangle(2, 190, 145, 8);
+            offButton = new Rectangle(148, 190, 19, 8);
+            circleRect = new Rectangle(168, 179, 8, 9);
+            squareRect = new Rectangle(168, 189, 8, 9);
+            sprayRect = new Rectangle(177, 179, 11, 9);
+            solidRect = new Rectangle(177, 189, 11, 9);
+            upButton = new Rectangle(201, 179, 8, 9);
+            downButton = new Rectangle(201, 189, 8, 9);
+            homeButton = new Rectangle(210, 179, 10, 9);
+            leftButton = new Rectangle(221, 179, 8, 9);
+            rightButton = new Rectangle(275, 179, 8, 9);
+            endButton = new Rectangle(284, 179, 10, 9);
+            delRect = new Rectangle(295, 179, 23, 9);
+            posRect = new Rectangle(230, 179, 44, 9);
+            statusRect = new Rectangle(0, 0, 320, 8);
+        }
     }
 }

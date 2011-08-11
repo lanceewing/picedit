@@ -80,12 +80,31 @@ public final class PicEdit extends JApplet {
         toolPanelContainer.setBackground(EgaPalette.GREY);
         toolPanelContainer.setOpaque(true);
         toolPanelContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        ToolPanel toolPanel = new ToolPanel(this.editStatus);
+        ToolPanel toolPanel = new ToolPanel(this);
         toolPanel.setPreferredSize(new Dimension(640, 46));
         toolPanelContainer.add(toolPanel);
         this.getContentPane().add(toolPanelContainer, BorderLayout.SOUTH);
     }
 
+    /**
+     * Gets the Picture that is currently being edited with PicEdit.
+     * 
+     * @return The Picture that is currently being edited.
+     */
+    public Picture getPicture() {
+        return picture;
+    }
+    
+    /**
+     * Gets the EditStatus for this PicEdit application. This object contains the
+     * editing state of everything within PicEdit.
+     * 
+     * @return The EditStatus.
+     */
+    public EditStatus getEditStatus() {
+        return editStatus;
+    }
+    
     /**
      * Returns the Menu used by PICEDIT.
      * 
