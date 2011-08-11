@@ -3,7 +3,11 @@ package com.agifans.picedit;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
@@ -47,6 +51,9 @@ public class ToolPanel extends JPanel {
         this.picGraphics = new PicGraphics(320, 23);
         
         drawInterface();
+        
+        ToolPanelMouseHandler mouseHandler = new ToolPanelMouseHandler(application.getEditStatus(), picGraphics, application.getPicture(), application);
+        this.addMouseListener(mouseHandler);
     }
     
     /**
@@ -213,7 +220,7 @@ public class ToolPanel extends JPanel {
     /**
      * Mouse handler for the Tool Panel.
      */
-    class ToolPanelMouseHandler extends CommonHandler {
+    class ToolPanelMouseHandler extends CommonHandler implements MouseListener {
       
         // -------------------- Bound boxes for buttons --------------------
         private Rectangle lineButton;
@@ -230,7 +237,6 @@ public class ToolPanel extends JPanel {
         private Rectangle upButton;
         private Rectangle downButton;
         private Rectangle posRect;
-        private Rectangle statusRect;
         private Rectangle delRect;
         private Rectangle leftButton;
         private Rectangle rightButton;
@@ -257,27 +263,178 @@ public class ToolPanel extends JPanel {
          * the PICEDIT screen.
          */
         private void createBoundingBoxes() {
-            // TODO: Adjust the dimensions to match ToolPanel size.
-            lineButton = new Rectangle(2, 179, 32, 10);
-            penButton = new Rectangle(35, 179, 24, 10);
-            stepButton = new Rectangle(60, 179, 33, 10);
-            fillButton = new Rectangle(94, 179, 31, 10);
-            brushButton = new Rectangle(126, 179, 41, 10);
-            paletteRect = new Rectangle(2, 190, 145, 8);
-            offButton = new Rectangle(148, 190, 19, 8);
-            circleRect = new Rectangle(168, 179, 8, 9);
-            squareRect = new Rectangle(168, 189, 8, 9);
-            sprayRect = new Rectangle(177, 179, 11, 9);
-            solidRect = new Rectangle(177, 189, 11, 9);
-            upButton = new Rectangle(201, 179, 8, 9);
-            downButton = new Rectangle(201, 189, 8, 9);
-            homeButton = new Rectangle(210, 179, 10, 9);
-            leftButton = new Rectangle(221, 179, 8, 9);
-            rightButton = new Rectangle(275, 179, 8, 9);
-            endButton = new Rectangle(284, 179, 10, 9);
-            delRect = new Rectangle(295, 179, 23, 9);
-            posRect = new Rectangle(230, 179, 44, 9);
-            statusRect = new Rectangle(0, 0, 320, 8);
+            lineButton = new Rectangle(2, 2, 32, 10);
+            penButton = new Rectangle(35, 2, 24, 10);
+            stepButton = new Rectangle(60, 2, 33, 10);
+            fillButton = new Rectangle(94, 2, 31, 10);
+            brushButton = new Rectangle(126, 2, 41, 10);
+            paletteRect = new Rectangle(2, 13, 145, 8);
+            offButton = new Rectangle(148, 13, 19, 8);
+            circleRect = new Rectangle(168, 2, 8, 9);
+            squareRect = new Rectangle(168, 12, 8, 9);
+            sprayRect = new Rectangle(177, 2, 11, 9);
+            solidRect = new Rectangle(177, 12, 11, 9);
+            upButton = new Rectangle(201, 2, 8, 9);
+            downButton = new Rectangle(201, 12, 8, 9);
+            homeButton = new Rectangle(210, 2, 10, 9);
+            leftButton = new Rectangle(221, 2, 8, 9);
+            rightButton = new Rectangle(275, 2, 8, 9);
+            endButton = new Rectangle(284, 2, 10, 9);
+            delRect = new Rectangle(295, 2, 23, 9);
+            posRect = new Rectangle(230, 2, 44, 9);
+        }
+
+        /**
+         * Invoked when a mouse button is clicked on the tool bar.
+         * 
+         * @param event the mouse click event.
+         */
+        public void mouseClicked(MouseEvent e) {
+            // Ignored. Mouse clicks are handled by the pressed event.
+        }
+
+        /**
+         * Invoked when the mouse enters the PICEDIT toolbar.
+         * 
+         * @param event the mouse entered event.
+         */
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        /**
+         * Invoked when the mouse exits the PICEDIT toolbar.
+         * 
+         * @param event the mouse exited event.
+         */
+        public void mouseExited(MouseEvent e) {
+        }
+        
+        /**
+         * Invoked when a mouse button is pressed down.
+         * 
+         * @param event the mouse pressed event.
+         */
+        public void mousePressed(MouseEvent event) { 
+            // Toolbar is stretched double in both directions, so adjust the point.
+            Point mousePoint = new Point(event.getX() / 2, event.getY() / 2);
+            
+            if (editStatus.isPaused()) {
+                // If paused then ignore mouse clicks.
+            } else if (editStatus.isMenuActive()) {
+                // If menu was active and we received a mouse click, then set menu active false again.
+                editStatus.setMenuActive(false);
+            } else {
+                processMouseClick(mousePoint, event.getButton());
+            }
+        }
+
+        /**
+         * Processes the given mouse click.
+         * 
+         * @param mousePoint the Point where the mouse click occurred.
+         * @param mouseButton the mouse button that was clicked.
+         */
+        public void processMouseClick(Point mousePoint, int mouseButton) {
+            int x = (int) mousePoint.getX();
+            int y = (int) mousePoint.getY();
+
+            // Is it the LEFT mouse button?
+            if (mouseButton == MouseEvent.BUTTON1) {
+                // Process clicks on the tool selection buttons.
+                if (lineButton.contains(mousePoint)) {
+                    processToolSelect(ToolType.LINE);
+                }
+                if (penButton.contains(mousePoint)) {
+                    processToolSelect(ToolType.PEN);
+                }
+                if (stepButton.contains(mousePoint)) {
+                    processToolSelect(ToolType.STEP);
+                }
+                if (fillButton.contains(mousePoint)) {
+                    processToolSelect(ToolType.FILL);
+                }
+                if (brushButton.contains(mousePoint)) {
+                    processToolSelect(ToolType.BRUSH);
+                }
+
+                // Process clicks on the brush shape/texture/size buttons.
+                if (upButton.contains(mousePoint)) {
+                    editStatus.incrementBrushSize();
+                }
+                if (downButton.contains(mousePoint)) {
+                    editStatus.decrementBrushSize();
+                }
+                if (circleRect.contains(mousePoint)) {
+                    editStatus.setBrushShape(BrushShape.CIRCLE);
+                }
+                if (squareRect.contains(mousePoint)) {
+                    editStatus.setBrushShape(BrushShape.SQUARE);
+                }
+                if (sprayRect.contains(mousePoint)) {
+                    editStatus.setBrushTexture(BrushTexture.SPRAY);
+                }
+                if (solidRect.contains(mousePoint)) {
+                    editStatus.setBrushTexture(BrushTexture.SOLID);
+                }
+
+                // Process left mouse button clicks on the palette and OFF buttons. Changes visual colour.
+                if (paletteRect.contains(mousePoint)) {
+                    processVisualColourChange(picGraphics.getPixel(x, y));
+                }
+                if (offButton.contains(mousePoint)) {
+                    editStatus.setVisualColour(EditStatus.VISUAL_OFF);
+                    editStatus.addPictureCode(0xF1);
+                    picture.updateScreen();
+                }
+
+                // Process clicks on the delete picture action button.
+                if (delRect.contains(mousePoint)) {
+                    processDeleteCurrentPictureAction();
+                }
+
+                // Process clicks on the picture navigation buttons.
+                if (leftButton.contains(mousePoint)) {
+                    processMoveBackOnePictureAction();
+                }
+                if (rightButton.contains(mousePoint)) {
+                    processMoveForwardOnePictureAction();
+                }
+                if (homeButton.contains(mousePoint)) {
+                    processMoveToStartOfPictureBuffer();
+                }
+                if (endButton.contains(mousePoint)) {
+                    processMoveToEndOfPictureBuffer();
+                }
+                if (posRect.contains(mousePoint)) {
+                    processEnterPosition();
+                }
+            }
+
+            // Is it the RIGHT mouse button?
+            if (mouseButton == MouseEvent.BUTTON3) {
+                // Right-clicking on the palette sets the priority colour.
+                if (paletteRect.contains(mousePoint)) {
+                    int newPriorityColour = picGraphics.getPixel(x, y);
+                    editStatus.setPriorityColour(newPriorityColour);
+                    editStatus.addPictureCode(0xF2);
+                    editStatus.addPictureCode(newPriorityColour);
+                    picture.updateScreen();
+                }
+                // Right-clicking on the OFF button turns off the priority colour.
+                if (offButton.contains(mousePoint)) {
+                    editStatus.setPriorityColour(EditStatus.PRIORITY_OFF);
+                    editStatus.addPictureCode(0xF3);
+                    picture.updateScreen();
+                }
+            }
+        }
+        
+        /**
+         * Invoked when a mouse button is released.
+         * 
+         * @param event the mouse released event.
+         */
+        public void mouseReleased(MouseEvent e) {
         }
     }
 }
