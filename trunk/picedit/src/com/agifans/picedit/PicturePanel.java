@@ -67,7 +67,7 @@ public class PicturePanel extends JPanel {
         this.picture = picture;
         this.application = application;
         
-        Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
+        Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
         this.setPreferredSize(appDimension);
         
         MouseHandler mouseHandler = new MouseHandler(editStatus, picGraphics, picture, application);
