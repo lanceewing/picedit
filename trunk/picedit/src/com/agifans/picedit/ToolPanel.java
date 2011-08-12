@@ -3,7 +3,6 @@ package com.agifans.picedit;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -48,7 +47,7 @@ public class ToolPanel extends JPanel {
      */
     public ToolPanel(PicEdit application) {
         this.application = application;
-        this.picGraphics = new PicGraphics(320, 23);
+        this.picGraphics = new PicGraphics(320, 23, this, 25);
         
         drawInterface();
         

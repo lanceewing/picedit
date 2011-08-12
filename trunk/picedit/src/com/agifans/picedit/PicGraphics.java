@@ -20,11 +20,6 @@ import java.util.Map;
 public final class PicGraphics {
 
     /**
-     * The offset into the main PICEDIT screen where the picture starts.
-     */
-    private static final int PICTURE_OFFSET = 2880;
-
-    /**
      * The Image for the background image.
      */
     private Image backgroundImage;
@@ -95,20 +90,12 @@ public final class PicGraphics {
      * 
      * @param width The width of the underlying image.
      * @param heigth The height of the underlying image.
-     */
-    public PicGraphics(int width, int height) {
-        createScreenImage(width, height);
-        buildColourMap();
-    }
-    
-    /**
-     * Constructor for PicGraphics.
-     * 
      * @param component the GUI component that will create the image.
      * @param framesPerSecond the maximum number of frames to display per second.
      */
-    public PicGraphics(Component component, int framesPerSecond) {
-        this(320, 200);
+    public PicGraphics(int width, int height, Component component, int framesPerSecond) {
+        createScreenImage(width, height);
+        buildColourMap();
         
         this.component = component;
         this.frameDuration = (1000 / framesPerSecond);
@@ -129,7 +116,7 @@ public final class PicGraphics {
      * @param pictureType The type of picture being edited (AGI/SCI0).
      */
     public void createPriorityBandsImage(PictureType pictureType) {
-        bandsImage = new BufferedImage(320, pictureType.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        bandsImage = new BufferedImage(pictureType.getWidth(), pictureType.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics bandsGraphics = bandsImage.getGraphics();
 
         // Draw the bands onto the image so it is ready to be displayed when
@@ -140,7 +127,7 @@ public final class PicGraphics {
             // For SCI0, the top 42 lines are for priority 0. The other 14 bands
             // get an even share of the 148 remaining lines (which, btw, doesn't
             // divide evenly, so the bands are not even as then are in AGI).
-            for (int y = 0; y < 200; y++) {
+            for (int y = 0; y < 190; y++) {
                 int priorityBand = ((int) ((y - 42) / ((190 - 42) / 14))) + 1;
 
                 if (priorityBand != currentPriorityBand) {
@@ -199,7 +186,7 @@ public final class PicGraphics {
      * @param pictureType The type of picture currently being edited.
      */
     public void clearDrawingArea(PictureType pictureType) {
-        Arrays.fill(this.screen, PICTURE_OFFSET, pictureType.getNumberOfEGAPixels() + PICTURE_OFFSET, EgaPalette.transparent);
+        Arrays.fill(this.screen, 0, pictureType.getNumberOfEGAPixels(), EgaPalette.transparent);
     }
 
     /**
@@ -232,60 +219,60 @@ public final class PicGraphics {
         }
     }
 
-    /**
-     * Draws the given array of RGB values into the screen at the given offset,
-     * doubling each pixel as it goes.
-     * 
-     * @param offset the offset at which to start copying the RGB data.
-     * @param rgbData the RGB data to copy onto the screen.
-     */
-    public void drawDoubleRGBData(int offset, int[] rgbData) {
-        for (int i = 0; i < 26880;) {
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-            screen[offset++] = screen[offset++] = rgbData[i++];
-        }
-    }
+//    /**
+//     * Draws the given array of RGB values into the screen at the given offset,
+//     * doubling each pixel as it goes.
+//     * 
+//     * @param offset the offset at which to start copying the RGB data.
+//     * @param rgbData the RGB data to copy onto the screen.
+//     */
+//    public void drawDoubleRGBData(int offset, int[] rgbData) {
+//        for (int i = 0; i < 26880;) {
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//            screen[offset++] = screen[offset++] = rgbData[i++];
+//        }
+//    }
 
-    /**
-     * Draws the given array of RGB values into the screen at the given offset.
-     * 
-     * @param offset the offset at which to start copying the RGB data.
-     * @param rgbData the RGB data to copy onto the screen.
-     */
-    public void drawRGBData(int offset, int[] rgbData) {
-        for (int i = 0; i < 60800;) {
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-            screen[offset++] = rgbData[i++];
-        }
-    }
+//    /**
+//     * Draws the given array of RGB values into the screen at the given offset.
+//     * 
+//     * @param offset the offset at which to start copying the RGB data.
+//     * @param rgbData the RGB data to copy onto the screen.
+//     */
+//    public void drawRGBData(int offset, int[] rgbData) {
+//        for (int i = 0; i < 60800;) {
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//            screen[offset++] = rgbData[i++];
+//        }
+//    }
 
     /**
      * Draws the screen data onto the Image.
