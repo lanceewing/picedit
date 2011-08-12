@@ -2,7 +2,6 @@ package com.agifans.picedit;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -34,11 +33,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      */
     private Robot robot;
 
-    // -------------------- Bound boxes for buttons --------------------
-    private Rectangle screenRect;
-    private Rectangle picRect;
-    private Rectangle statusRect;
-
     /**
      * Constructor for MouseHandler.
      * 
@@ -49,9 +43,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      */
     public MouseHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
         super(editStatus, picGraphics, picture, application);
-
-        // Create the bounding boxes for all of the UI buttons.
-        createBoundingBoxes();
 
         // Starts timer that injects mouse motion events.
         startMouseMotionTimer();
@@ -85,16 +76,13 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                         // Otherwise process the mouse event as per normal.
                         processMouseMove(mousePoint);
 
-                        // Is the mouse point within the AGI picture?
-                        if (picRect.contains(mousePoint)) {
-                            // Vary the colour of the end point of the temporary line so that it is obvious where it is.
-                            if ((editStatus.isLineActive() || editStatus.isPenActive() || editStatus.isStepActive()) && (editStatus.getNumOfClicks() > 0)) {
-                                int index = (editStatus.getMouseY() << 8) + (editStatus.getMouseY() << 6) + (editStatus.getMouseX() << 1) + 2880;
-                                int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
-                                int rgbCode = (new java.awt.Color(brightness, brightness, brightness)).getRGB();
-                                picGraphics.getScreen()[index] = rgbCode;
-                                picGraphics.getScreen()[index + 1] = rgbCode;
-                            }
+                        // Vary the colour of the end point of the temporary line so that it is obvious where it is.
+                        if ((editStatus.isLineActive() || editStatus.isPenActive() || editStatus.isStepActive()) && (editStatus.getNumOfClicks() > 0)) {
+                            int index = (editStatus.getMouseY() << 8) + (editStatus.getMouseY() << 6) + (editStatus.getMouseX() << 1);
+                            int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
+                            int rgbCode = (new java.awt.Color(brightness, brightness, brightness)).getRGB();
+                            picGraphics.getScreen()[index] = rgbCode;
+                            picGraphics.getScreen()[index + 1] = rgbCode;
                         }
                     }
 
@@ -107,16 +95,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             }
         };
         timer.scheduleAtFixedRate(trackingTask, 40, 40);
-    }
-
-    /**
-     * Creates the bounding rectangles for each of the 'buttons' on 
-     * the PICEDIT screen.
-     */
-    private void createBoundingBoxes() {
-        screenRect = new Rectangle(0, 0, 320, 200);
-        picRect = new Rectangle(0, 9, 320, 168);
-        statusRect = new Rectangle(0, 0, 320, 8);
     }
 
     /**
@@ -196,12 +174,8 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             // If menu was active and we received a mouse click, then set menu active false again.
             editStatus.setMenuActive(false);
         } else {
-            if (statusRect.contains(mousePoint)) {
-              // TODO: Now that the menu is not activated here, it opens up more possibilities for the status bar.
-            } else {
-                // Otherwise process mouse click as per normal.
-                processMouseClick(mousePoint, event.getButton());
-            }
+            // Otherwise process mouse click as per normal.
+            processMouseClick(mousePoint, event.getButton());
         }
 
         // Change mouse cursor depending on position.
@@ -233,7 +207,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param mousePoint the current mouse position.
      */
     private void updateMouseCursor(Point mousePoint) {
-        if (!editStatus.isMenuActive() && picRect.contains(mousePoint)) {
+        if (!editStatus.isMenuActive()) {
             if ((editStatus.getNumOfClicks() == 0) || editStatus.isFillActive() || editStatus.isBrushActive()) {
                 // If the tool is Fill or Brush then show the standard cross hair cursor.
                 picGraphics.showCrossHairCursor();
@@ -257,64 +231,66 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         // Update the status line on every mouse movement.
         editStatus.updateMousePoint(mousePoint);
 
-        if (picRect.contains(mousePoint) || !screenRect.contains(mousePoint)) {
-            int x = editStatus.getMouseX();
-            int y = editStatus.getMouseY();
+        int x = editStatus.getMouseX();
+        int y = editStatus.getMouseY();
 
-            if (editStatus.getNumOfClicks() > 0) {
-                Point clickPoint = editStatus.getClickPoint();
-                int clickX = (int) clickPoint.getX();
-                int clickY = (int) clickPoint.getY();
-                int lineColour = editStatus.getTemporaryLineColour();
+        if (editStatus.getNumOfClicks() > 0) {
+            Point clickPoint = editStatus.getClickPoint();
+            int clickX = (int) clickPoint.getX();
+            int clickY = (int) clickPoint.getY();
+            int lineColour = editStatus.getTemporaryLineColour();
 
-                if (editStatus.isLineActive()) {
-                    picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+            if (editStatus.isLineActive()) {
+                picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+            }
+            if (editStatus.isStepActive()) {
+                int dX = 0;
+                int dY = 0;
+
+                switch (editStatus.getNumOfClicks()) {
+                    case 1:
+                        dX = x - clickX;
+                        dY = y - clickY;
+                        if (Math.abs(dX) > Math.abs(dY)) {
+                            y = clickY;
+                        } else {
+                            x = clickX;
+                        }
+                        picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+                        break;
+
+                    default:
+                        if ((editStatus.isXCornerActive() && ((editStatus.getNumOfClicks() % 2) == 0)) || (editStatus.isYCornerActive() && ((editStatus.getNumOfClicks() % 2) > 0))) {
+                            // X and Y corners toggle different direction based on number of clicks.	
+                            x = clickX;
+                        } else {
+                            y = clickY;
+                        }
+                        picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+                        break;
                 }
-                if (editStatus.isStepActive()) {
-                    int dX = 0;
-                    int dY = 0;
+            }
+            if (editStatus.isPenActive()) {
+                x = clickX + adjustForPen(x - clickX, 6);
+                y = clickY + adjustForPen(y - clickY, 7);
+                picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+            }
 
-                    switch (editStatus.getNumOfClicks()) {
-                        case 1:
-                            dX = x - clickX;
-                            dY = y - clickY;
-                            if (Math.abs(dX) > Math.abs(dY)) {
-                                y = clickY;
-                            } else {
-                                x = clickX;
-                            }
-                            picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
-                            break;
+            // Move the mouse to the tool restricted x/y position (if applicable).
+            if ((robot != null) && ((x != editStatus.getMouseX()) || (y != editStatus.getMouseY()))) {
+                // Make sure the EditStatus has the tool adjusted mouse point.
+                editStatus.setMousePoint(new Point(x, y));
 
-                        default:
-                            if ((editStatus.isXCornerActive() && ((editStatus.getNumOfClicks() % 2) == 0)) || (editStatus.isYCornerActive() && ((editStatus.getNumOfClicks() % 2) > 0))) {
-                                // X and Y corners toggle different direction based on number of clicks.	
-                                x = clickX;
-                            } else {
-                                y = clickY;
-                            }
-                            picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
-                            break;
-                    }
-                }
-                if (editStatus.isPenActive()) {
-                    x = clickX + adjustForPen(x - clickX, 6);
-                    y = clickY + adjustForPen(y - clickY, 7);
-                    picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
-                }
-
-                // Move the mouse to the tool restricted x/y position (if applicable).
-                if ((robot != null) && ((x != editStatus.getMouseX()) || (y != editStatus.getMouseY()))) {
-                    // Make sure the EditStatus has the tool adjusted mouse point.
-                    editStatus.setMousePoint(new Point(x, y));
-
-                    // Adjust new x/y pos back to screen coords.
+                // Adjust new x/y pos back to screen coords.
+                if (editStatus.getPictureType().equals(PictureType.AGI)) {
                     x = ((x << 1) * editStatus.getZoomFactor()) + diffX;
-                    y = ((y + 9) * editStatus.getZoomFactor()) + diffY;
-
-                    // Use robot to move the mouse cursor.
-                    robot.mouseMove(x, y);
+                } else {
+                    x = (x * editStatus.getZoomFactor()) + diffX;
                 }
+                y = (y * editStatus.getZoomFactor()) + diffY;
+
+                // Use robot to move the mouse cursor.
+                robot.mouseMove(x, y);
             }
         }
     }
@@ -334,8 +310,8 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
 
         // Is it the LEFT mouse button?
         if (mouseButton == MouseEvent.BUTTON1) {
-            // Is the mouse click within the picture?
-            if (picRect.contains(mousePoint) && (editStatus.getTool() != ToolType.NONE)) {
+            // Is a tool active?
+            if (editStatus.getTool() != ToolType.NONE) {
                 // Register the new left mouse click in the edit status.
                 editStatus.addClickPoint();
 
@@ -481,51 +457,49 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         // Is it the RIGHT mouse button?
         if (mouseButton == MouseEvent.BUTTON3) {
             // Right-clicking on the AGI picture will clear the current tool selection.
-            if (picRect.contains(mousePoint)) {
-                if ((editStatus.getNumOfClicks() == 1) && (editStatus.isStepActive())) {
-                    // Single point line support for the Step tool.
-                    
-                    // Get the 'adjusted' X & Y position back from the edit status.
-                    editStatus.addClickPoint();
-                    Point pictureClickPoint = editStatus.getClickPoint();
-                    x = (int) pictureClickPoint.getX();
-                    y = (int) pictureClickPoint.getY();
+            if ((editStatus.getNumOfClicks() == 1) && (editStatus.isStepActive())) {
+                // Single point line support for the Step tool.
+                
+                // Get the 'adjusted' X & Y position back from the edit status.
+                editStatus.addClickPoint();
+                Point pictureClickPoint = editStatus.getClickPoint();
+                x = (int) pictureClickPoint.getX();
+                y = (int) pictureClickPoint.getY();
 
-                    // Get the previous mouse click point for use with single point Step.
-                    int previousX = 0;
-                    int previousY = 0;
-                    Point previousClickPoint = editStatus.getPreviousClickPoint();
-                    if (previousClickPoint != null) {
-                        previousX = (int) previousClickPoint.getX();
-                        previousY = (int) previousClickPoint.getY();
-                    }
-                    
-                    // The X/Y corner decision for single point is based on where right click was.
-                    int dX = x - previousX;
-                    int dY = y - previousY;
-                    if (Math.abs(dX) > Math.abs(dY)) { /* X or Y corner */
-                        editStatus.addPictureCode(0xF5);
-                        editStatus.addPictureCode(previousX);
-                        editStatus.addPictureCode(previousY);
-                    } else {
-                        editStatus.addPictureCode(0xF4);
-                        editStatus.addPictureCode(previousX);
-                        editStatus.addPictureCode(previousY);
-                    }
-                    
-                    picture.putPixel(previousX, previousY);
-                    picture.updateScreen();
+                // Get the previous mouse click point for use with single point Step.
+                int previousX = 0;
+                int previousY = 0;
+                Point previousClickPoint = editStatus.getPreviousClickPoint();
+                if (previousClickPoint != null) {
+                    previousX = (int) previousClickPoint.getX();
+                    previousY = (int) previousClickPoint.getY();
                 }
-                if (editStatus.getNumOfClicks() > 0) {
-                    // If a tool is active (i.e. has a least one click) then right click resets 
-                    // number of clicks, which allows the user to move to new location.
-                    editStatus.clearTool();
+                
+                // The X/Y corner decision for single point is based on where right click was.
+                int dX = x - previousX;
+                int dY = y - previousY;
+                if (Math.abs(dX) > Math.abs(dY)) { /* X or Y corner */
+                    editStatus.addPictureCode(0xF5);
+                    editStatus.addPictureCode(previousX);
+                    editStatus.addPictureCode(previousY);
                 } else {
-                    // If no clicks performed yet then a right click sets tool to None.
-                    editStatus.setTool(ToolType.NONE);
+                    editStatus.addPictureCode(0xF4);
+                    editStatus.addPictureCode(previousX);
+                    editStatus.addPictureCode(previousY);
                 }
+                
+                picture.putPixel(previousX, previousY);
                 picture.updateScreen();
             }
+            if (editStatus.getNumOfClicks() > 0) {
+                // If a tool is active (i.e. has a least one click) then right click resets 
+                // number of clicks, which allows the user to move to new location.
+                editStatus.clearTool();
+            } else {
+                // If no clicks performed yet then a right click sets tool to None.
+                editStatus.setTool(ToolType.NONE);
+            }
+            picture.updateScreen();
         }
     }
 
