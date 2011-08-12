@@ -97,17 +97,17 @@ public class PicturePanel extends JPanel {
     public void paint(Graphics g) {
         // Create the offscreen image the first time.
         if (offScreenImage == null) {
-            offScreenImage = createImage(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
+            offScreenImage = createImage(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
             offScreenGC = (Graphics2D) offScreenImage.getGraphics();
         }
 
         // If we're in text mode ("Help" and "View Data"), then just display the image.
         if (editStatus.isTextMode()) {
-            offScreenGC.drawImage(picGraphics.getTextImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
+            offScreenGC.drawImage(picGraphics.getTextImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
         } else {
             // Draw the background image (if there is one) to the offscreen image.
             if ((picGraphics.getBackgroundImage() != null) && (editStatus.isBackgroundEnabled())) {
-                offScreenGC.drawImage(picGraphics.getBackgroundImage(), 0, 0, 320 * editStatus.getZoomFactor(), 168 * editStatus.getZoomFactor(), this);
+                offScreenGC.drawImage(picGraphics.getBackgroundImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
             } else {
                 // Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
                 if (editStatus.isDualModeEnabled()) {
@@ -119,7 +119,7 @@ public class PicturePanel extends JPanel {
                 } else {
                     offScreenGC.setColor(EgaPalette.RED);
                 }
-                offScreenGC.fillRect(0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
+                offScreenGC.fillRect(0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
             }
 
             if (editStatus.isDualModeEnabled()) {
@@ -130,7 +130,7 @@ public class PicturePanel extends JPanel {
                 BufferedImage tmpVisualImage = new BufferedImage(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), BufferedImage.TYPE_INT_ARGB);
                 Graphics tmpVisualGraphics = tmpVisualImage.getGraphics();
                 tmpVisualGraphics.setColor(EgaPalette.WHITE);
-                tmpVisualGraphics.fillRect(0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor());
+                tmpVisualGraphics.fillRect(0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
                 tmpVisualGraphics.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 
                 // Build a RescapeOp to perform the 50% transparency.
@@ -154,7 +154,7 @@ public class PicturePanel extends JPanel {
             }
             
             // Draw the  PICEDIT screen to the offscreen image (transparent pixels will show the background).
-            offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor(), this);
+            offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
         }
 
         // Now display the screen to the user.

@@ -199,9 +199,9 @@ public final class PicGraphics {
         DataBufferInt dataBuffer = new DataBufferInt(this.screen, this.screen.length);
         ColorModel colorModel = ColorModel.getRGBdefault();
         int[] bandMasks = new int[] { 0x00ff0000, // red mask
-        0x0000ff00, // green mask
-        0x000000ff, // blue mask
-        0xff000000 }; // alpha mask
+                0x0000ff00, // green mask
+                0x000000ff, // blue mask
+                0xff000000 }; // alpha mask
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, width, height, width, bandMasks, null);
         this.screenImage = new BufferedImage(colorModel, raster, false, null);
     }
@@ -218,61 +218,6 @@ public final class PicGraphics {
             colourMap.put(colours[i], i);
         }
     }
-
-//    /**
-//     * Draws the given array of RGB values into the screen at the given offset,
-//     * doubling each pixel as it goes.
-//     * 
-//     * @param offset the offset at which to start copying the RGB data.
-//     * @param rgbData the RGB data to copy onto the screen.
-//     */
-//    public void drawDoubleRGBData(int offset, int[] rgbData) {
-//        for (int i = 0; i < 26880;) {
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//            screen[offset++] = screen[offset++] = rgbData[i++];
-//        }
-//    }
-
-//    /**
-//     * Draws the given array of RGB values into the screen at the given offset.
-//     * 
-//     * @param offset the offset at which to start copying the RGB data.
-//     * @param rgbData the RGB data to copy onto the screen.
-//     */
-//    public void drawRGBData(int offset, int[] rgbData) {
-//        for (int i = 0; i < 60800;) {
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//            screen[offset++] = rgbData[i++];
-//        }
-//    }
 
     /**
      * Draws the screen data onto the Image.
@@ -574,8 +519,8 @@ public final class PicGraphics {
                 y2 = y;
             }
 
-            index = (y1 << 8) + (y1 << 6) + (x1 << 1) + 2880;
-            endIndex = (y2 << 8) + (y2 << 6) + (x2 << 1) + 2880;
+            index = (y1 << 8) + (y1 << 6) + (x1 << 1);
+            endIndex = (y2 << 8) + (y2 << 6) + (x2 << 1);
             rgbCode = colours[c];
 
             for (; index <= endIndex; index += 320) {
@@ -593,8 +538,8 @@ public final class PicGraphics {
                 x2 = x;
             }
 
-            index = (y1 << 8) + (y1 << 6) + (x1 << 1) + 2880;
-            endIndex = (y2 << 8) + (y2 << 6) + (x2 << 1) + 2880;
+            index = (y1 << 8) + (y1 << 6) + (x1 << 1);
+            endIndex = (y2 << 8) + (y2 << 6) + (x2 << 1);
             rgbCode = colours[c];
 
             for (; index <= endIndex; index += 2) {
@@ -638,7 +583,7 @@ public final class PicGraphics {
 
             x = x1;
             y = y1;
-            index = (y1 << 8) + (y1 << 6) + (x1 << 1) + 2880;
+            index = (y1 << 8) + (y1 << 6) + (x1 << 1);
             rgbCode = colours[c];
 
             bgLineData[bgIndex++] = index;
@@ -659,7 +604,7 @@ public final class PicGraphics {
                     x += stepX;
                 }
 
-                index = (y << 8) + (y << 6) + (x << 1) + 2880;
+                index = (y << 8) + (y << 6) + (x << 1);
                 bgLineData[bgIndex++] = index;
                 bgLineData[bgIndex++] = screen[index];
                 screen[index] = rgbCode;
