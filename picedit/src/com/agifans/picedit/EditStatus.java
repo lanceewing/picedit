@@ -755,10 +755,10 @@ public class EditStatus {
     }
     
     /**
-     * Adjusts the mouse point to the coordinate system of the AGI 
+     * Adjusts the mouse point to the coordinate system of the AGI/SCI0 
      * picture canvas. The EditStatus doesn't care about anything outside
      * of the canvas, and it also doesn't care about what the actual
-     * screen location was. All it keeps track of is AGI picture X/Y
+     * screen location was. All it keeps track of is AGI/SCI0 picture X/Y
      * position.
      * 
      * @param point the Point to adjust.
@@ -771,23 +771,36 @@ public class EditStatus {
 
         // PICEDIT screen is 320 pixels wide but AGI PICTURE is 160
         // pixels wide. So start by dividing x by 2.
-        x = x >> 1;
+        if (pictureType.equals(PictureType.AGI)) {
+            x = x >> 1;
+        }
 
-        // AGI PICTURE is 9 pixels from the top of the PICEDIT screen.
-        y = y - 9;
-
-        // Now do the bounds checking. AGI PICTURE is 160x168.
+        // Now do the bounds checking. AGI PICTURE is 160x168. SCI0 is 320x190.
         if (x < 0) {
             x = 0;
-        }
-        if (x > 159) {
-            x = 159;
         }
         if (y < 0) {
             y = 0;
         }
-        if (y > 167) {
-            y = 167;
+        
+        switch (pictureType) {
+          case AGI:
+            if (x > 159) {
+              x = 159;
+            }
+            if (y > 167) {
+              y = 167;
+            }
+            break;
+            
+          case SCI0:
+            if (x > 319) {
+              x = 319;
+            }
+            if (y > 189) {
+              y = 189;
+            }
+            break;
         }
 
         // And finally we return the adjusted Point.

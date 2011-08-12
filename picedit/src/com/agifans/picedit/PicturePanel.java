@@ -107,7 +107,7 @@ public class PicturePanel extends JPanel {
         } else {
             // Draw the background image (if there is one) to the offscreen image.
             if ((picGraphics.getBackgroundImage() != null) && (editStatus.isBackgroundEnabled())) {
-                offScreenGC.drawImage(picGraphics.getBackgroundImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), 168 * editStatus.getZoomFactor(), this);
+                offScreenGC.drawImage(picGraphics.getBackgroundImage(), 0, 0, 320 * editStatus.getZoomFactor(), 168 * editStatus.getZoomFactor(), this);
             } else {
                 // Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
                 if (editStatus.isDualModeEnabled()) {
@@ -124,7 +124,7 @@ public class PicturePanel extends JPanel {
 
             if (editStatus.isDualModeEnabled()) {
                 // Dual mode is when the priority and visual screens mix.
-                offScreenGC.drawImage(picture.getPriorityImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+                offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 
                 // To create the effect demonstrated by Joakim in APE, we need a solid white.
                 BufferedImage tmpVisualImage = new BufferedImage(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), BufferedImage.TYPE_INT_ARGB);
@@ -139,18 +139,18 @@ public class PicturePanel extends JPanel {
                 RescaleOp rop = new RescaleOp(scales, offsets, null);
 
                 // Draw the visual screen on top of the priority screen with 50% transparency.
-                offScreenGC.drawImage(tmpVisualImage, rop, 0, 9 * editStatus.getZoomFactor());
+                offScreenGC.drawImage(tmpVisualImage, rop, 0, 0);
 
             } else {
                 if (editStatus.isPriorityShowing()) {
-                    offScreenGC.drawImage(picture.getPriorityImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+                    offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
                 } else {
-                    offScreenGC.drawImage(picture.getVisualImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+                    offScreenGC.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
                 }
             }
 
             if (editStatus.isBandsOn()) {
-                offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 9 * editStatus.getZoomFactor(), 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+                offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
             }
             
             // Draw the  PICEDIT screen to the offscreen image (transparent pixels will show the background).

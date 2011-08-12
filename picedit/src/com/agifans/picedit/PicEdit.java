@@ -51,7 +51,7 @@ public final class PicEdit extends JApplet {
     @SuppressWarnings("unchecked")
     public PicEdit() {
         this.editStatus = new EditStatus();
-        this.picGraphics = new PicGraphics(this, 25);
+        this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), this, 25);
         this.picture = new Picture(editStatus, picGraphics);
         this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, this);
 
