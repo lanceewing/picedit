@@ -41,6 +41,11 @@ public final class PicEdit extends JApplet {
     private PicturePanel picturePanel;
     
     /**
+     * The scroll pane that holds the picture panel.
+     */
+    private JScrollPane pictureScrollPane;
+    
+    /**
      * The PICEDIT menu handler.
      */
     private Menu menu;
@@ -70,7 +75,7 @@ public final class PicEdit extends JApplet {
         this.getContentPane().add(statusbar, BorderLayout.NORTH);
         
         // Add the panel that holds the picture that is being edited.
-        JScrollPane pictureScrollPane = new JScrollPane(picturePanel);
+        pictureScrollPane = new JScrollPane(picturePanel);
         pictureScrollPane.setPreferredSize(picturePanel.getPreferredSize());
         pictureScrollPane.setMinimumSize(new Dimension(10, 10));
         this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
@@ -131,22 +136,12 @@ public final class PicEdit extends JApplet {
     public void resizeScreen(int zoomFactor) {
         this.editStatus.setZoomFactor(zoomFactor);
         
-        // There was previously some sort of intermittent issue in this method. It
-        // would sometimes fail to resize the window when pack was called. It is 
-        // possible it was a timing issue or simply that I don't know enough about
-        // what is happening in Swing. So I have altered this a bit in an attempt
-        // to solve the issue. It may still be happening though. I'll keep an eye
-        // on it and if I see it again then I'll try something else to fix it.
-        this.remove(this.picturePanel);
-        picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), 200 * editStatus.getZoomFactor()));
+        // Update the size of the picture according to new zoom factor.
+        picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
         picturePanel.resizeOffscreenImage();
-        this.add(this.picturePanel);
         
-        if (SwingUtilities.getRoot(this) instanceof JFrame) {
-            JFrame frame = (JFrame) SwingUtilities.getRoot(this);
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-        }
+        // This will tell the scroll pane to adjust itself.
+        picturePanel.revalidate();
     }
 
     /**
