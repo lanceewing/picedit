@@ -76,8 +76,9 @@ public final class PicEdit extends JApplet {
         
         // Add the panel that holds the picture that is being edited.
         pictureScrollPane = new JScrollPane(picturePanel);
-        pictureScrollPane.setPreferredSize(picturePanel.getPreferredSize());
         pictureScrollPane.setMinimumSize(new Dimension(10, 10));
+        pictureScrollPane.setOpaque(true);
+        pictureScrollPane.setBackground(Color.lightGray);
         this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
         
         // Add the tool panel centered below the picture.
@@ -182,7 +183,7 @@ public final class PicEdit extends JApplet {
         frame.setLocationRelativeTo(null);
         frame.setResizable(true);
         frame.setVisible(true);
-
+        
         app.requestFocus();
     }
 }
