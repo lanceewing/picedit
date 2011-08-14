@@ -140,8 +140,8 @@ public abstract class CommonHandler {
         final StringBuilder inputLine = new StringBuilder();
 
         // Clear position box reading for input.
-        picGraphics.drawFilledBox(230, 179, 273, 187, 0);
-        picGraphics.drawString(inputLine.toString(), 231, 180, 7, 0);
+        picGraphics.drawFilledBox(230, 2, 273, 10, 0);
+        picGraphics.drawString(inputLine.toString(), 231, 3, 7, 0);
 
         // Register a temporary KeyListener for getting the new position.
         this.application.addKeyListener(new KeyAdapter() {
@@ -178,8 +178,8 @@ public abstract class CommonHandler {
                 }
 
                 String tempString = String.format("%5s", inputLine);
-                picGraphics.drawFilledBox(230, 179, 273, 187, 0);
-                picGraphics.drawString(tempString, 230, 180, 7, 0);
+                picGraphics.drawFilledBox(230, 2, 273, 10, 0);
+                picGraphics.drawString(tempString, 230, 3, 7, 0);
             }
         });
     }
