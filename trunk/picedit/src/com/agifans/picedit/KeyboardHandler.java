@@ -29,6 +29,7 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
      */
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
+        int keyChar = e.getKeyChar();
 
         if (editStatus.isPaused()) {
             // Ignore key events if the application is paused.
@@ -72,6 +73,20 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
             // Handle picture action delete key.
             if (key == KeyEvent.VK_DELETE) {
                 processDeleteCurrentPictureAction();
+            }
+            
+            // Handle zoom in and zoom out.
+            if ((key == KeyEvent.VK_PLUS) || (keyChar == '+')) {
+                int zoomFactor = editStatus.getZoomFactor();
+                if (zoomFactor < 5) {
+                    application.resizeScreen(zoomFactor + 1);
+                }
+            }
+            if ((key == KeyEvent.VK_MINUS) || (keyChar == '-')) {
+                int zoomFactor = editStatus.getZoomFactor();
+                if (zoomFactor > 2) {
+                    application.resizeScreen(zoomFactor - 1);
+                }
             }
         }
 
