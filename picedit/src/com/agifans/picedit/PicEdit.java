@@ -181,6 +181,7 @@ public final class PicEdit extends JApplet {
         frame.getContentPane().add(app, BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
+        frame.setMinimumSize(new Dimension(644, 450));
         frame.setResizable(true);
         frame.setVisible(true);
         
