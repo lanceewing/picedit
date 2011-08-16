@@ -51,6 +51,11 @@ public final class PicEdit extends JApplet {
     private Menu menu;
     
     /**
+     * The slider that sets the picture position.
+     */
+    private JSlider positionSlider;
+    
+    /**
      * Constructor for PicEdit.
      */
     @SuppressWarnings("unchecked")
@@ -82,6 +87,11 @@ public final class PicEdit extends JApplet {
         this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
         
         // Add the tool panel centered below the picture.
+        JPanel southPanel = new JPanel();
+        southPanel.setLayout(new BorderLayout());
+        positionSlider = new JSlider();
+        positionSlider.setModel(new PositionSliderModel(editStatus, picture));
+        southPanel.add(positionSlider, BorderLayout.NORTH);
         JPanel toolPanelContainer = new JPanel();
         toolPanelContainer.setBackground(EgaPalette.GREY);
         toolPanelContainer.setOpaque(true);
@@ -89,7 +99,8 @@ public final class PicEdit extends JApplet {
         ToolPanel toolPanel = new ToolPanel(this);
         toolPanel.setPreferredSize(new Dimension(640, 46));
         toolPanelContainer.add(toolPanel);
-        this.getContentPane().add(toolPanelContainer, BorderLayout.SOUTH);
+        southPanel.add(toolPanelContainer, BorderLayout.CENTER);
+        this.getContentPane().add(southPanel, BorderLayout.SOUTH);
     }
 
     /**
@@ -127,6 +138,15 @@ public final class PicEdit extends JApplet {
      */
     public PicturePanel getPicturePanel() {
         return this.picturePanel;
+    }
+    
+    /**
+     * Gets the JSlider that sets the picture position.
+     * 
+     * @return The JSlider that set the picture position.
+     */
+    public JSlider getPositionSlider() {
+        return this.positionSlider;
     }
     
     /**
