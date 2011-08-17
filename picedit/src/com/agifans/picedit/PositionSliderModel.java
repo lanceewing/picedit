@@ -48,6 +48,11 @@ public class PositionSliderModel implements BoundedRangeModel {
     protected EventListenerList listenerList = new EventListenerList();
 
     /**
+     * The value used in the most recent setValue method call.
+     */
+    private int lastSetValue;
+    
+    /**
      * Constructor for EditStatus.
      * 
      * @param editStatus The EditStatus that the model is based on.
@@ -142,12 +147,15 @@ public class PositionSliderModel implements BoundedRangeModel {
      * @see #getValue
      */
     public void setValue(int newValue) {
-        newValue = Math.min(newValue, Integer.MAX_VALUE - extent);
-        newValue = Math.max(newValue, getMinimum());
-        if (newValue + extent > getMaximum()) {
-            newValue = getMaximum() - extent;
+        if (newValue != lastSetValue) {
+            newValue = Math.min(newValue, Integer.MAX_VALUE - extent);
+            newValue = Math.max(newValue, getMinimum());
+            if (newValue + extent > getMaximum()) {
+                newValue = getMaximum() - extent;
+            }
+            setRangeProperties(newValue, extent, getMinimum(), getMaximum(), isAdjusting);
+            lastSetValue = newValue;
         }
-        setRangeProperties(newValue, extent, getMinimum(), getMaximum(), isAdjusting);
     }
 
     /**
@@ -186,7 +194,6 @@ public class PositionSliderModel implements BoundedRangeModel {
      * @see     #setValue
      */
     public int getExtent() {
-        // TODO: Auto-calculate the extent based on the picture code list size.
         return extent;
     }
 
@@ -241,7 +248,7 @@ public class PositionSliderModel implements BoundedRangeModel {
                 value = value - 1;
             }
         }
-        if (value != editStatus.getPicturePosition()) {
+        if (value != lastSetValue) {
             editStatus.setPicturePosition(value);
             picture.drawPicture();
             picture.updateScreen();

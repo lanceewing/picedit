@@ -142,7 +142,7 @@ public class EditStatus {
      * The name of the most recently used directory.
      */
     private String lastUsedDirectory;
-
+    
     /**
      * Constructor for EditStatus.
      */
