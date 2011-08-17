@@ -171,6 +171,9 @@ public final class PicEdit extends JApplet {
     public void paint(Graphics g) {
         super.paint(g);
         
+        // Make sure the slider is up to date with the picture position.
+        positionSlider.getModel().setValue(editStatus.getPicturePosition());
+        
         // If we are in a window then update the title to show the current picture name.
         if (SwingUtilities.getRoot(this) instanceof JFrame) {
             StringBuilder title = new StringBuilder(PICEDIT_NAME);

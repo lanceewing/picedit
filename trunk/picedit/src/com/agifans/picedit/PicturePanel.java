@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
@@ -158,7 +157,7 @@ public class PicturePanel extends JPanel {
         }
 
         // Now display the screen to the user.
-        g.drawImage(offScreenImage, 0, 0, this);    
+        g.drawImage(offScreenImage, 0, 0, this);
     }
     
     /**
