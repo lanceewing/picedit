@@ -91,6 +91,7 @@ public final class PicEdit extends JApplet {
         southPanel.setLayout(new BorderLayout());
         positionSlider = new JSlider();
         positionSlider.setModel(new PositionSliderModel(editStatus, picture));
+        positionSlider.setFocusable(false);
         southPanel.add(positionSlider, BorderLayout.NORTH);
         JPanel toolPanelContainer = new JPanel();
         toolPanelContainer.setBackground(EgaPalette.GREY);
