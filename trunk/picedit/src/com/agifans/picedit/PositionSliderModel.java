@@ -248,10 +248,14 @@ public class PositionSliderModel implements BoundedRangeModel {
                 value = value - 1;
             }
         }
+        // This first check is important for the slider to get updated for external position changes.
         if (value != lastSetValue) {
-            editStatus.setPicturePosition(value);
-            picture.drawPicture();
-            picture.updateScreen();
+            // This second check is so that we don't redraw picture if picture is already at the position.
+            if (value != editStatus.getPicturePosition()) {
+                editStatus.setPicturePosition(value);
+                picture.drawPicture();
+                picture.updateScreen();
+            }
             fireStateChanged();
         }
     }
