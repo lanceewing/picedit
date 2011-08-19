@@ -50,6 +50,11 @@ public class PictureCache {
     //    10. Slider position change: Use cached image.
     //    11. Drawing actions use Picture to draw that action only, on top of the current picture. Needs to cache every position from that point to the end? (or invalidate the cache from that point to the end)
 
+    public void addCacheEntry(int picturePosition, int[] visualScreen, int[] priorityScreen, int[] controlScreen) {
+    	PictureCacheEntry cacheEntry = new PictureCacheEntry(picturePosition, visualScreen, priorityScreen, controlScreen);
+    	this.cache.put(picturePosition, cacheEntry);
+    }
+    
     /**
      * An entry in the picture cache is of this type. It contains the screen
      * data as it is at the associated picture position and also a subset of
