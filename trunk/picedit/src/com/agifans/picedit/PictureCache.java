@@ -92,12 +92,24 @@ public class PictureCache {
         /**
          * Constructor for PictureCache.
          * 
+         * @param picturePosition The picture position that this entry relates to.
          * @param visualScreen 
          * @param priorityScreen 
          * @param controlScreen 
          */
-        public PictureCacheEntry(int[] visualScreen, int[] priorityScreen, int[] controlScreen) {
+        public PictureCacheEntry(int picturePosition, int[] visualScreen, int[] priorityScreen, int[] controlScreen) {
+        	this.picturePosition = picturePosition;
+        	this.visualScreen = visualScreen;
+        	this.priorityScreen = priorityScreen;
+        	this.controlScreen = controlScreen;
         	
+        	this.tool = editStatus.getTool();
+        	this.visualColour = editStatus.getVisualColour();
+        	this.priorityColour = editStatus.getPriorityColour();
+        	this.controlColour = editStatus.getControlColour();
+        	this.brushSize = editStatus.getBrushSize();
+        	this.brushShape = editStatus.getBrushShape();
+        	this.brushTexture = editStatus.getBrushTexture();
         }
         
         public int[] getVisualScreen() {
