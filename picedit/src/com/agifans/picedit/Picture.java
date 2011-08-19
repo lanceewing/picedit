@@ -62,6 +62,11 @@ public class Picture {
     private PicGraphics picGraphics;
 
     /**
+     * Holds the cache of picture state at various picture positions. Used for faster picture draws.
+     */
+    private PictureCache pictureCache;
+    
+    /**
      * Constructor for Picture.
      * 
      * @param editStatus the EditStatus containing current editing status.
@@ -83,6 +88,8 @@ public class Picture {
         this.editStatus = editStatus;
         this.picGraphics = picGraphics;
 
+        this.pictureCache = new PictureCache(editStatus);
+        
         clearPicture();
         updateScreen();
     }

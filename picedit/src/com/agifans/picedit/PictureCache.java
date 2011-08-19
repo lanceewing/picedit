@@ -22,10 +22,18 @@ public class PictureCache {
     private TreeMap<Integer, PictureCacheEntry> cache;
 
     /**
-     * Constructor for PictureCache.
+     * Holds the editing status of the PICEDIT application.
      */
-    public PictureCache() {
+    private EditStatus editStatus;
+    
+    /**
+     * Constructor for PictureCache.
+     * 
+     * @param editStatus The editing status of the PICEDIT application.
+     */
+    public PictureCache(EditStatus editStatus) {
         this.cache = new TreeMap<Integer, PictureCacheEntry>();
+        this.editStatus = editStatus;
     }
 
     // Some notes about when the cache will be used or updated.
@@ -64,29 +72,96 @@ public class PictureCache {
          */
         private int controlScreen[];
         
-        // TODO: This needs to store the visual, priority and control line screens.
-        // TODO: Should this store the int arrays or the associated BufferedImage?
-
         // This is the subset of data from the EditStatus that the Picture class
         // alters when drawing the picture. For this reason it needs to be cached
         // along with the screen data. This is so that the EditStatus can be adjusted
         // to match the given picture position.
-
         private ToolType tool;
-
         private int visualColour;
-
         private int priorityColour;
-
         private int controlColour;
-
         private int brushSize;
-
         private BrushShape brushShape;
-
         private BrushTexture brushTexture;
-
         
+        public int[] getVisualScreen() {
+            return visualScreen;
+        }
         
+        public void setVisualScreen(int[] visualScreen) {
+            this.visualScreen = visualScreen;
+        }
+        
+        public int[] getPriorityScreen() {
+            return priorityScreen;
+        }
+        
+        public void setPriorityScreen(int[] priorityScreen) {
+            this.priorityScreen = priorityScreen;
+        }
+        
+        public int[] getControlScreen() {
+            return controlScreen;
+        }
+        
+        public void setControlScreen(int[] controlScreen) {
+            this.controlScreen = controlScreen;
+        }
+        
+        public ToolType getTool() {
+            return tool;
+        }
+        
+        public void setTool(ToolType tool) {
+            this.tool = tool;
+        }
+        
+        public int getVisualColour() {
+            return visualColour;
+        }
+        
+        public void setVisualColour(int visualColour) {
+            this.visualColour = visualColour;
+        }
+        
+        public int getPriorityColour() {
+            return priorityColour;
+        }
+        
+        public void setPriorityColour(int priorityColour) {
+            this.priorityColour = priorityColour;
+        }
+        
+        public int getControlColour() {
+            return controlColour;
+        }
+        
+        public void setControlColour(int controlColour) {
+            this.controlColour = controlColour;
+        }
+        
+        public int getBrushSize() {
+            return brushSize;
+        }
+        
+        public void setBrushSize(int brushSize) {
+            this.brushSize = brushSize;
+        }
+        
+        public BrushShape getBrushShape() {
+            return brushShape;
+        }
+        
+        public void setBrushShape(BrushShape brushShape) {
+            this.brushShape = brushShape;
+        }
+        
+        public BrushTexture getBrushTexture() {
+            return brushTexture;
+        }
+        
+        public void setBrushTexture(BrushTexture brushTexture) {
+            this.brushTexture = brushTexture;
+        }
     }
 }
