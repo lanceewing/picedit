@@ -57,6 +57,11 @@ public class PictureCache {
      */
     public class PictureCacheEntry {
 
+    	/**
+    	 * The position that this entry relates to.
+    	 */
+    	private int picturePosition;
+    	
         /**
          * Holds the pixel data for the visual screen of the picture.
          */
@@ -83,6 +88,17 @@ public class PictureCache {
         private int brushSize;
         private BrushShape brushShape;
         private BrushTexture brushTexture;
+
+        /**
+         * Constructor for PictureCache.
+         * 
+         * @param visualScreen 
+         * @param priorityScreen 
+         * @param controlScreen 
+         */
+        public PictureCacheEntry(int[] visualScreen, int[] priorityScreen, int[] controlScreen) {
+        	
+        }
         
         public int[] getVisualScreen() {
             return visualScreen;
