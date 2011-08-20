@@ -1,5 +1,6 @@
 package com.agifans.picedit;
 
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -79,6 +80,15 @@ public class PictureCache {
     	
     	// Create an entry to add to the picture cache for this osition.
     	PictureCacheEntry cacheEntry = new PictureCacheEntry(picturePosition, visualScreenCopy, priorityScreenCopy, controlScreenCopy);
+    	
+    	// If we are adding to a position where there existing cache entries above 
+    	// it then we need to clear them.
+    	if (cache.higherKey(picturePosition) != null) {
+    		System.out.println("Clearing tail map");
+    		SortedMap<Integer, PictureCacheEntry> entriesBelow = cache.headMap(picturePosition);
+    		cache.clear();
+    		cache.putAll(entriesBelow);
+    	}
     	
     	this.cache.put(picturePosition, cacheEntry);
     }
