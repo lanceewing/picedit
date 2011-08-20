@@ -36,6 +36,13 @@ public class PictureCache {
         this.editStatus = editStatus;
     }
 
+    /**
+     * Clears the picture cache.
+     */
+    public void clear() {
+    	this.cache.clear();
+    }
+    
     // Some notes about when the cache will be used or updated.
     //
     //    1. Load picture: Obviously has to draw the new picture from the start.
@@ -50,9 +57,53 @@ public class PictureCache {
     //    10. Slider position change: Use cached image.
     //    11. Drawing actions use Picture to draw that action only, on top of the current picture. Needs to cache every position from that point to the end? (or invalidate the cache from that point to the end)
 
+    /**
+     * Adds a new entry to the picture cache.
+     * 
+     * @param picturePosition The position that this entry relates to.
+     * @param visualScreen The pixel data for the visual screen of the picture.
+     * @param priorityScreen The pixel data for the priority screen of the picture.
+     * @param controlScreen The pixel data for the control screen of the picture.
+     */
     public void addCacheEntry(int picturePosition, int[] visualScreen, int[] priorityScreen, int[] controlScreen) {
-    	PictureCacheEntry cacheEntry = new PictureCacheEntry(picturePosition, visualScreen, priorityScreen, controlScreen);
+    	// Copy the three screen arrays.
+    	int[] visualScreenCopy = new int[visualScreen.length];
+    	System.arraycopy(visualScreen, 0, visualScreenCopy, 0, visualScreen.length);
+    	int[] priorityScreenCopy = new int[priorityScreen.length];
+    	System.arraycopy(priorityScreen, 0, priorityScreenCopy, 0, priorityScreen.length);
+    	int[] controlScreenCopy = null;
+    	if (editStatus.getPictureType().equals(PictureType.SCI0)) {
+	    	controlScreenCopy = new int[controlScreen.length];
+	    	System.arraycopy(controlScreen, 0, controlScreenCopy, 0, controlScreen.length);
+    	}
+    	
+    	// Create an entry to add to the picture cache for this osition.
+    	PictureCacheEntry cacheEntry = new PictureCacheEntry(picturePosition, visualScreenCopy, priorityScreenCopy, controlScreenCopy);
+    	
     	this.cache.put(picturePosition, cacheEntry);
+    }
+    
+    /**
+     * Gets the cache entry at the given picture position, or the closest position
+     * below the given position. If the picture position in the returned cache entry
+     * does not match the picture position of the method parameter then there was no
+     * matching entry and the closest entry below that has been returned instead. If
+     * no entry exists below the picturePosition then null is returned.
+     * 
+     * @param picturePosition The picture position to get the cache entry for.
+     * 
+     * @return The cache entry, as described above.
+     */
+    public PictureCacheEntry getCacheEntry(int picturePosition) {
+    	PictureCacheEntry cacheEntry = this.cache.get(picturePosition);
+    	if (cacheEntry == null) {
+    		Integer closestPosition = this.cache.lowerKey(picturePosition);
+    		if (closestPosition != null) {
+    			cacheEntry = this.cache.get(closestPosition);
+    		}
+    	}
+
+    	return cacheEntry;
     }
     
     /**
@@ -98,9 +149,9 @@ public class PictureCache {
          * Constructor for PictureCache.
          * 
          * @param picturePosition The picture position that this entry relates to.
-         * @param visualScreen 
-         * @param priorityScreen 
-         * @param controlScreen 
+	     * @param visualScreen The pixel data for the visual screen of the picture.
+	     * @param priorityScreen The pixel data for the priority screen of the picture.
+	     * @param controlScreen The pixel data for the control screen of the picture.
          */
         public PictureCacheEntry(int picturePosition, int[] visualScreen, int[] priorityScreen, int[] controlScreen) {
         	this.picturePosition = picturePosition;
@@ -117,7 +168,15 @@ public class PictureCache {
         	this.brushTexture = editStatus.getBrushTexture();
         }
         
-        public int[] getVisualScreen() {
+        public int getPicturePosition() {
+			return picturePosition;
+		}
+
+		public void setPicturePosition(int picturePosition) {
+			this.picturePosition = picturePosition;
+		}
+
+		public int[] getVisualScreen() {
             return visualScreen;
         }
         

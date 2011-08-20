@@ -9,6 +9,8 @@ import java.awt.image.WritableRaster;
 import java.util.Arrays;
 import java.util.List;
 
+import com.agifans.picedit.PictureCache.PictureCacheEntry;
+
 /**
  * This class represents an AGI Picture.
  * 
@@ -160,16 +162,48 @@ public class Picture {
     }
 
     /**
+     * Clears the picture cache.
+     */
+    public void clearPictureCache() {
+    	this.pictureCache.clear();
+    }
+    
+    /**
      * Draws the picture from the beginning up to the current picture position.
      */
     public void drawPicture() {
+    	long before = System.currentTimeMillis();
+    	
         int action, index = 0;
 
-        // Clear the picture bitmaps to the original colours.
-        clearPicture();
-
-        // When drawing from the start, we need to clear everything except for the data.
-        editStatus.clear(false);
+        PictureCacheEntry cacheEntry = this.pictureCache.getCacheEntry(editStatus.getPicturePosition());
+        if (cacheEntry != null) {
+        	// Copy the cached screen arrays into the main picture images.
+        	System.arraycopy(cacheEntry.getVisualScreen(), 0, visualScreen, 0, visualScreen.length);
+        	System.arraycopy(cacheEntry.getPriorityScreen(), 0, priorityScreen, 0, priorityScreen.length);
+        	if (editStatus.getPictureType().equals(PictureType.SCI0)) {
+    	    	System.arraycopy(cacheEntry.getControlScreen(), 0, controlScreen, 0, controlScreen.length);
+        	}
+        	
+        	// Skip straight to the cached position.
+        	index = cacheEntry.getPicturePosition();
+        	
+        	// Restore the settings from the EditStatus that apply to the cached position.
+        	editStatus.setBrushShape(cacheEntry.getBrushShape());
+        	editStatus.setBrushSize(cacheEntry.getBrushSize());
+        	editStatus.setBrushTexture(cacheEntry.getBrushTexture());
+        	editStatus.setControlColour(cacheEntry.getControlColour());
+        	editStatus.setPriorityColour(cacheEntry.getPriorityColour());
+        	editStatus.setTool(cacheEntry.getTool());
+        	editStatus.setVisualColour(cacheEntry.getVisualColour());
+        	
+        } else {
+	        // Clear the picture bitmaps to the original colours.
+	        clearPicture();
+	       
+	        // When drawing from the start, we need to clear everything except for the data.
+	        editStatus.clear(false);
+        }
 
         if (editStatus.getPicturePosition() > 0) {
             List<PictureCode> pictureCodes = editStatus.getPictureCodes();
@@ -228,10 +262,17 @@ public class Picture {
                         System.exit(0);
                         break;
                 }
+                
+                // Add the current picture state to the picture cache.
+                pictureCache.addCacheEntry(index, visualScreen, priorityScreen, controlScreen);
+                
             } while ((index < editStatus.getPicturePosition()) && (action != 0xFF));
 
             updateScreen();
         }
+        
+        long after = System.currentTimeMillis();
+        System.out.println("time: " + (after - before));
     }
 
     /**

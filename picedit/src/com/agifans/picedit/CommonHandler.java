@@ -542,6 +542,7 @@ public abstract class CommonHandler {
         try {
             // Make sure we start with a clean picture.
             editStatus.clear();
+            picture.clearPictureCache();
 
             // Store file name for display on title bar.
             editStatus.setPictureFile(pictureFile);
