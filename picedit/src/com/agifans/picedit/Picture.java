@@ -205,7 +205,7 @@ public class Picture {
 	        editStatus.clear(false);
         }
 
-        if (editStatus.getPicturePosition() > 0) {
+        if ((editStatus.getPicturePosition() > 0) && (index < editStatus.getPicturePosition())) {
             List<PictureCode> pictureCodes = editStatus.getPictureCodes();
 
             do {
