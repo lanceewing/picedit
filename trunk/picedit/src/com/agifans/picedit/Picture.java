@@ -174,7 +174,8 @@ public class Picture {
     public void drawPicture() {
     	long before = System.currentTimeMillis();
     	
-        int action, index = 0;
+        int action = 0;
+        int index = 0;
 
         PictureCacheEntry cacheEntry = this.pictureCache.getCacheEntry(editStatus.getPicturePosition());
         if (cacheEntry != null) {
@@ -209,6 +210,8 @@ public class Picture {
             List<PictureCode> pictureCodes = editStatus.getPictureCodes();
 
             do {
+                boolean isCacheable = true;
+                
                 // Get the next picture action.
                 action = pictureCodes.get(index++).getCode();
 
@@ -216,15 +219,19 @@ public class Picture {
                 switch (action) {
                     case 0xF0:
                         editStatus.setVisualColour(pictureCodes.get(index++).getCode());
+                        isCacheable = false;
                         break;
                     case 0xF1:
                         editStatus.setVisualColour(EditStatus.VISUAL_OFF);
+                        isCacheable = false;
                         break;
                     case 0xF2:
                         editStatus.setPriorityColour(pictureCodes.get(index++).getCode());
+                        isCacheable = false;
                         break;
                     case 0xF3:
                         editStatus.setPriorityColour(EditStatus.PRIORITY_OFF);
+                        isCacheable = false;
                         break;
                     case 0xF4:
                         editStatus.setTool(ToolType.STEP);
@@ -248,6 +255,7 @@ public class Picture {
                         break;
                     case 0xF9:
                         editStatus.setBrushCode(pictureCodes.get(index++).getCode());
+                        isCacheable = false;
                         break;
                     case 0xFA:
                         editStatus.setTool(ToolType.BRUSH);
@@ -264,8 +272,10 @@ public class Picture {
                 }
                 
                 // Add the current picture state to the picture cache.
-                pictureCache.addCacheEntry(index, visualScreen, priorityScreen, controlScreen);
-                
+                // TODO: Only cache at certain intervals. Caching everything is very memory consuming.
+                if (isCacheable) {
+                    pictureCache.addCacheEntry(index, visualScreen, priorityScreen, controlScreen);
+                }
             } while ((index < editStatus.getPicturePosition()) && (action != 0xFF));
 
             updateScreen();
@@ -273,6 +283,9 @@ public class Picture {
         
         long after = System.currentTimeMillis();
         System.out.println("time: " + (after - before));
+        System.out.println("free memory: " + Runtime.getRuntime().freeMemory());
+        System.out.println("max memory: " + Runtime.getRuntime().maxMemory());
+        System.out.println("total memory: " + Runtime.getRuntime().totalMemory());
     }
 
     /**
