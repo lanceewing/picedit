@@ -44,6 +44,17 @@ public class PictureCache {
     	this.cache.clear();
     }
     
+    /**
+     * Clears the picture cache from the given picture position.
+     * 
+     * @param fromPicturePosition The picture position to clear the picture from.
+     */
+    public void clear(int fromPicturePosition) {
+		SortedMap<Integer, PictureCacheEntry> entriesBelow = cache.headMap(fromPicturePosition);
+		cache.clear();
+		cache.putAll(entriesBelow);
+    }
+    
     // Some notes about when the cache will be used or updated.
     //
     //    1. Load picture: Obviously has to draw the new picture from the start.
@@ -85,9 +96,7 @@ public class PictureCache {
     	// it then we need to clear them.
     	if (cache.higherKey(picturePosition) != null) {
     		System.out.println("Clearing tail map");
-    		SortedMap<Integer, PictureCacheEntry> entriesBelow = cache.headMap(picturePosition);
-    		cache.clear();
-    		cache.putAll(entriesBelow);
+    		clear(picturePosition);
     	}
     	
     	this.cache.put(picturePosition, cacheEntry);
