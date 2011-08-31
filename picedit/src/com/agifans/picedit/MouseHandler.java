@@ -334,22 +334,22 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                     picture.fill(x, y);
                     picture.updateScreen();
                     if (editStatus.isFirstClick()) {
-                        editStatus.addPictureCode(0xF8);
+                        picture.addPictureCode(0xF8);
                     }
-                    editStatus.addPictureCode(x);
-                    editStatus.addPictureCode(y);
+                    picture.addPictureCode(x);
+                    picture.addPictureCode(y);
                 } else if (editStatus.isLineActive()) {
                     switch (editStatus.getNumOfClicks()) {
                         case 1:
-                            editStatus.addPictureCode(0xF6);
-                            editStatus.addPictureCode(x);
-                            editStatus.addPictureCode(y);
+                            picture.addPictureCode(0xF6);
+                            picture.addPictureCode(x);
+                            picture.addPictureCode(y);
                             picture.putPixel(x, y);
                             picture.updateScreen();
                             break;
                         default:
-                            editStatus.addPictureCode(x);
-                            editStatus.addPictureCode(y);
+                            picture.addPictureCode(x);
+                            picture.addPictureCode(y);
                             picture.drawLine(previousX, previousY, x, y);
                             picture.updateScreen();
                             break;
@@ -361,9 +361,9 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
 
                     switch (editStatus.getNumOfClicks()) {
                         case 1:
-                            editStatus.addPictureCode(0xF7);
-                            editStatus.addPictureCode(x);
-                            editStatus.addPictureCode(y);
+                            picture.addPictureCode(0xF7);
+                            picture.addPictureCode(x);
+                            picture.addPictureCode(y);
                             picture.putPixel(x, y);
                             picture.updateScreen();
                             break;
@@ -383,7 +383,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                             } else {
                                 disp |= dY;
                             }
-                            editStatus.addPictureCode(disp);
+                            picture.addPictureCode(disp);
                             picture.drawLine(previousX, previousY, x, y);
                             picture.updateScreen();
                             editStatus.setClickPoint(new Point(x, y));
@@ -393,18 +393,18 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                     int patNum = 0;
 
                     if (editStatus.isFirstClick()) {
-                        editStatus.addPictureCode(0xF9);
-                        editStatus.addPictureCode(editStatus.getBrushCode());
-                        editStatus.addPictureCode(0xFA);
+                        picture.addPictureCode(0xF9);
+                        picture.addPictureCode(editStatus.getBrushCode());
+                        picture.addPictureCode(0xFA);
                     }
                     patNum = (((new java.util.Random().nextInt(255)) % 0xEE) >> 1) & 0x7F;
                     picture.plotPattern(patNum, x, y);
                     picture.updateScreen();
                     if (editStatus.getBrushTexture() == BrushTexture.SPRAY) {
-                        editStatus.addPictureCode(patNum << 1);
+                        picture.addPictureCode(patNum << 1);
                     }
-                    editStatus.addPictureCode(x);
-                    editStatus.addPictureCode(y);
+                    picture.addPictureCode(x);
+                    picture.addPictureCode(y);
                 } else if (editStatus.isStepActive()) {
                     int dX = 0;
                     int dY = 0;
@@ -419,17 +419,17 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                             if (Math.abs(dX) > Math.abs(dY)) { /* X or Y corner */
                                 y = previousY;
                                 editStatus.setStepType(StepType.XCORNER);
-                                editStatus.addPictureCode(0xF5);
-                                editStatus.addPictureCode(previousX);
-                                editStatus.addPictureCode(previousY);
-                                editStatus.addPictureCode(x);
+                                picture.addPictureCode(0xF5);
+                                picture.addPictureCode(previousX);
+                                picture.addPictureCode(previousY);
+                                picture.addPictureCode(x);
                             } else {
                                 x = previousX;
                                 editStatus.setStepType(StepType.YCORNER);
-                                editStatus.addPictureCode(0xF4);
-                                editStatus.addPictureCode(previousX);
-                                editStatus.addPictureCode(previousY);
-                                editStatus.addPictureCode(y);
+                                picture.addPictureCode(0xF4);
+                                picture.addPictureCode(previousX);
+                                picture.addPictureCode(previousY);
+                                picture.addPictureCode(y);
                             }
                             picture.drawLine(previousX, previousY, x, y);
                             picture.updateScreen();
@@ -440,10 +440,10 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                             if ((editStatus.isXCornerActive() && ((editStatus.getNumOfClicks() % 2) > 0)) || (editStatus.isYCornerActive() && ((editStatus.getNumOfClicks() % 2) == 0))) {
                                 // X and Y corners toggle different direction based on number of clicks.	
                                 x = previousX;
-                                editStatus.addPictureCode(y);
+                                picture.addPictureCode(y);
                             } else {
                                 y = previousY;
-                                editStatus.addPictureCode(x);
+                                picture.addPictureCode(x);
                             }
                             picture.drawLine(previousX, previousY, x, y);
                             picture.updateScreen();
@@ -479,13 +479,13 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 int dX = x - previousX;
                 int dY = y - previousY;
                 if (Math.abs(dX) > Math.abs(dY)) { /* X or Y corner */
-                    editStatus.addPictureCode(0xF5);
-                    editStatus.addPictureCode(previousX);
-                    editStatus.addPictureCode(previousY);
+                    picture.addPictureCode(0xF5);
+                    picture.addPictureCode(previousX);
+                    picture.addPictureCode(previousY);
                 } else {
-                    editStatus.addPictureCode(0xF4);
-                    editStatus.addPictureCode(previousX);
-                    editStatus.addPictureCode(previousY);
+                    picture.addPictureCode(0xF4);
+                    picture.addPictureCode(previousX);
+                    picture.addPictureCode(previousY);
                 }
                 
                 picture.putPixel(previousX, previousY);

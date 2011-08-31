@@ -16,11 +16,6 @@ import javax.swing.event.EventListenerList;
 public class PositionSliderModel implements BoundedRangeModel {
 
     /**
-     * The EditStatus that the model's state and behaviour is based on.
-     */
-    private EditStatus editStatus;
-
-    /**
      * The picture whose position is being adjusted.
      */
     private Picture picture;
@@ -55,11 +50,9 @@ public class PositionSliderModel implements BoundedRangeModel {
     /**
      * Constructor for EditStatus.
      * 
-     * @param editStatus The EditStatus that the model is based on.
      * @param picture The Picture whose position is being adjusted.
      */
-    public PositionSliderModel(EditStatus editStatus, Picture picture) {
-        this.editStatus = editStatus;
+    public PositionSliderModel(Picture picture) {
         this.picture = picture;
     }
 
@@ -92,7 +85,7 @@ public class PositionSliderModel implements BoundedRangeModel {
      * @see #setExtent
      */
     public int getMaximum() {
-        return editStatus.getPictureCodes().size() - 1;
+        return picture.getPictureCodes().size() - 1;
     }
 
     /**
@@ -121,7 +114,7 @@ public class PositionSliderModel implements BoundedRangeModel {
      * @see     #setValue
      */
     public int getValue() {
-        return editStatus.getPicturePosition();
+        return picture.getPicturePosition();
     }
 
     /**
@@ -241,7 +234,7 @@ public class PositionSliderModel implements BoundedRangeModel {
     public void setRangeProperties(int value, int extent, int min, int max, boolean adjusting) {
         // Since the state is determined by the EditStatus, we ignore everything 
         // except for the value.
-        LinkedList<PictureCode> pictureCodes = editStatus.getPictureCodes();
+        LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
         if (value < (pictureCodes.size() - 1)) {
             // Find the closest picture action to the entered position.
             while (pictureCodes.get(value).getCode() < 0xF0) {
@@ -251,8 +244,8 @@ public class PositionSliderModel implements BoundedRangeModel {
         // This first check is important for the slider to get updated for external position changes.
         if (value != lastSetValue) {
             // This second check is so that we don't redraw picture if picture is already at the position.
-            if (value != editStatus.getPicturePosition()) {
-                editStatus.setPicturePosition(value);
+            if (value != picture.getPicturePosition()) {
+                picture.setPicturePosition(value);
                 picture.drawPicture();
                 picture.updateScreen();
             }

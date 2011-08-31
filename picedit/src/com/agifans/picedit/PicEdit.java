@@ -90,7 +90,7 @@ public final class PicEdit extends JApplet {
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new BorderLayout());
         positionSlider = new JSlider();
-        positionSlider.setModel(new PositionSliderModel(editStatus, picture));
+        positionSlider.setModel(new PositionSliderModel(picture));
         positionSlider.setFocusable(false);
         southPanel.add(positionSlider, BorderLayout.NORTH);
         JPanel toolPanelContainer = new JPanel();
@@ -173,7 +173,7 @@ public final class PicEdit extends JApplet {
         super.paint(g);
         
         // Make sure the slider is up to date with the picture position.
-        positionSlider.getModel().setValue(editStatus.getPicturePosition());
+        positionSlider.getModel().setValue(picture.getPicturePosition());
         
         // If we are in a window then update the title to show the current picture name.
         if (SwingUtilities.getRoot(this) instanceof JFrame) {
