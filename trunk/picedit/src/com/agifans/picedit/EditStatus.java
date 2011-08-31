@@ -60,8 +60,6 @@ public class EditStatus {
 
     private boolean priorityShowing;
 
-    //private int picturePosition;
-
     private boolean paused;
 
     private boolean textMode;
