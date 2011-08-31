@@ -62,6 +62,7 @@ public class ToolPanel extends JPanel {
      */
     public void paint(Graphics graphics) {
         EditStatus editStatus = application.getEditStatus();
+        Picture picture = application.getPicture();
       
         // Create the offscreen image the first time.
         if (offScreenImage == null) {
@@ -76,8 +77,8 @@ public class ToolPanel extends JPanel {
         }
 
         // Update the picture position.
-        if (editStatus.getLastRenderedPicturePosition() != editStatus.getPicturePosition()) {
-            editStatus.setLastRenderedPicturePosition(editStatus.getPicturePosition());
+        if (editStatus.getLastRenderedPicturePosition() != picture.getPicturePosition()) {
+            editStatus.setLastRenderedPicturePosition(picture.getPicturePosition());
             updatePositionBox();
         }
         
@@ -93,10 +94,10 @@ public class ToolPanel extends JPanel {
      * picture. This is handy when deleting an action.
      */
     public void updatePositionBox() {
-        EditStatus editStatus = application.getEditStatus();
+        Picture picture = application.getPicture();
       
         // Draw the current position on the control panel.
-        String tempString = String.format("%5d", editStatus.getPicturePosition());
+        String tempString = String.format("%5d", picture.getPicturePosition());
         picGraphics.drawFilledBox(230, 2, 273, 10, 0);
         picGraphics.drawString(tempString, 230, 3, 7, 0);
 
@@ -104,8 +105,8 @@ public class ToolPanel extends JPanel {
         picGraphics.drawFilledBox(210, 12, 317, 20, 0);
 
         // Now draw the next six picture codes.
-        LinkedList<PictureCode> pictureCodes = editStatus.getPictureCodes();
-        int startIndex = editStatus.getPicturePosition();
+        LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
+        int startIndex = picture.getPicturePosition();
         int endIndex = startIndex + 6;
         endIndex = (endIndex > pictureCodes.size() ? pictureCodes.size() : endIndex);
         for (int index = startIndex; index < endIndex; index++) {
@@ -382,7 +383,7 @@ public class ToolPanel extends JPanel {
                 }
                 if (offButton.contains(mousePoint)) {
                     editStatus.setVisualColour(EditStatus.VISUAL_OFF);
-                    editStatus.addPictureCode(0xF1);
+                    picture.addPictureCode(0xF1);
                     picture.updateScreen();
                 }
 
@@ -415,14 +416,14 @@ public class ToolPanel extends JPanel {
                 if (paletteRect.contains(mousePoint)) {
                     int newPriorityColour = picGraphics.getPixel(x, y);
                     editStatus.setPriorityColour(newPriorityColour);
-                    editStatus.addPictureCode(0xF2);
-                    editStatus.addPictureCode(newPriorityColour);
+                    picture.addPictureCode(0xF2);
+                    picture.addPictureCode(newPriorityColour);
                     picture.updateScreen();
                 }
                 // Right-clicking on the OFF button turns off the priority colour.
                 if (offButton.contains(mousePoint)) {
                     editStatus.setPriorityColour(EditStatus.PRIORITY_OFF);
-                    editStatus.addPictureCode(0xF3);
+                    picture.addPictureCode(0xF3);
                     picture.updateScreen();
                 }
             }
