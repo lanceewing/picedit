@@ -83,8 +83,8 @@ public abstract class CommonHandler {
      */
     protected void processVisualColourChange(int newVisualColour) {
         editStatus.setVisualColour(newVisualColour);
-        editStatus.addPictureCode(0xF0);
-        editStatus.addPictureCode(newVisualColour);
+        picture.addPictureCode(0xF0);
+        picture.addPictureCode(newVisualColour);
         picture.updateScreen();
     }
 
@@ -107,7 +107,7 @@ public abstract class CommonHandler {
         if ((inputLine != null) && (!inputLine.trim().equals(""))) {
             try {
                 // If the entered value is valid, apply the new position.
-                LinkedList<PictureCode> pictureCodes = editStatus.getPictureCodes();
+                LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
                 int newPosition = Integer.parseInt(inputLine.toString());
                 if ((newPosition >= 0) && (newPosition < pictureCodes.size())) {
                     if (newPosition < (pictureCodes.size() - 1)) {
@@ -116,7 +116,7 @@ public abstract class CommonHandler {
                             newPosition = newPosition - 1;
                         }
                     }
-                    editStatus.setPicturePosition(newPosition);
+                    picture.setPicturePosition(newPosition);
                     picture.drawPicture();
                     picture.updateScreen();
                 }
@@ -155,7 +155,7 @@ public abstract class CommonHandler {
                     picture.drawPicture();
                     picture.updateScreen();
                     inputLine.delete(0, inputLine.length());
-                    inputLine.append(editStatus.getPicturePosition());
+                    inputLine.append(picture.getPicturePosition());
 
                 } else if (key == KeyEvent.VK_BACK_SPACE) {
                     if (inputLine.length() > 0) {
@@ -167,7 +167,7 @@ public abstract class CommonHandler {
                     processPositionEntered(inputLine.toString());
                     editStatus.setPaused(false);
                     inputLine.delete(0, inputLine.length());
-                    inputLine.append(editStatus.getPicturePosition());
+                    inputLine.append(picture.getPicturePosition());
 
                 } else if ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9')) {
                     // If the character is a number, and the maximum length has not been reached, then add to the input. 
@@ -190,8 +190,8 @@ public abstract class CommonHandler {
         // Move back through the codes until we find an Action code.
         PictureCode pictureCode = null;
         do {
-            pictureCode = editStatus.decrementPicturePosition();
-        } while ((pictureCode != null) && !pictureCode.isActionCode() && (editStatus.getPicturePosition() > 0));
+            pictureCode = picture.decrementPicturePosition();
+        } while ((pictureCode != null) && !pictureCode.isActionCode() && (picture.getPicturePosition() > 0));
 
         picture.drawPicture();
         picture.updateScreen();
@@ -201,10 +201,10 @@ public abstract class CommonHandler {
      * Process movement forward one picture action through the picture code buffer.
      */
     protected void processMoveForwardOnePictureAction() {
-        if (editStatus.getPicturePosition() < (editStatus.getPictureCodes().size() - 1)) {
+        if (picture.getPicturePosition() < (picture.getPictureCodes().size() - 1)) {
             PictureCode pictureCode = null;
             do {
-                pictureCode = editStatus.incrementPicturePosition();
+                pictureCode = picture.incrementPicturePosition();
             } while ((pictureCode != null) && !pictureCode.isActionCode());
 
             picture.drawPicture();
@@ -216,7 +216,7 @@ public abstract class CommonHandler {
      * Process movement to the start of the picture code buffer.
      */
     protected void processMoveToStartOfPictureBuffer() {
-        editStatus.setPicturePosition(0);
+        picture.setPicturePosition(0);
         picture.drawPicture();
         picture.updateScreen();
     }
@@ -225,8 +225,8 @@ public abstract class CommonHandler {
      * Process movement to the end of the picture code buffer.
      */
     protected void processMoveToEndOfPictureBuffer() {
-        if (editStatus.getPicturePosition() < (editStatus.getPictureCodes().size() - 1)) {
-            editStatus.setPicturePosition(editStatus.getPictureCodes().size() - 1);
+        if (picture.getPicturePosition() < (picture.getPictureCodes().size() - 1)) {
+            picture.setPicturePosition(picture.getPictureCodes().size() - 1);
             picture.drawPicture();
             picture.updateScreen();
         }
@@ -237,9 +237,9 @@ public abstract class CommonHandler {
      * action at the current picture position.
      */
     protected void processDeleteCurrentPictureAction() {
-        PictureCode pictureCode = editStatus.deleteAtPicturePosition();
+        PictureCode pictureCode = picture.deleteAtPicturePosition();
         while ((pictureCode != null) && (pictureCode.isDataCode())) {
-            pictureCode = editStatus.deleteAtPicturePosition();
+            pictureCode = picture.deleteAtPicturePosition();
         }
         editStatus.setLastRenderedPicturePosition(EditStatus.LAST_VALUE_NONE);
         picture.drawPicture();
@@ -370,7 +370,7 @@ public abstract class CommonHandler {
      * @param position the position in the picture code buffer to start rendering from.
      */
     private void showPageOfHexData(int position) {
-        LinkedList<PictureCode> pictureCodes = editStatus.getPictureCodes();
+        LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
 
         Font font = new Font("DialogInput", Font.BOLD, 14);
         Image textImage = application.createImage(640, 400);
@@ -397,7 +397,7 @@ public abstract class CommonHandler {
                 if (position <= (pictureCodes.size() - 1)) {
                     int code = pictureCodes.get(position).getCode();
                     if (code >= 0xF0) {
-                        if (position == editStatus.getPicturePosition()) {
+                        if (position == picture.getPicturePosition()) {
                             graphics.setColor(EgaPalette.LIGHTMAGENTA);
                         } else {
                             graphics.setColor(EgaPalette.RED);
@@ -458,12 +458,12 @@ public abstract class CommonHandler {
                 } else if (key == KeyEvent.VK_HOME) {
                     startPos[0] = 0;
                 } else if (key == KeyEvent.VK_END) {
-                    startPos[0] = ((((editStatus.getPictureCodes().size() - 352) + 16) / 16) * 16);
+                    startPos[0] = ((((picture.getPictureCodes().size() - 352) + 16) / 16) * 16);
                 }
 
                 // Keep the start pos within the valid range of the picture code buffer.
-                if ((startPos[0] + 352) > editStatus.getPictureCodes().size()) {
-                    startPos[0] = ((((editStatus.getPictureCodes().size() - 352) + 16) / 16) * 16);
+                if ((startPos[0] + 352) > picture.getPictureCodes().size()) {
+                    startPos[0] = ((((picture.getPictureCodes().size() - 352) + 16) / 16) * 16);
                 }
                 if (startPos[0] < 0) {
                     startPos[0] = 0;
@@ -486,8 +486,8 @@ public abstract class CommonHandler {
                 startPos[0] += (16 * e.getWheelRotation());
 
                 // Keep the start pos within the valid range of the picture code buffer.
-                if ((startPos[0] + 352) > editStatus.getPictureCodes().size()) {
-                    startPos[0] = ((((editStatus.getPictureCodes().size() - 352) + 16) / 16) * 16);
+                if ((startPos[0] + 352) > picture.getPictureCodes().size()) {
+                    startPos[0] = ((((picture.getPictureCodes().size() - 352) + 16) / 16) * 16);
                 }
                 if (startPos[0] < 0) {
                     startPos[0] = 0;
@@ -542,7 +542,7 @@ public abstract class CommonHandler {
         try {
             // Make sure we start with a clean picture.
             editStatus.clear();
-            picture.clearPictureCache();
+            picture.clearPicture();
 
             // Store file name for display on title bar.
             editStatus.setPictureFile(pictureFile);
@@ -554,7 +554,7 @@ public abstract class CommonHandler {
             int pictureCode;
             while ((pictureCode = in.read()) != -1) {
                 if (pictureCode != 0xFF) {
-                    editStatus.addPictureCode(pictureCode);
+                    picture.addPictureCode(pictureCode);
                 } else {
                     // 0xFF is the end of an AGI picture.
                     break;
@@ -597,7 +597,7 @@ public abstract class CommonHandler {
             out = new BufferedOutputStream(new FileOutputStream(pictureFile));
 
             // Write each of the picture codes out to the file.
-            for (PictureCode pictureCode : editStatus.getPictureCodes()) {
+            for (PictureCode pictureCode : picture.getPictureCodes()) {
                 out.write(pictureCode.getCode());
             }
         } catch (FileNotFoundException fnfe) {

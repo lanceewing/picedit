@@ -60,9 +60,7 @@ public class EditStatus {
 
     private boolean priorityShowing;
 
-    private int picturePosition;
-
-    private LinkedList<PictureCode> pictureCodes;
+    //private int picturePosition;
 
     private boolean paused;
 
@@ -198,9 +196,6 @@ public class EditStatus {
         brushTexture = BrushTexture.SOLID;
         if (clearPictureCodes) {
             // These are the bits that get cleared for a new picture.
-            pictureCodes = new LinkedList<PictureCode>();
-            pictureCodes.add(new PictureCode(0xFF));
-            picturePosition = 0;
             priorityShowing = false;
             pictureType = PictureType.AGI;
             backgroundEnabled = false;
@@ -233,80 +228,6 @@ public class EditStatus {
         clickPoint = null;
         previousClickPoint = null;
         clearBGLineData();
-    }
-
-    public void addPictureCode(int code) {
-        pictureCodes.add(picturePosition++, new PictureCode(code));
-    }
-
-    public void setPictureCode(int position, int code) {
-        pictureCodes.set(position, new PictureCode(code));
-    }
-
-    public LinkedList<PictureCode> getPictureCodes() {
-        return pictureCodes;
-    }
-
-    public int getPicturePosition() {
-        return picturePosition;
-    }
-
-    public void setPicturePosition(int picturePosition) {
-        this.picturePosition = picturePosition;
-    }
-
-    public PictureCode getCurrentPictureAction() {
-        if (pictureCodes.size() == 1) {
-            return null;
-        }
-        int position = picturePosition;
-        while ((position > 0) && !pictureCodes.get(position).isActionCode()) {
-            position--;
-        }
-        return pictureCodes.get(position);
-    }
-
-    public PictureCode getNextPictureAction() {
-        PictureCode pictureCode = null;
-        if (picturePosition < pictureCodes.size() - 1) {
-            int position = picturePosition + 1;
-            while ((position < pictureCodes.size()) && !pictureCodes.get(position).isActionCode()) {
-                position++;
-            }
-            if (position < pictureCodes.size()) {
-                pictureCode = pictureCodes.get(position);
-            }
-        }
-        return pictureCode;
-    }
-
-    public PictureCode incrementPicturePosition() {
-        picturePosition++;
-        if (picturePosition >= pictureCodes.size()) {
-            picturePosition = pictureCodes.size() - 1;
-            return null;
-        } else {
-            return pictureCodes.get(picturePosition);
-        }
-    }
-
-    public PictureCode decrementPicturePosition() {
-        picturePosition--;
-        if (picturePosition < 0) {
-            picturePosition = 0;
-        }
-        return pictureCodes.get(picturePosition);
-    }
-
-    public PictureCode deleteAtPicturePosition() {
-        PictureCode pictureCode = null;
-        if (picturePosition < (pictureCodes.size() - 1)) {
-            pictureCodes.remove(picturePosition);
-            if (picturePosition < (pictureCodes.size() - 1)) {
-                pictureCode = pictureCodes.get(picturePosition);
-            }
-        }
-        return pictureCode;
     }
 
     public int getTemporaryLineColour() {

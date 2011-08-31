@@ -7,12 +7,13 @@ import java.awt.image.DataBufferInt;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.agifans.picedit.PictureCache.PictureCacheEntry;
 
 /**
- * This class represents an AGI Picture.
+ * This class represents an AGI/SCI Picture.
  * 
  * @author Lance Ewing
  */
@@ -23,6 +24,16 @@ public class Picture {
      */
     private final static int[] colours = EgaPalette.colours;
 
+    /**
+     * Holds the current position within the picture code buffer.
+     */
+    private int picturePosition;
+    
+    /**
+     * Holds the linked list of picture codes for this picture.
+     */
+    private LinkedList<PictureCode> pictureCodes;
+    
     /**
      * Holds the pixel data for the visual screen of the picture.
      */
@@ -89,7 +100,6 @@ public class Picture {
 
         this.editStatus = editStatus;
         this.picGraphics = picGraphics;
-
         this.pictureCache = new PictureCache(editStatus);
         
         clearPicture();
@@ -115,16 +125,133 @@ public class Picture {
     }
 
     /**
-     * Clears the visual and priority screens.
+     * Clears the picture code buffer, picture cache and picture screens. This
+     * would usually be done when it is a completely new picture, e.g. when 
+     * loading a picture or creating a new picture.
      */
     public void clearPicture() {
+        clearPictureCodes();
+        clearPictureScreens();
+        clearPictureCache();
+    }
+    
+    /**
+     * Clears the visual, priority (and control) screens.
+     */
+    public void clearPictureScreens() {
         Arrays.fill(visualScreen, EgaPalette.transparent);
         Arrays.fill(priorityScreen, EgaPalette.transparent);
         if (editStatus.getPictureType().equals(PictureType.SCI0)) {
             Arrays.fill(controlScreen, EgaPalette.transparent);
         }
     }
+    
+    /**
+     * Clears the picture cache.
+     */
+    public void clearPictureCache() {
+        this.pictureCache.clear();
+    }
+    
+    /**
+     * Clears the picture code buffer.
+     */
+    public void clearPictureCodes() {
+        picturePosition = 0;
+        pictureCodes = new LinkedList<PictureCode>();
+        pictureCodes.add(new PictureCode(0xFF));
+    }
+    
+    /**
+     * Gets the current picture position.
+     * 
+     * @return The current picture position.
+     */
+    public int getPicturePosition() {
+        return picturePosition;
+    }
 
+    /**
+     * Sets the picture position to the given value.
+     * 
+     * @param picturePosition The new picture position.
+     */
+    public void setPicturePosition(int picturePosition) {
+        this.picturePosition = picturePosition;
+    }
+    
+    /**
+     * Adds a code to the picture code buffer.
+     * 
+     * @param code The code to add to the picture code buffer.
+     */
+    public void addPictureCode(int code) {
+        pictureCodes.add(picturePosition++, new PictureCode(code));
+    }
+
+    /**
+     * Gets the picture code buffer.
+     * 
+     * @return The picture code buffer.
+     */
+    public LinkedList<PictureCode> getPictureCodes() {
+        return pictureCodes;
+    }
+    
+    public PictureCode getCurrentPictureAction() {
+      if (pictureCodes.size() == 1) {
+          return null;
+      }
+      int position = picturePosition;
+      while ((position > 0) && !pictureCodes.get(position).isActionCode()) {
+          position--;
+      }
+      return pictureCodes.get(position);
+    }
+
+    public PictureCode getNextPictureAction() {
+        PictureCode pictureCode = null;
+        if (picturePosition < pictureCodes.size() - 1) {
+            int position = picturePosition + 1;
+            while ((position < pictureCodes.size()) && !pictureCodes.get(position).isActionCode()) {
+                position++;
+            }
+            if (position < pictureCodes.size()) {
+                pictureCode = pictureCodes.get(position);
+            }
+        }
+        return pictureCode;
+    }
+    
+    public PictureCode incrementPicturePosition() {
+        picturePosition++;
+        if (picturePosition >= pictureCodes.size()) {
+            picturePosition = pictureCodes.size() - 1;
+            return null;
+        } else {
+            return pictureCodes.get(picturePosition);
+        }
+    }
+
+    public PictureCode decrementPicturePosition() {
+        picturePosition--;
+        if (picturePosition < 0) {
+            picturePosition = 0;
+        }
+        return pictureCodes.get(picturePosition);
+    }
+
+    public PictureCode deleteAtPicturePosition() {
+        PictureCode pictureCode = null;
+        if (picturePosition < (pictureCodes.size() - 1)) {
+            pictureCodes.remove(picturePosition);
+            if (picturePosition < (pictureCodes.size() - 1)) {
+                pictureCode = pictureCodes.get(picturePosition);
+            }
+        }
+        return pictureCode;
+    }
+    
     /**
      * Updates the PICEDIT screen with the current contents of the 
      * picture's internal visual or priority buffer.
@@ -162,13 +289,6 @@ public class Picture {
     }
 
     /**
-     * Clears the picture cache.
-     */
-    public void clearPictureCache() {
-    	this.pictureCache.clear();
-    }
-    
-    /**
      * Draws the picture from the beginning up to the current picture position.
      */
     public void drawPicture() {
@@ -177,7 +297,7 @@ public class Picture {
         int action = 0;
         int index = 0;
 
-        PictureCacheEntry cacheEntry = this.pictureCache.getCacheEntry(editStatus.getPicturePosition());
+        PictureCacheEntry cacheEntry = this.pictureCache.getCacheEntry(picturePosition);
         if (cacheEntry != null) {
         	// Copy the cached screen arrays into the main picture images.
         	System.arraycopy(cacheEntry.getVisualScreen(), 0, visualScreen, 0, visualScreen.length);
@@ -200,15 +320,13 @@ public class Picture {
         	
         } else {
 	        // Clear the picture bitmaps to the original colours.
-	        clearPicture();
+	        clearPictureScreens();
 	       
 	        // When drawing from the start, we need to clear everything except for the data.
 	        editStatus.clear(false);
         }
 
-        if ((editStatus.getPicturePosition() > 0) && (index < editStatus.getPicturePosition())) {
-            List<PictureCode> pictureCodes = editStatus.getPictureCodes();
-
+        if ((picturePosition > 0) && (index < picturePosition)) {
             do {
                 boolean isCacheable = true;
                 
@@ -276,7 +394,7 @@ public class Picture {
                 if (isCacheable) {
                     pictureCache.addCacheEntry(index, visualScreen, priorityScreen, controlScreen);
                 }
-            } while ((index < editStatus.getPicturePosition()) && (action != 0xFF));
+            } while ((index < picturePosition) && (action != 0xFF));
 
             updateScreen();
         }
