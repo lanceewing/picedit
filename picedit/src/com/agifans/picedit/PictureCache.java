@@ -41,7 +41,7 @@ public class PictureCache {
      * Clears the picture cache.
      */
     public void clear() {
-    	this.cache.clear();
+        this.cache.clear();
     }
     
     /**
@@ -50,9 +50,9 @@ public class PictureCache {
      * @param fromPicturePosition The picture position to clear the picture from.
      */
     public void clear(int fromPicturePosition) {
-		SortedMap<Integer, PictureCacheEntry> entriesBelow = cache.headMap(fromPicturePosition);
-		cache.clear();
-		cache.putAll(entriesBelow);
+        SortedMap<Integer, PictureCacheEntry> entriesBelow = cache.headMap(fromPicturePosition);
+        cache.clear();
+        cache.putAll(entriesBelow);
     }
     
     // Some notes about when the cache will be used or updated.
