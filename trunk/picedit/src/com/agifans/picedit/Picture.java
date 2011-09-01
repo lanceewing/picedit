@@ -186,7 +186,9 @@ public class Picture {
      * @param code The code to add to the picture code buffer.
      */
     public void addPictureCode(int code) {
-        pictureCodes.add(picturePosition++, new PictureCode(code));
+        pictureCache.clear(picturePosition);
+        pictureCodes.add(picturePosition, new PictureCode(code));
+        picturePosition = picturePosition + 1;
     }
 
     /**

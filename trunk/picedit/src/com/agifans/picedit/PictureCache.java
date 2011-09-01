@@ -50,9 +50,12 @@ public class PictureCache {
      * @param fromPicturePosition The picture position to clear the picture from.
      */
     public void clear(int fromPicturePosition) {
-        SortedMap<Integer, PictureCacheEntry> entriesBelow = cache.headMap(fromPicturePosition);
-        cache.clear();
-        cache.putAll(entriesBelow);
+        if (cache.higherKey(fromPicturePosition) != null) {
+            SortedMap<Integer, PictureCacheEntry> entriesBelow = cache.headMap(fromPicturePosition);
+            cache.clear();
+            cache.putAll(entriesBelow);
+            System.out.println("Clearing tail map");
+        }
     }
     
     // Some notes about when the cache will be used or updated.
@@ -91,13 +94,6 @@ public class PictureCache {
     	
     	// Create an entry to add to the picture cache for this osition.
     	PictureCacheEntry cacheEntry = new PictureCacheEntry(picturePosition, visualScreenCopy, priorityScreenCopy, controlScreenCopy);
-    	
-    	// If we are adding to a position where there existing cache entries above 
-    	// it then we need to clear them.
-    	if (cache.higherKey(picturePosition) != null) {
-    		System.out.println("Clearing tail map");
-    		clear(picturePosition);
-    	}
     	
     	this.cache.put(picturePosition, cacheEntry);
     }
