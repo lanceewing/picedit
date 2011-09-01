@@ -257,7 +257,7 @@ public class Picture {
     /**
      * Process movement back one picture action through the picture code buffer.
      */
-    public void processMoveBackOnePictureAction() {
+    public void moveBackOnePictureAction() {
         // Move back through the codes until we find an Action code.
         PictureCode pictureCode = null;
         do {
@@ -271,7 +271,7 @@ public class Picture {
     /**
      * Process movement forward one picture action through the picture code buffer.
      */
-    public void processMoveForwardOnePictureAction() {
+    public void moveForwardOnePictureAction() {
         if (picturePosition < (pictureCodes.size() - 1)) {
             PictureCode pictureCode = null;
             do {
@@ -286,7 +286,7 @@ public class Picture {
     /**
      * Process movement to the start of the picture code buffer.
      */
-    public void processMoveToStartOfPictureBuffer() {
+    public void moveToStartOfPictureBuffer() {
         setPicturePosition(0);
         drawPicture();
         updateScreen();
@@ -295,7 +295,7 @@ public class Picture {
     /**
      * Process movement to the end of the picture code buffer.
      */
-    public void processMoveToEndOfPictureBuffer() {
+    public void moveToEndOfPictureBuffer() {
         if (picturePosition < (pictureCodes.size() - 1)) {
             setPicturePosition(pictureCodes.size() - 1);
             drawPicture();
@@ -307,7 +307,7 @@ public class Picture {
      * Process deletion of the current picture action, i.e. the picture
      * action at the current picture position.
      */
-    public void processDeleteCurrentPictureAction() {
+    public void deleteCurrentPictureAction() {
         PictureCode pictureCode = deleteAtPicturePosition();
         while ((pictureCode != null) && (pictureCode.isDataCode())) {
             pictureCode = deleteAtPicturePosition();

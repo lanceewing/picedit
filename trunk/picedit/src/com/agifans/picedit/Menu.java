@@ -468,19 +468,19 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 break;
             
             case START:
-                picture.processMoveToStartOfPictureBuffer();
+                picture.moveToStartOfPictureBuffer();
                 break;
                 
             case PREV:
-                picture.processMoveBackOnePictureAction();
+                picture.moveBackOnePictureAction();
                 break;
                 
             case NEXT:
-                picture.processMoveForwardOnePictureAction();
+                picture.moveForwardOnePictureAction();
                 break;
                 
             case END:
-                picture.processMoveToEndOfPictureBuffer();
+                picture.moveToEndOfPictureBuffer();
                 break;
                 
             case GOTO:
@@ -489,7 +489,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 break;
                 
             case DELETE:
-                picture.processDeleteCurrentPictureAction();
+                picture.deleteCurrentPictureAction();
                 break;
                 
             case VISUAL:
