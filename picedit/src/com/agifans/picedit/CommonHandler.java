@@ -184,69 +184,6 @@ public abstract class CommonHandler {
     }
 
     /**
-     * Process movement back one picture action through the picture code buffer.
-     */
-    protected void processMoveBackOnePictureAction() {
-        // Move back through the codes until we find an Action code.
-        PictureCode pictureCode = null;
-        do {
-            pictureCode = picture.decrementPicturePosition();
-        } while ((pictureCode != null) && !pictureCode.isActionCode() && (picture.getPicturePosition() > 0));
-
-        picture.drawPicture();
-        picture.updateScreen();
-    }
-
-    /**
-     * Process movement forward one picture action through the picture code buffer.
-     */
-    protected void processMoveForwardOnePictureAction() {
-        if (picture.getPicturePosition() < (picture.getPictureCodes().size() - 1)) {
-            PictureCode pictureCode = null;
-            do {
-                pictureCode = picture.incrementPicturePosition();
-            } while ((pictureCode != null) && !pictureCode.isActionCode());
-
-            picture.drawPicture();
-            picture.updateScreen();
-        }
-    }
-
-    /**
-     * Process movement to the start of the picture code buffer.
-     */
-    protected void processMoveToStartOfPictureBuffer() {
-        picture.setPicturePosition(0);
-        picture.drawPicture();
-        picture.updateScreen();
-    }
-
-    /**
-     * Process movement to the end of the picture code buffer.
-     */
-    protected void processMoveToEndOfPictureBuffer() {
-        if (picture.getPicturePosition() < (picture.getPictureCodes().size() - 1)) {
-            picture.setPicturePosition(picture.getPictureCodes().size() - 1);
-            picture.drawPicture();
-            picture.updateScreen();
-        }
-    }
-
-    /**
-     * Process deletion of the current picture action, i.e. the picture
-     * action at the current picture position.
-     */
-    protected void processDeleteCurrentPictureAction() {
-        PictureCode pictureCode = picture.deleteAtPicturePosition();
-        while ((pictureCode != null) && (pictureCode.isDataCode())) {
-            pictureCode = picture.deleteAtPicturePosition();
-        }
-        editStatus.setLastRenderedPicturePosition(EditStatus.LAST_VALUE_NONE);
-        picture.drawPicture();
-        picture.updateScreen();
-    }
-
-    /**
      * Toggles the display of the priority screen.
      */
     public void processTogglePriorityScreen() {
