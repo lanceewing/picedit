@@ -41,16 +41,16 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
 
             // Handle picture buffer navigation keys.
             if (key == KeyEvent.VK_HOME) {
-                picture.processMoveToStartOfPictureBuffer();
+                picture.moveToStartOfPictureBuffer();
             }
             if (key == KeyEvent.VK_LEFT) {
-                picture.processMoveBackOnePictureAction();
+                picture.moveBackOnePictureAction();
             }
             if (key == KeyEvent.VK_RIGHT) {
-                picture.processMoveForwardOnePictureAction();
+                picture.moveForwardOnePictureAction();
             }
             if (key == KeyEvent.VK_END) {
-                picture.processMoveToEndOfPictureBuffer();
+                picture.moveToEndOfPictureBuffer();
             }
 
             // Handle tool selection keys.
@@ -72,7 +72,7 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
 
             // Handle picture action delete key.
             if (key == KeyEvent.VK_DELETE) {
-                picture.processDeleteCurrentPictureAction();
+                picture.deleteCurrentPictureAction();
             }
             
             // Handle zoom in and zoom out.

@@ -389,21 +389,21 @@ public class ToolPanel extends JPanel {
 
                 // Process clicks on the delete picture action button.
                 if (delRect.contains(mousePoint)) {
-                    picture.processDeleteCurrentPictureAction();
+                    picture.deleteCurrentPictureAction();
                 }
 
                 // Process clicks on the picture navigation buttons.
                 if (leftButton.contains(mousePoint)) {
-                    picture.processMoveBackOnePictureAction();
+                    picture.moveBackOnePictureAction();
                 }
                 if (rightButton.contains(mousePoint)) {
-                    picture.processMoveForwardOnePictureAction();
+                    picture.moveForwardOnePictureAction();
                 }
                 if (homeButton.contains(mousePoint)) {
-                    picture.processMoveToStartOfPictureBuffer();
+                    picture.moveToStartOfPictureBuffer();
                 }
                 if (endButton.contains(mousePoint)) {
-                    picture.processMoveToEndOfPictureBuffer();
+                    picture.moveToEndOfPictureBuffer();
                 }
                 if (posRect.contains(mousePoint)) {
                     processEnterPosition();
