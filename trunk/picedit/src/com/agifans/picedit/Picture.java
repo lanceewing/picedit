@@ -255,6 +255,70 @@ public class Picture {
     }
     
     /**
+     * Process movement back one picture action through the picture code buffer.
+     */
+    public void processMoveBackOnePictureAction() {
+        // Move back through the codes until we find an Action code.
+        PictureCode pictureCode = null;
+        do {
+            pictureCode = decrementPicturePosition();
+        } while ((pictureCode != null) && !pictureCode.isActionCode() && (picturePosition > 0));
+
+        drawPicture();
+        updateScreen();
+    }
+
+    /**
+     * Process movement forward one picture action through the picture code buffer.
+     */
+    public void processMoveForwardOnePictureAction() {
+        if (picturePosition < (pictureCodes.size() - 1)) {
+            PictureCode pictureCode = null;
+            do {
+                pictureCode = incrementPicturePosition();
+            } while ((pictureCode != null) && !pictureCode.isActionCode());
+
+            drawPicture();
+            updateScreen();
+        }
+    }
+
+    /**
+     * Process movement to the start of the picture code buffer.
+     */
+    public void processMoveToStartOfPictureBuffer() {
+        setPicturePosition(0);
+        drawPicture();
+        updateScreen();
+    }
+
+    /**
+     * Process movement to the end of the picture code buffer.
+     */
+    public void processMoveToEndOfPictureBuffer() {
+        if (picturePosition < (pictureCodes.size() - 1)) {
+            setPicturePosition(pictureCodes.size() - 1);
+            drawPicture();
+            updateScreen();
+        }
+    }
+
+    /**
+     * Process deletion of the current picture action, i.e. the picture
+     * action at the current picture position.
+     */
+    public void processDeleteCurrentPictureAction() {
+        PictureCode pictureCode = deleteAtPicturePosition();
+        while ((pictureCode != null) && (pictureCode.isDataCode())) {
+            pictureCode = deleteAtPicturePosition();
+        }
+        editStatus.setLastRenderedPicturePosition(EditStatus.LAST_VALUE_NONE);
+        pictureCache.clear(picturePosition);
+        drawPicture();
+        updateScreen();
+    }
+    
+    /**
      * Updates the PICEDIT screen with the current contents of the 
      * picture's internal visual or priority buffer.
      */
