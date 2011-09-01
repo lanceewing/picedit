@@ -54,7 +54,7 @@ public class PictureCache {
             SortedMap<Integer, PictureCacheEntry> entriesBelow = cache.headMap(fromPicturePosition);
             cache.clear();
             cache.putAll(entriesBelow);
-            System.out.println("Clearing tail map");
+            System.out.println("Clearing tail map from position " + fromPicturePosition);
         }
     }
     
@@ -79,8 +79,10 @@ public class PictureCache {
      * @param visualScreen The pixel data for the visual screen of the picture.
      * @param priorityScreen The pixel data for the priority screen of the picture.
      * @param controlScreen The pixel data for the control screen of the picture.
+     * 
+     * @return The newly added PictureCacheEntry.
      */
-    public void addCacheEntry(int picturePosition, int[] visualScreen, int[] priorityScreen, int[] controlScreen) {
+    public PictureCacheEntry addCacheEntry(int picturePosition, int[] visualScreen, int[] priorityScreen, int[] controlScreen) {
     	// Copy the three screen arrays.
     	int[] visualScreenCopy = new int[visualScreen.length];
     	System.arraycopy(visualScreen, 0, visualScreenCopy, 0, visualScreen.length);
@@ -96,6 +98,8 @@ public class PictureCache {
     	PictureCacheEntry cacheEntry = new PictureCacheEntry(picturePosition, visualScreenCopy, priorityScreenCopy, controlScreenCopy);
     	
     	this.cache.put(picturePosition, cacheEntry);
+    	
+    	return cacheEntry;
     }
     
     /**
@@ -270,5 +274,14 @@ public class PictureCache {
         public void setBrushTexture(BrushTexture brushTexture) {
             this.brushTexture = brushTexture;
         }
+    }
+
+    /**
+     * Returns the size of the cache.
+     * 
+     * @return The size of the cache.
+     */
+    public int size() {
+        return cache.size();
     }
 }
