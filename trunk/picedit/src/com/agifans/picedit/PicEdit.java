@@ -41,6 +41,11 @@ public final class PicEdit extends JApplet {
     private PicturePanel picturePanel;
     
     /**
+     * The internal frame for the picture panel.
+     */
+    private PictureFrame pictureFrame;
+    
+    /**
      * The PICEDIT menu handler.
      */
     private Menu menu;
@@ -76,7 +81,7 @@ public final class PicEdit extends JApplet {
         
         // Add the desktop pane that holds the picture that is being edited.
         JDesktopPane desktop = new JDesktopPane();
-        PictureFrame pictureFrame = new PictureFrame(editStatus, picturePanel);
+        pictureFrame = new PictureFrame(editStatus, picturePanel);
         desktop.add(pictureFrame);
         this.getContentPane().add(desktop, BorderLayout.CENTER);
         
@@ -150,14 +155,16 @@ public final class PicEdit extends JApplet {
      * @param zoomFactor the new zoom factor.
      */
     public void resizeScreen(int zoomFactor) {
-        this.editStatus.setZoomFactor(zoomFactor);
+        pictureFrame.resizeForZoomFactor(zoomFactor);
         
-        // Update the size of the picture according to new zoom factor.
-        picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
-        picturePanel.resizeOffscreenImage();
-        
-        // This will tell the scroll pane to adjust itself.
-        picturePanel.revalidate();
+//        this.editStatus.setZoomFactor(zoomFactor);
+//        
+//        // Update the size of the picture according to new zoom factor.
+//        picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
+//        picturePanel.resizeOffscreenImage();
+//        
+//        // This will tell the scroll pane to adjust itself.
+//        picturePanel.revalidate();
     }
 
     /**
