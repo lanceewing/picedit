@@ -33,6 +33,16 @@ public class PictureFrame extends JInternalFrame {
     private EditStatus editStatus;
     
     /**
+     * 
+     */
+    private int widthPadding;
+    
+    /**
+     * 
+     */
+    private int heightPadding;
+    
+    /**
      * Constructor for PictureFrame.
      * 
      * @param editStatus 
@@ -52,11 +62,27 @@ public class PictureFrame extends JInternalFrame {
         pictureScrollPane.setBackground(Color.lightGray);
         this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
         this.pack();
+        this.widthPadding = this.getWidth() - ((int)picturePanel.getPreferredSize().getWidth());
+        this.heightPadding = this.getHeight() - ((int)picturePanel.getPreferredSize().getHeight());
         this.setMaximumSize(new Dimension(this.getWidth(), this.getHeight()));
         this.setIconifiable(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setVisible(true);
+    }
+    
+    public void resizeForZoomFactor(int zoomFactor) {
+        this.editStatus.setZoomFactor(zoomFactor);
+        
+        // Update the size of the picture according to new zoom factor.
+        picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
+        picturePanel.resizeOffscreenImage();
+        
+        // This will tell the scroll pane to adjust itself.
+        picturePanel.revalidate();
+        
+        this.setMaximumSize(new Dimension(picturePanel.getWidth() + widthPadding, picturePanel.getHeight() + heightPadding));
+        this.revalidate();
     }
     
     /**
