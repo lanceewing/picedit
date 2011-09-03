@@ -41,11 +41,6 @@ public final class PicEdit extends JApplet {
     private PicturePanel picturePanel;
     
     /**
-     * The scroll pane that holds the picture panel.
-     */
-    private JScrollPane pictureScrollPane;
-    
-    /**
      * The PICEDIT menu handler.
      */
     private Menu menu;
@@ -79,13 +74,7 @@ public final class PicEdit extends JApplet {
         statusbar.setPreferredSize(new Dimension(320, 20));
         this.getContentPane().add(statusbar, BorderLayout.NORTH);
         
-        // Add the panel that holds the picture that is being edited.
-        //pictureScrollPane = new JScrollPane(picturePanel);
-        //pictureScrollPane.setMinimumSize(new Dimension(10, 10));
-        //pictureScrollPane.setOpaque(true);
-        //pictureScrollPane.setBackground(Color.lightGray);
-        //this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
-        
+        // Add the desktop pane that holds the picture that is being edited.
         JDesktopPane desktop = new JDesktopPane();
         PictureFrame pictureFrame = new PictureFrame(editStatus, picturePanel);
         desktop.add(pictureFrame);
@@ -179,18 +168,6 @@ public final class PicEdit extends JApplet {
         
         // Make sure the slider is up to date with the picture position.
         positionSlider.getModel().setValue(picture.getPicturePosition());
-        
-        // If we are in a window then update the title to show the current picture name.
-        if (SwingUtilities.getRoot(this) instanceof JFrame) {
-            StringBuilder title = new StringBuilder(PICEDIT_NAME);
-            title.append(" - ");
-            if (editStatus.getPictureFile() == null) {
-                title.append("Untitled");
-            } else {
-                title.append(editStatus.getPictureFile().getName());
-            }
-            ((JFrame) SwingUtilities.getRoot(this)).setTitle(title.toString());
-        }
     }
     
     /**
@@ -202,6 +179,7 @@ public final class PicEdit extends JApplet {
         app.resizeScreen(2);
 
         JFrame frame = new JFrame();
+        frame.setTitle(PICEDIT_NAME);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
                 app.editStatus.savePreferences();

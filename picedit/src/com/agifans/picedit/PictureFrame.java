@@ -52,7 +52,7 @@ public class PictureFrame extends JInternalFrame {
         pictureScrollPane.setBackground(Color.lightGray);
         this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
         this.pack();
-        this.setMaximizable(true);
+        this.setMaximumSize(new Dimension(this.getWidth(), this.getHeight()));
         this.setIconifiable(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
