@@ -55,6 +55,9 @@ public class PictureFrame extends JInternalFrame {
         
         this.picturePanel = picturePanel;
         
+        //int storedZoomFactor = editStatus.getZoomFactor();
+        //this.resizeForZoomFactor(2);
+        
         // Add the panel that holds the picture that is being edited.
         pictureScrollPane = new JScrollPane(picturePanel);
         pictureScrollPane.setMinimumSize(new Dimension(10, 10));
@@ -64,11 +67,13 @@ public class PictureFrame extends JInternalFrame {
         this.pack();
         this.widthPadding = this.getWidth() - ((int)picturePanel.getPreferredSize().getWidth());
         this.heightPadding = this.getHeight() - ((int)picturePanel.getPreferredSize().getHeight());
-        this.setMaximumSize(new Dimension(this.getWidth(), this.getHeight()));
+        this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
         this.setIconifiable(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setVisible(true);
+        
+        //this.resizeForZoomFactor(storedZoomFactor);
     }
     
     public void resizeForZoomFactor(int zoomFactor) {
