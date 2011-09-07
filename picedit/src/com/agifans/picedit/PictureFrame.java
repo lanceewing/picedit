@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -55,10 +57,11 @@ public class PictureFrame extends JInternalFrame {
         pictureScrollPane.setBackground(Color.lightGray);
         this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
         this.pack();
-        this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
+        //this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
         this.setIconifiable(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addComponentListener(new PictureFrameResizeListener(this));
         this.setVisible(true);
         
         this.resizeForZoomFactor(storedZoomFactor);
@@ -89,6 +92,38 @@ public class PictureFrame extends JInternalFrame {
             this.setTitle("Untitled");
         } else {
             this.setTitle(editStatus.getPictureFile().getName());
+        }
+    }
+    
+    /**
+     * A ComponentListener for the internal picture frame that manages the maximum and minimum 
+     * sizes of the internal frame when resized.
+     */
+    class PictureFrameResizeListener extends ComponentAdapter {
+        
+        /**
+         * The frame that this resize listener is managing.
+         */
+        private PictureFrame frame;
+        
+        /**
+         * Constructor for PictureFrameComponentListener.
+         * 
+         * @param frame The frame that this resize listener is managing.
+         */
+        PictureFrameResizeListener(PictureFrame frame) {
+            this.frame = frame;
+        }
+        
+        public void componentResized(ComponentEvent event) {
+            System.out.println("resized.");
+            int maxWidth = Math.min(500, frame.getWidth());
+            int maxHeight = Math.min(500, frame.getHeight());
+            int minWidth = Math.max(300, frame.getWidth());
+            int minHeight = Math.max(300, frame.getHeight());
+            frame.setMinimumSize(new Dimension(minWidth, minHeight));
+            frame.setMaximumSize(new Dimension(maxWidth, maxHeight));
+            //frame.setSize(newWidth, newHeight);
         }
     }
 }
