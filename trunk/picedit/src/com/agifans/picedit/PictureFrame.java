@@ -116,14 +116,11 @@ public class PictureFrame extends JInternalFrame {
         }
         
         public void componentResized(ComponentEvent event) {
-            System.out.println("resized.");
-            int maxWidth = Math.min(500, frame.getWidth());
-            int maxHeight = Math.min(500, frame.getHeight());
-            int minWidth = Math.max(300, frame.getWidth());
-            int minHeight = Math.max(300, frame.getHeight());
-            frame.setMinimumSize(new Dimension(minWidth, minHeight));
-            frame.setMaximumSize(new Dimension(maxWidth, maxHeight));
-            //frame.setSize(newWidth, newHeight);
+            frame.setMinimumSize(new Dimension(300, 300));
+            frame.setMaximumSize(new Dimension(500, 500));
+            int newWidth = Math.max(Math.min(500, frame.getWidth()), 300);
+            int newHeight = Math.max(Math.min(500, frame.getHeight()), 300);
+            frame.setSize(newWidth, newHeight);
         }
     }
 }
