@@ -198,6 +198,7 @@ public final class PicEdit extends JApplet {
         frame.setLocationRelativeTo(null);
         frame.setResizable(true);
         frame.setVisible(true);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         
         app.requestFocus();
     }
