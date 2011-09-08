@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 /**
  * 
@@ -61,23 +60,19 @@ public class PictureFrame extends JInternalFrame {
         this.picturePanel = picturePanel;
         this.calculateResizeDimensions();
         
-        int storedZoomFactor = editStatus.getZoomFactor();
-        this.resizeForZoomFactor(2);
-        
         // Add the panel that holds the picture that is being edited.
         pictureScrollPane = new JScrollPane(picturePanel);
         pictureScrollPane.setMinimumSize(new Dimension(10, 10));
         pictureScrollPane.setOpaque(true);
         pictureScrollPane.setBackground(Color.lightGray);
         this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
-        this.pack();
-        //this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
         this.setIconifiable(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addComponentListener(new PictureFrameResizeListener(this));
+        this.setSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
+        this.setMaximumSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
         this.setVisible(true);
-        this.resizeForZoomFactor(storedZoomFactor);
     }
     
     public void calculateResizeDimensions() {
@@ -87,13 +82,18 @@ public class PictureFrame extends JInternalFrame {
             JPanel panel = new JPanel();
             Dimension appDimension = new Dimension(320 * i, editStatus.getPictureType().getHeight() * i);
             panel.setPreferredSize(appDimension);
-            frame.add(panel);
+            JScrollPane scrollPane = new JScrollPane(panel);
+            scrollPane.setMinimumSize(new Dimension(10, 10));
+            frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
             frame.pack();
+            frame.invalidate();
             this.maximumSizeMap.put(i, frame.getSize());
         }
     }
     
     public void resizeForZoomFactor(int zoomFactor) {
+        System.out.println("resizeForZoomFactor: " + zoomFactor);
+        
         // TODO: Either get the frame to pack() at all sizes on creation and store in Map OR...
         // TODO: ...OR remove scroll bars before pack. 
         // TODO: ...OR do a double pack()  (before invalidate and after)
@@ -107,10 +107,6 @@ public class PictureFrame extends JInternalFrame {
         // Update the size of the picture according to new zoom factor.
         picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
         picturePanel.resizeOffscreenImage();
-        
-        
-        // Make the frame as small as possible to completely fit the picture panel.
-        //pack();
         
         // TODO: We need to take the desktop maximum size into account. Either that or put scroll bars on the desktop.
         maximumSize = maximumSizeMap.get(editStatus.getZoomFactor());
