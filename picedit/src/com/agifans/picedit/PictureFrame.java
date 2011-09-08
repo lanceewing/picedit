@@ -6,9 +6,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
@@ -40,6 +43,11 @@ public class PictureFrame extends JInternalFrame {
     private Dimension maximumSize;
     
     /**
+     * 
+     */
+    private Map<Integer, Dimension> maximumSizeMap;
+    
+    /**
      * Constructor for PictureFrame.
      * 
      * @param editStatus 
@@ -51,6 +59,7 @@ public class PictureFrame extends JInternalFrame {
         this.editStatus = editStatus;
         
         this.picturePanel = picturePanel;
+        this.calculateResizeDimensions();
         
         int storedZoomFactor = editStatus.getZoomFactor();
         this.resizeForZoomFactor(2);
@@ -68,8 +77,20 @@ public class PictureFrame extends JInternalFrame {
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addComponentListener(new PictureFrameResizeListener(this));
         this.setVisible(true);
-        
         this.resizeForZoomFactor(storedZoomFactor);
+    }
+    
+    public void calculateResizeDimensions() {
+        this.maximumSizeMap = new HashMap<Integer, Dimension>();
+        for (int i=2; i<=5; i++) {
+            JInternalFrame frame = new JInternalFrame();
+            JPanel panel = new JPanel();
+            Dimension appDimension = new Dimension(320 * i, editStatus.getPictureType().getHeight() * i);
+            panel.setPreferredSize(appDimension);
+            frame.add(panel);
+            frame.pack();
+            this.maximumSizeMap.put(i, frame.getSize());
+        }
     }
     
     public void resizeForZoomFactor(int zoomFactor) {
@@ -87,11 +108,12 @@ public class PictureFrame extends JInternalFrame {
         picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
         picturePanel.resizeOffscreenImage();
         
+        
         // Make the frame as small as possible to completely fit the picture panel.
-        pack();
+        //pack();
         
         // TODO: We need to take the desktop maximum size into account. Either that or put scroll bars on the desktop.
-        maximumSize = getSize();  
+        maximumSize = maximumSizeMap.get(editStatus.getZoomFactor());
         
         // Apply the new maximum size to the frame.
         this.setMaximumSize(maximumSize);

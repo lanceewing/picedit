@@ -182,8 +182,6 @@ public final class PicEdit extends JApplet {
      */
     public static void main(String[] args) {
         final PicEdit app = new PicEdit();
-        int storedZoomFactor = app.getEditStatus().getZoomFactor();
-        app.resizeScreen(2);
 
         JFrame frame = new JFrame();
         frame.setTitle(PICEDIT_NAME);
@@ -198,8 +196,6 @@ public final class PicEdit extends JApplet {
         frame.getContentPane().add(app, BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
-        frame.setMinimumSize(new Dimension(frame.getWidth(), frame.getHeight()));
-        app.resizeScreen(storedZoomFactor);
         frame.setResizable(true);
         frame.setVisible(true);
         
