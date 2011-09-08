@@ -35,6 +35,11 @@ public class PictureFrame extends JInternalFrame {
     private EditStatus editStatus;
     
     /**
+     * The maximum allowed size of the frame.
+     */
+    private Dimension maximumSize;
+    
+    /**
      * Constructor for PictureFrame.
      * 
      * @param editStatus 
@@ -68,11 +73,34 @@ public class PictureFrame extends JInternalFrame {
     }
     
     public void resizeForZoomFactor(int zoomFactor) {
+        // TODO: Either get the frame to pack() at all sizes on creation and store in Map OR...
+        // TODO: ...OR remove scroll bars before pack. 
+        // TODO: ...OR do a double pack()  (before invalidate and after)
+      
+      
         this.editStatus.setZoomFactor(zoomFactor);
+        
+        // Get the current size of the picture frame.
+        Dimension currentSize = getSize();
         
         // Update the size of the picture according to new zoom factor.
         picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
         picturePanel.resizeOffscreenImage();
+        
+        // Make the frame as small as possible to completely fit the picture panel.
+        pack();
+        
+        // TODO: We need to take the desktop maximum size into account. Either that or put scroll bars on the desktop.
+        maximumSize = getSize();  
+        
+        // Apply the new maximum size to the frame.
+        this.setMaximumSize(maximumSize);
+        
+        // Calculate the new current size. If the current size was below the packed 
+        // size then we stick with that; otherwise we set it at the packed size.
+        this.setSize(new Dimension(
+            (int)Math.min(currentSize.getWidth(), maximumSize.getWidth()),
+            (int)Math.min(currentSize.getHeight(), maximumSize.getHeight())));
         
         // This will tell the scroll pane to adjust itself.
         picturePanel.revalidate();
@@ -116,11 +144,11 @@ public class PictureFrame extends JInternalFrame {
         }
         
         public void componentResized(ComponentEvent event) {
-            frame.setMinimumSize(new Dimension(300, 300));
-            frame.setMaximumSize(new Dimension(500, 500));
-            int newWidth = Math.max(Math.min(500, frame.getWidth()), 300);
-            int newHeight = Math.max(Math.min(500, frame.getHeight()), 300);
-            frame.setSize(newWidth, newHeight);
+            //frame.setMinimumSize(new Dimension(300, 300));
+            //frame.setMaximumSize(new Dimension(500, 500));
+            //int newWidth = Math.max(Math.min(500, frame.getWidth()), 300);
+            //int newHeight = Math.max(Math.min(500, frame.getHeight()), 300);
+            //frame.setSize(newWidth, newHeight);
         }
     }
 }
