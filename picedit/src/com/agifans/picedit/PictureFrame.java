@@ -69,7 +69,6 @@ public class PictureFrame extends JInternalFrame {
         this.setIconifiable(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.addComponentListener(new PictureFrameResizeListener(this));
         this.setSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
         this.setMaximumSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
         this.setVisible(true);
@@ -92,13 +91,6 @@ public class PictureFrame extends JInternalFrame {
     }
     
     public void resizeForZoomFactor(int zoomFactor) {
-        System.out.println("resizeForZoomFactor: " + zoomFactor);
-        
-        // TODO: Either get the frame to pack() at all sizes on creation and store in Map OR...
-        // TODO: ...OR remove scroll bars before pack. 
-        // TODO: ...OR do a double pack()  (before invalidate and after)
-      
-      
         this.editStatus.setZoomFactor(zoomFactor);
         
         // Get the current size of the picture frame.
@@ -108,11 +100,8 @@ public class PictureFrame extends JInternalFrame {
         picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
         picturePanel.resizeOffscreenImage();
         
-        // TODO: We need to take the desktop maximum size into account. Either that or put scroll bars on the desktop.
-        maximumSize = maximumSizeMap.get(editStatus.getZoomFactor());
-        
         // Apply the new maximum size to the frame.
-        this.setMaximumSize(maximumSize);
+        this.setMaximumSize(maximumSizeMap.get(editStatus.getZoomFactor()));
         
         // Calculate the new current size. If the current size was below the packed 
         // size then we stick with that; otherwise we set it at the packed size.
@@ -138,35 +127,6 @@ public class PictureFrame extends JInternalFrame {
             this.setTitle("Untitled");
         } else {
             this.setTitle(editStatus.getPictureFile().getName());
-        }
-    }
-    
-    /**
-     * A ComponentListener for the internal picture frame that manages the maximum and minimum 
-     * sizes of the internal frame when resized.
-     */
-    class PictureFrameResizeListener extends ComponentAdapter {
-        
-        /**
-         * The frame that this resize listener is managing.
-         */
-        private PictureFrame frame;
-        
-        /**
-         * Constructor for PictureFrameComponentListener.
-         * 
-         * @param frame The frame that this resize listener is managing.
-         */
-        PictureFrameResizeListener(PictureFrame frame) {
-            this.frame = frame;
-        }
-        
-        public void componentResized(ComponentEvent event) {
-            //frame.setMinimumSize(new Dimension(300, 300));
-            //frame.setMaximumSize(new Dimension(500, 500));
-            //int newWidth = Math.max(Math.min(500, frame.getWidth()), 300);
-            //int newHeight = Math.max(Math.min(500, frame.getHeight()), 300);
-            //frame.setSize(newWidth, newHeight);
         }
     }
 }
