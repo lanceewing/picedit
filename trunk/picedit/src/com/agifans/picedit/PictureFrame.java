@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.KeyboardFocusManager;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +60,7 @@ public class PictureFrame extends JInternalFrame {
      * TODO: Move creation of the PicturePanel into this class.
      * TODO: Move creation of EditStatus, PicGraphics, Picture into this class.
      */
+    @SuppressWarnings("unchecked")
     public PictureFrame(EditStatus editStatus, Picture picture, PicturePanel picturePanel) {
         this.editStatus = editStatus;
         this.picture = picture;
@@ -65,6 +68,10 @@ public class PictureFrame extends JInternalFrame {
         
         this.calculateResizeDimensions();
         this.setLayout(new BorderLayout());
+        
+        // This allows us to use TAB in the application (default within Java is that it traverses between fields).
+        this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
+        this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         
         // Add the panel that holds the picture that is being edited.
         pictureScrollPane = new JScrollPane(picturePanel);
