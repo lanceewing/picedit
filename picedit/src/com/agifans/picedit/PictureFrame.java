@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,6 +96,8 @@ public class PictureFrame extends JInternalFrame {
             JScrollPane scrollPane = new JScrollPane(panel);
             scrollPane.setMinimumSize(new Dimension(10, 10));
             frame.setLayout(new BorderLayout());
+            JSlider slider = new JSlider();
+            frame.getContentPane().add(slider, BorderLayout.SOUTH);
             frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
             frame.pack();
             frame.invalidate();
