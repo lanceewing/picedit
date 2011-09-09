@@ -80,10 +80,15 @@ public final class PicEdit extends JApplet {
         this.getContentPane().add(statusbar, BorderLayout.NORTH);
         
         // Add the desktop pane that holds the picture that is being edited.
-        JDesktopPane desktop = new JDesktopPane();
+        JDesktopPane desktop = new ScrollDesktop();
+        desktop.setPreferredSize(new Dimension(2000, 2000));
+        JScrollPane desktopScrollPane = new JScrollPane(desktop);
+        desktopScrollPane.setMinimumSize(new Dimension(10, 10));
+        desktopScrollPane.setOpaque(true);
+        desktopScrollPane.setBackground(Color.lightGray);
         pictureFrame = new PictureFrame(editStatus, picturePanel);
         desktop.add(pictureFrame);
-        this.getContentPane().add(desktop, BorderLayout.CENTER);
+        this.getContentPane().add(desktopScrollPane, BorderLayout.CENTER);
         
         // Add the tool panel centered below the picture.
         JPanel southPanel = new JPanel();
@@ -175,6 +180,28 @@ public final class PicEdit extends JApplet {
         
         // Make sure the slider is up to date with the picture position.
         positionSlider.getModel().setValue(picture.getPicturePosition());
+    }
+    
+    class ScrollDesktop extends JDesktopPane implements Scrollable {
+      public Dimension getPreferredScrollableViewportSize() {
+        return getPreferredSize();
+      }
+
+      public int getScrollableUnitIncrement(Rectangle r, int axis, int dir) {
+        return 50;
+      }
+
+      public int getScrollableBlockIncrement(Rectangle r, int axis, int dir) {
+        return 200;
+      }
+
+      public boolean getScrollableTracksViewportWidth() {
+        return false;
+      }
+
+      public boolean getScrollableTracksViewportHeight() {
+        return false;
+      }
     }
     
     /**
