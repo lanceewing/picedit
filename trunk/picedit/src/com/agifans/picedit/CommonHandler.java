@@ -99,16 +99,18 @@ public abstract class CommonHandler {
     }
 
     /**
-     * Processes the entered position. 
-     * 
-     * @param inputLine The String form of the position that the user has entered.
+     * Allow the user to go to a position in the picture buffer immediately 
+     * without having to use the navigation buttons. The position will be 
+     * set to the start of the drawing action that the given position lies 
+     * within.
      */
-    protected void processPositionEntered(String inputLine) {
-        if ((inputLine != null) && (!inputLine.trim().equals(""))) {
+    protected void processEnterPosition() {
+        String positionStr = JOptionPane.showInputDialog(application, "Enter a picture position:", "Goto", JOptionPane.QUESTION_MESSAGE);
+        if ((positionStr != null) && (!positionStr.trim().equals(""))) {
             try {
                 // If the entered value is valid, apply the new position.
                 LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
-                int newPosition = Integer.parseInt(inputLine.toString());
+                int newPosition = Integer.parseInt(positionStr.toString());
                 if ((newPosition >= 0) && (newPosition < pictureCodes.size())) {
                     if (newPosition < (pictureCodes.size() - 1)) {
                         // Find the closest picture action to the entered position.
@@ -124,63 +126,6 @@ public abstract class CommonHandler {
                 // Ignore. The user has entered a non-numeric value.
             }
         }
-    }
-    
-    /**
-     * Allow the user to go to a position in the picture buffer immediately 
-     * without having to use the navigation buttons. The position will be 
-     * set to the start of the drawing action that the given position lies 
-     * within.
-     */
-    protected void processEnterPosition() {
-        // Disable processing of key events by the main application (i.e. no menu, no tools)
-        editStatus.setPaused(true);
-
-        final StringBuilder inputLine = new StringBuilder();
-
-        // Clear position box reading for input.
-        picGraphics.drawFilledBox(230, 2, 273, 10, 0);
-        picGraphics.drawString(inputLine.toString(), 231, 3, 7, 0);
-
-        // Register a temporary KeyListener for getting the new position.
-        this.application.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                int key = e.getKeyCode();
-
-                if (key == KeyEvent.VK_ESCAPE) {
-                    // Keep current position.
-                    application.getPicturePanel().removeKeyListener(this);
-                    editStatus.setPaused(false);
-                    picture.drawPicture();
-                    picture.updateScreen();
-                    inputLine.delete(0, inputLine.length());
-                    inputLine.append(picture.getPicturePosition());
-
-                } else if (key == KeyEvent.VK_BACK_SPACE) {
-                    if (inputLine.length() > 0) {
-                        inputLine.deleteCharAt(inputLine.length() - 1);
-                    }
-                } else if (key == KeyEvent.VK_ENTER) {
-                    // User has finished entering a position.
-                    application.getPicturePanel().removeKeyListener(this);
-                    processPositionEntered(inputLine.toString());
-                    editStatus.setPaused(false);
-                    inputLine.delete(0, inputLine.length());
-                    inputLine.append(picture.getPicturePosition());
-
-                } else if ((e.getKeyChar() >= '0') && (e.getKeyChar() <= '9')) {
-                    // If the character is a number, and the maximum length has not been reached, then add to the input. 
-                    if (inputLine.length() < 5) {
-                        inputLine.append(e.getKeyChar());
-                    }
-                }
-
-                String tempString = String.format("%5s", inputLine);
-                picGraphics.drawFilledBox(230, 2, 273, 10, 0);
-                picGraphics.drawString(tempString, 230, 3, 7, 0);
-            }
-        });
     }
 
     /**
