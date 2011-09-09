@@ -50,10 +50,10 @@ public final class PicEdit extends JApplet {
      */
     private Menu menu;
     
-    /**
-     * The slider that sets the picture position.
-     */
-    private JSlider positionSlider;
+//    /**
+//     * The slider that sets the picture position.
+//     */
+//    private JSlider positionSlider;
     
     /**
      * Constructor for PicEdit.
@@ -86,17 +86,17 @@ public final class PicEdit extends JApplet {
         desktopScrollPane.setMinimumSize(new Dimension(10, 10));
         desktopScrollPane.setOpaque(true);
         desktopScrollPane.setBackground(Color.lightGray);
-        pictureFrame = new PictureFrame(editStatus, picturePanel);
+        pictureFrame = new PictureFrame(editStatus, picture, picturePanel);
         desktop.add(pictureFrame);
         this.getContentPane().add(desktopScrollPane, BorderLayout.CENTER);
         
         // Add the tool panel centered below the picture.
-        JPanel southPanel = new JPanel();
-        southPanel.setLayout(new BorderLayout());
-        positionSlider = new JSlider();
-        positionSlider.setModel(new PositionSliderModel(picture));
-        positionSlider.setFocusable(false);
-        southPanel.add(positionSlider, BorderLayout.NORTH);
+        //JPanel southPanel = new JPanel();
+        //southPanel.setLayout(new BorderLayout());
+        //positionSlider = new JSlider();
+        //positionSlider.setModel(new PositionSliderModel(picture));
+        //positionSlider.setFocusable(false);
+        //southPanel.add(positionSlider, BorderLayout.NORTH);
         JPanel toolPanelContainer = new JPanel();
         toolPanelContainer.setBackground(EgaPalette.GREY);
         toolPanelContainer.setOpaque(true);
@@ -104,8 +104,8 @@ public final class PicEdit extends JApplet {
         ToolPanel toolPanel = new ToolPanel(this);
         toolPanel.setPreferredSize(new Dimension(640, 46));
         toolPanelContainer.add(toolPanel);
-        southPanel.add(toolPanelContainer, BorderLayout.CENTER);
-        this.getContentPane().add(southPanel, BorderLayout.SOUTH);
+        //southPanel.add(toolPanelContainer, BorderLayout.CENTER);
+        this.getContentPane().add(toolPanelContainer, BorderLayout.SOUTH);
     }
 
     /**
@@ -145,14 +145,14 @@ public final class PicEdit extends JApplet {
         return this.picturePanel;
     }
     
-    /**
-     * Gets the JSlider that sets the picture position.
-     * 
-     * @return The JSlider that set the picture position.
-     */
-    public JSlider getPositionSlider() {
-        return this.positionSlider;
-    }
+//    /**
+//     * Gets the JSlider that sets the picture position.
+//     * 
+//     * @return The JSlider that set the picture position.
+//     */
+//    public JSlider getPositionSlider() {
+//        return this.positionSlider;
+//    }
     
     /**
      * Resizes the screen according to the new zoom factor.
@@ -179,7 +179,7 @@ public final class PicEdit extends JApplet {
         super.paint(g);
         
         // Make sure the slider is up to date with the picture position.
-        positionSlider.getModel().setValue(picture.getPicturePosition());
+        //positionSlider.getModel().setValue(picture.getPicturePosition());
     }
     
     class ScrollDesktop extends JDesktopPane implements Scrollable {

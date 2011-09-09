@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 
 /**
  * 
@@ -39,7 +40,17 @@ public class PictureFrame extends JInternalFrame {
     /**
      * 
      */
+    private Picture picture;
+    
+    /**
+     * 
+     */
     private Map<Integer, Dimension> maximumSizeMap;
+    
+    /**
+     * The slider that sets the picture position.
+     */
+    private JSlider positionSlider;
     
     /**
      * Constructor for PictureFrame.
@@ -49,11 +60,13 @@ public class PictureFrame extends JInternalFrame {
      * TODO: Move creation of the PicturePanel into this class.
      * TODO: Move creation of EditStatus, PicGraphics, Picture into this class.
      */
-    public PictureFrame(EditStatus editStatus, PicturePanel picturePanel) {
+    public PictureFrame(EditStatus editStatus, Picture picture, PicturePanel picturePanel) {
         this.editStatus = editStatus;
-        
+        this.picture = picture;
         this.picturePanel = picturePanel;
+        
         this.calculateResizeDimensions();
+        this.setLayout(new BorderLayout());
         
         // Add the panel that holds the picture that is being edited.
         pictureScrollPane = new JScrollPane(picturePanel);
@@ -61,6 +74,12 @@ public class PictureFrame extends JInternalFrame {
         pictureScrollPane.setOpaque(true);
         pictureScrollPane.setBackground(Color.lightGray);
         this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
+        
+        positionSlider = new JSlider();
+        positionSlider.setModel(new PositionSliderModel(picture));
+        positionSlider.setFocusable(false);
+        this.getContentPane().add(positionSlider, BorderLayout.SOUTH);
+        
         this.setIconifiable(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -78,6 +97,7 @@ public class PictureFrame extends JInternalFrame {
             panel.setPreferredSize(appDimension);
             JScrollPane scrollPane = new JScrollPane(panel);
             scrollPane.setMinimumSize(new Dimension(10, 10));
+            frame.setLayout(new BorderLayout());
             frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
             frame.pack();
             frame.invalidate();
@@ -116,7 +136,7 @@ public class PictureFrame extends JInternalFrame {
         super.paint(g);
         
         // Make sure the slider is up to date with the picture position.
-        //positionSlider.getModel().setValue(picture.getPicturePosition());
+        positionSlider.getModel().setValue(picture.getPicturePosition());
         
         // If we are in a window then update the title to show the current picture name.
         if (editStatus.getPictureFile() == null) {
