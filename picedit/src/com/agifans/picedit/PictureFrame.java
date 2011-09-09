@@ -37,11 +37,6 @@ public class PictureFrame extends JInternalFrame {
     private EditStatus editStatus;
     
     /**
-     * The maximum allowed size of the frame.
-     */
-    private Dimension maximumSize;
-    
-    /**
      * 
      */
     private Map<Integer, Dimension> maximumSizeMap;
@@ -101,7 +96,8 @@ public class PictureFrame extends JInternalFrame {
         picturePanel.resizeOffscreenImage();
         
         // Apply the new maximum size to the frame.
-        this.setMaximumSize(maximumSizeMap.get(editStatus.getZoomFactor()));
+        Dimension maximumSize = maximumSizeMap.get(editStatus.getZoomFactor());
+        this.setMaximumSize(maximumSize);
         
         // Calculate the new current size. If the current size was below the packed 
         // size then we stick with that; otherwise we set it at the packed size.
