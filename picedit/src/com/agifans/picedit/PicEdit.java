@@ -101,7 +101,11 @@ public final class PicEdit extends JApplet {
      * @return The panel that holds the picture.
      */
     public PicturePanel getPicturePanel() {
-        return this.pictureFrame.getPicturePanel();
+        return pictureFrame.getPicturePanel();
+    }
+    
+    public PictureFrame getPictureFrame() {
+        return pictureFrame;
     }
     
     /**
