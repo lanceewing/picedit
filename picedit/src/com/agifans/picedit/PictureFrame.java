@@ -16,7 +16,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 
 /**
- * 
+ * An internal picture frame to display in the desktop pane. There is one 
+ * such frame for each picture that is loaded. It is in these frames that
+ * the pictures are displayed.
  * 
  * @author Lance Ewing
  */
@@ -33,17 +35,22 @@ public class PictureFrame extends JInternalFrame {
     private PicturePanel picturePanel;
     
     /**
-     * 
+     * Holds the current edit status of the picture in this frame.
      */
     private EditStatus editStatus;
     
     /**
-     * 
+     * The picture that is displayed in this frame.
      */
     private Picture picture;
     
     /**
-     * 
+     * The graphics routines with which the application draws the screen.
+     */
+    private PicGraphics picGraphics;
+    
+    /**
+     * Holds the maximum frame size for each zoom factor.
      */
     private Map<Integer, Dimension> maximumSizeMap;
     
@@ -55,16 +62,14 @@ public class PictureFrame extends JInternalFrame {
     /**
      * Constructor for PictureFrame.
      * 
-     * @param editStatus 
-     * 
-     * TODO: Move creation of the PicturePanel into this class.
-     * TODO: Move creation of EditStatus, PicGraphics, Picture into this class.
+     * @param application The PicEdit application.
      */
     @SuppressWarnings("unchecked")
-    public PictureFrame(EditStatus editStatus, Picture picture, PicturePanel picturePanel) {
-        this.editStatus = editStatus;
-        this.picture = picture;
-        this.picturePanel = picturePanel;
+    public PictureFrame(PicEdit application) {
+        this.editStatus = new EditStatus();
+        this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), application, 25);
+        this.picture = new Picture(editStatus, picGraphics);
+        this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, application);
         
         this.calculateResizeDimensions();
         this.setLayout(new BorderLayout());
@@ -91,6 +96,22 @@ public class PictureFrame extends JInternalFrame {
         this.setSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
         this.setMaximumSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
         this.setVisible(true);
+    }
+    
+    public EditStatus getEditStatus() {
+        return editStatus;
+    }
+    
+    public Picture getPicture() {
+        return picture;
+    }
+    
+    public PicturePanel getPicturePanel() {
+        return picturePanel;
+    }
+    
+    public PicGraphics getPicGraphics() {
+        return picGraphics;
     }
     
     public void calculateResizeDimensions() {

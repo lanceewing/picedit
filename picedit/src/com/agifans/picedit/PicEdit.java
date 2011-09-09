@@ -21,26 +21,6 @@ public final class PicEdit extends JApplet {
     private static final String PICEDIT_NAME = "PICEDIT v1.3M3";
     
     /**
-     * The graphics routines with which the application draws the screen.
-     */
-    private PicGraphics picGraphics;
-
-    /**
-     * The AGI picture being edited.
-     */
-    private Picture picture;
-
-    /**
-     * Holds the current "editing" state of everything within PICEDIT.
-     */
-    private EditStatus editStatus;
-
-    /**
-     * The panel containing the picture being edited.
-     */
-    private PicturePanel picturePanel;
-    
-    /**
      * The internal frame for the picture panel.
      */
     private PictureFrame pictureFrame;
@@ -55,28 +35,24 @@ public final class PicEdit extends JApplet {
      */
     @SuppressWarnings("unchecked")
     public PicEdit() {
-        this.editStatus = new EditStatus();
-        this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), this, 25);
-        this.picture = new Picture(editStatus, picGraphics);
-        this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, this);
+        this.pictureFrame = new PictureFrame(this);
 
         // This allows us to use TAB in the application (default within Java is that it traverses between fields).
         this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
        
         // Create the menu and register the menu event listeners.
-        this.menu = new Menu(editStatus, picGraphics, picture, this);
+        this.menu = new Menu(pictureFrame.getEditStatus(), pictureFrame.getPicGraphics(), pictureFrame.getPicture(), this);
         
         this.getContentPane().setLayout(new BorderLayout());
         
         // Add the status bar above the picture.
-        StatusBarPanel statusbar = new StatusBarPanel(this.editStatus);
+        StatusBarPanel statusbar = new StatusBarPanel(pictureFrame.getEditStatus());
         statusbar.setPreferredSize(new Dimension(320, 20));
         this.getContentPane().add(statusbar, BorderLayout.NORTH);
         
         // Add the desktop pane that holds the picture that is being edited.
         JDesktopPane desktop = new JDesktopPane();
-        pictureFrame = new PictureFrame(editStatus, picture, picturePanel);
         desktop.add(pictureFrame);
         this.getContentPane().add(desktop, BorderLayout.CENTER);
         
@@ -97,7 +73,7 @@ public final class PicEdit extends JApplet {
      * @return The Picture that is currently being edited.
      */
     public Picture getPicture() {
-        return picture;
+        return pictureFrame.getPicture();
     }
     
     /**
@@ -107,7 +83,7 @@ public final class PicEdit extends JApplet {
      * @return The EditStatus.
      */
     public EditStatus getEditStatus() {
-        return editStatus;
+        return pictureFrame.getEditStatus();
     }
     
     /**
@@ -125,7 +101,7 @@ public final class PicEdit extends JApplet {
      * @return The panel that holds the picture.
      */
     public PicturePanel getPicturePanel() {
-        return this.picturePanel;
+        return this.pictureFrame.getPicturePanel();
     }
     
     /**
@@ -154,7 +130,7 @@ public final class PicEdit extends JApplet {
         frame.setTitle(PICEDIT_NAME);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
-                app.editStatus.savePreferences();
+                app.getEditStatus().savePreferences();
             }
         });
         
