@@ -127,6 +127,10 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         return picGraphics;
     }
     
+    public JSlider getPositionSlider() {
+        return positionSlider;
+    }
+    
     public void calculateResizeDimensions() {
         this.maximumSizeMap = new HashMap<Integer, Dimension>();
         for (int i=2; i<=5; i++) {
@@ -171,7 +175,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     }
     
     /**
-     * Paints the PICEDIT applet.
+     * Paints the PictureFrame.
      */
     public void paint(Graphics g) {
         super.paint(g);
@@ -187,18 +191,20 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         }
     }
 
-    public void internalFrameActivated(InternalFrameEvent arg0) {
+    public void internalFrameActivated(InternalFrameEvent event) {
     }
 
-    public void internalFrameClosed(InternalFrameEvent arg0) {
+    public void internalFrameClosed(InternalFrameEvent event) {
     }
 
-    public void internalFrameClosing(InternalFrameEvent arg0) {
+    public void internalFrameClosing(InternalFrameEvent event) {
     }
 
-    @Override
-    public void internalFrameDeactivated(InternalFrameEvent arg0) {
-        System.out.println("Deactivated");
+    /**
+     * Invokes when the picture frame is deactivated. If after being deactivated there is
+     * no active frame then it asks to be selected again.
+     */
+    public void internalFrameDeactivated(InternalFrameEvent event) {
         final JDesktopPane desktopPane = application.getDesktopPane();
         if (desktopPane != null) {
             if (desktopPane.getSelectedFrame() == null) {

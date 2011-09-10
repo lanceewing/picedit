@@ -674,6 +674,15 @@ public class EditStatus {
     }
     
     /**
+     * Returns true if a line is currently being drawn.
+     * 
+     * @return true if a line is currently being drawn.
+     */
+    public boolean isLineBeingDrawn() {
+        return (isLineActive() || isPenActive() || isStepActive()) && (numOfClicks > 0);
+    }
+    
+    /**
      * Adjusts the mouse point to the coordinate system of the AGI/SCI0 
      * picture canvas. The EditStatus doesn't care about anything outside
      * of the canvas, and it also doesn't care about what the actual

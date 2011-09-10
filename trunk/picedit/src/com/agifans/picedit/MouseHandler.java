@@ -35,6 +35,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * Robot used for programmatically adjusting the mouse cursor position.
      */
     private Robot robot;
+    
+    /**
+     * The picture frame that this MouseHandler is for.
+     */
+    private PictureFrame pictureFrame;
 
     /**
      * Constructor for MouseHandler.
@@ -45,6 +50,8 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     public MouseHandler(final PictureFrame pictureFrame, PicEdit application) {
         super(pictureFrame.getEditStatus(), pictureFrame.getPicGraphics(), pictureFrame.getPicture(), application);
 
+        this.pictureFrame = pictureFrame;
+        
         // Starts timer that injects mouse motion events.
         startMouseMotionTimer();
 
@@ -64,9 +71,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                         // Process the mouse click if it is not within the picture panel.
                         if (!pictureFrame.getPicturePanel().getBounds().contains(mouseEvent.getPoint())) {
                             mousePressed(mouseEvent);
-                            pictureFrame.getPicturePanel().requestFocusInWindow();
                         }
-                        // TODO: If desktop panel clicked on then reset focus on last active window.
                     }
                 }
             }
@@ -96,7 +101,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                         processMouseMove(mousePoint);
 
                         // Vary the colour of the end point of the temporary line so that it is obvious where it is.
-                        if ((editStatus.isLineActive() || editStatus.isPenActive() || editStatus.isStepActive()) && (editStatus.getNumOfClicks() > 0)) {
+                        if (editStatus.isLineBeingDrawn()) {
                             int index = (editStatus.getMouseY() << 8) + (editStatus.getMouseY() << 6) + (editStatus.getMouseX() << 1);
                             int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
                             int rgbCode = (new java.awt.Color(brightness, brightness, brightness)).getRGB();
@@ -317,9 +322,8 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 // If the screen coordinates are not the same as the original mouse 
                 // point then we need to move the mouse to this restricted position.
                 if ((realX != mousePoint.x) || (realY != mousePoint.y)) {
-                    if (editStatus.getTool().equals(ToolType.LINE) || 
-                        editStatus.getTool().equals(ToolType.PEN) || 
-                        editStatus.getTool().equals(ToolType.STEP)) {
+                    // Only applies to lines though. Fill and Brush do not have restrictions.
+                    if (editStatus.isLineBeingDrawn()) {
                         // Use robot to move the mouse cursor.
                         robot.mouseMove(realX, realY);
                     }
@@ -534,6 +538,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             }
             picture.updateScreen();
         }
+        
+        // Update active status of the position slider based on whether a line is being
+        // drawn or not. It should not be possible to use the slider if line drawing is
+        // enabled.
+        pictureFrame.getPositionSlider().setEnabled(!editStatus.isLineBeingDrawn());
     }
 
     /**
