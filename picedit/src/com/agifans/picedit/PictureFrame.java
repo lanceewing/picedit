@@ -4,14 +4,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 
 /**
  * An internal picture frame to display in the desktop pane. There is one 
@@ -21,8 +25,13 @@ import javax.swing.JSlider;
  * @author Lance Ewing
  */
 @SuppressWarnings("serial")
-public class PictureFrame extends JInternalFrame {
+public class PictureFrame extends JInternalFrame implements InternalFrameListener {
 
+    /**
+     * The PicEdit application.
+     */
+    private PicEdit application;
+    
     /**
      * The scroll pane that holds the picture panel.
      */
@@ -63,13 +72,14 @@ public class PictureFrame extends JInternalFrame {
      * 
      * @param application The PicEdit application.
      */
-    public PictureFrame(PicEdit application) {
+    public PictureFrame(final PicEdit application) {
+        this.application = application;
         this.editStatus = new EditStatus();
         this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), application, 25);
         this.picture = new Picture(editStatus, picGraphics);
         this.picturePanel = new PicturePanel(editStatus, picGraphics, picture);
         
-        MouseHandler mouseHandler = new MouseHandler(editStatus, picGraphics, picture, application);
+        MouseHandler mouseHandler = new MouseHandler(this, application);
         picturePanel.addMouseListener(mouseHandler);
         picturePanel.addMouseMotionListener(mouseHandler);
         picturePanel.addMouseWheelListener(mouseHandler);
@@ -97,6 +107,7 @@ public class PictureFrame extends JInternalFrame {
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
         this.setMaximumSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
+        this.addInternalFrameListener(this);
         this.setVisible(true);
     }
     
@@ -174,5 +185,37 @@ public class PictureFrame extends JInternalFrame {
         } else {
             this.setTitle(editStatus.getPictureFile().getName());
         }
+    }
+
+    public void internalFrameActivated(InternalFrameEvent arg0) {
+    }
+
+    public void internalFrameClosed(InternalFrameEvent arg0) {
+    }
+
+    public void internalFrameClosing(InternalFrameEvent arg0) {
+    }
+
+    @Override
+    public void internalFrameDeactivated(InternalFrameEvent arg0) {
+        System.out.println("Deactivated");
+        final JDesktopPane desktopPane = application.getDesktopPane();
+        if (desktopPane != null) {
+            if (desktopPane.getSelectedFrame() == null) {
+                try {
+                    this.setSelected(true);
+                } catch (PropertyVetoException e) {
+                }
+            }
+        }
+    }
+
+    public void internalFrameDeiconified(InternalFrameEvent event) {
+    }
+
+    public void internalFrameIconified(InternalFrameEvent event) {
+    }
+
+    public void internalFrameOpened(InternalFrameEvent event) {
     }
 }

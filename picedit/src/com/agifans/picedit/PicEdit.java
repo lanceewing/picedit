@@ -1,6 +1,8 @@
 package com.agifans.picedit;
 
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.*;
@@ -24,6 +26,11 @@ public final class PicEdit extends JApplet {
      * The most recently active picture window.
      */
     private PictureFrame pictureFrame;
+    
+    /**
+     * The desktop pane that the picture frames live in.
+     */
+    private JDesktopPane desktopPane;
     
     /**
      * The PICEDIT menu handler.
@@ -52,10 +59,10 @@ public final class PicEdit extends JApplet {
         this.getContentPane().add(statusbar, BorderLayout.NORTH);
         
         // Add the desktop pane that holds the picture that is being edited.
-        JDesktopPane desktop = new JDesktopPane();
-        desktop.add(pictureFrame);
-        desktop.setFocusable(false);
-        this.getContentPane().add(desktop, BorderLayout.CENTER);
+        desktopPane = new JDesktopPane();
+        desktopPane.add(pictureFrame);
+        desktopPane.setFocusable(false);
+        this.getContentPane().add(desktopPane, BorderLayout.CENTER);
         
         // Add the tool panel centered below the picture.
         JPanel toolPanelContainer = new JPanel();
@@ -68,6 +75,15 @@ public final class PicEdit extends JApplet {
         this.getContentPane().add(toolPanelContainer, BorderLayout.SOUTH);
     }
 
+    /**
+     * Gets the desktop pane that the picture frames live within.
+     * 
+     * @return The desktop pane that the picture frames live within.
+     */
+    public JDesktopPane getDesktopPane() {
+        return desktopPane;
+    }
+    
     /**
      * Gets the Picture that is currently being edited with PicEdit.
      * 
@@ -149,6 +165,7 @@ public final class PicEdit extends JApplet {
         frame.setVisible(true);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         
-        app.requestFocus();
+        app.requestFocusInWindow();
+        app.getDesktopPane().selectFrame(true);
     }
 }
