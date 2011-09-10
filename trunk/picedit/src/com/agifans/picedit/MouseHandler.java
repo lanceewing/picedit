@@ -39,13 +39,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     /**
      * Constructor for MouseHandler.
      * 
-     * @param editStatus the EditStatus holding current picture editor state.
-     * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
-     * @param picture the AGI PICTURE currently being edited.
-     * @param application the PICEDIT application component.
+     * @param pictureFrame The PictureFrame that this MouseHandler is for.
+     * @param application The PICEDIT application component.
      */
-    public MouseHandler(final EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
-        super(editStatus, picGraphics, picture, application);
+    public MouseHandler(final PictureFrame pictureFrame, PicEdit application) {
+        super(pictureFrame.getEditStatus(), pictureFrame.getPicGraphics(), pictureFrame.getPicture(), application);
 
         // Starts timer that injects mouse motion events.
         startMouseMotionTimer();
@@ -63,9 +61,12 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 MouseEvent mouseEvent = (MouseEvent)e;
                 if (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED) {
                     if (editStatus.getNumOfClicks() > 1) {
-                        mousePressed(mouseEvent);
-                        // TODO: Check that mouse outside of bounds.
-                        // TODO: Set focus on panel again if outside of bounds.
+                        // Process the mouse click if it is not within the picture panel.
+                        if (!pictureFrame.getPicturePanel().getBounds().contains(mouseEvent.getPoint())) {
+                            mousePressed(mouseEvent);
+                            pictureFrame.getPicturePanel().requestFocusInWindow();
+                        }
+                        // TODO: If desktop panel clicked on then reset focus on last active window.
                     }
                 }
             }
@@ -324,23 +325,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                     }
                 }
             }
-            
-            
-//            if ((robot != null) && ((x != editStatus.getMouseX()) || (y != editStatus.getMouseY()))) {
-//                // Make sure the EditStatus has the tool adjusted mouse point.
-//                editStatus.setMousePoint(new Point(x, y));
-//
-//                // Adjust new x/y pos back to screen coords.
-//                if (editStatus.getPictureType().equals(PictureType.AGI)) {
-//                    x = ((x << 1) * editStatus.getZoomFactor()) + diffX;
-//                } else {
-//                    x = (x * editStatus.getZoomFactor()) + diffX;
-//                }
-//                y = (y * editStatus.getZoomFactor()) + diffY;
-//
-//                // Use robot to move the mouse cursor.
-//                robot.mouseMove(x, y);
-//            }
         }
     }
 
