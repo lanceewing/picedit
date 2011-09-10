@@ -38,11 +38,6 @@ public class PicturePanel extends JPanel {
     private EditStatus editStatus;
 
     /**
-     * The PICEDIT application component.
-     */
-    private PicEdit application;
-    
-    /**
      * The offscreen image used to prepare the PICEDIT screen before displaying it.
      */
     private Image offScreenImage;
@@ -58,22 +53,14 @@ public class PicturePanel extends JPanel {
      * @param editStatus the EditStatus holding current picture editor state.
      * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
      * @param picture the AGI PICTURE currently being edited.
-     * @param application the PICEDIT application component.
      */
-    public PicturePanel(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
+    public PicturePanel(EditStatus editStatus, PicGraphics picGraphics, Picture picture) {
         this.editStatus = editStatus;
         this.picGraphics = picGraphics;
         this.picture = picture;
-        this.application = application;
         
         Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
         this.setPreferredSize(appDimension);
-        
-        MouseHandler mouseHandler = new MouseHandler(editStatus, picGraphics, picture, application);
-        
-        this.addMouseListener(mouseHandler);
-        this.addMouseMotionListener(mouseHandler);
-        this.addMouseWheelListener(mouseHandler);
     }
     
     /**

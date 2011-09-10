@@ -1,8 +1,11 @@
 package com.agifans.picedit;
 
+import java.awt.AWTEvent;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -41,7 +44,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param picture the AGI PICTURE currently being edited.
      * @param application the PICEDIT application component.
      */
-    public MouseHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
+    public MouseHandler(final EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
         super(editStatus, picGraphics, picture, application);
 
         // Starts timer that injects mouse motion events.
@@ -52,6 +55,21 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             robot = new Robot();
         } catch (Exception e) {
         }
+        
+        // Registers the mouse event listener that handles mouse clicks external to 
+        // the picture panel when a line is active.
+        Toolkit.getDefaultToolkit().addAWTEventListener( new AWTEventListener() {
+            public void eventDispatched(AWTEvent e) {
+                MouseEvent mouseEvent = (MouseEvent)e;
+                if (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED) {
+                    if (editStatus.getNumOfClicks() > 1) {
+                        mousePressed(mouseEvent);
+                        // TODO: Check that mouse outside of bounds.
+                        // TODO: Set focus on panel again if outside of bounds.
+                    }
+                }
+            }
+        }, AWTEvent.MOUSE_EVENT_MASK);
     }
 
     /**
@@ -233,8 +251,10 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
 
         int x = editStatus.getMouseX();
         int y = editStatus.getMouseY();
-
+        
         if (editStatus.getNumOfClicks() > 0) {
+            // Make sure that the mouse cursor can't leave the picture while a line
+            // is being drawn.
             Point clickPoint = editStatus.getClickPoint();
             int clickX = (int) clickPoint.getX();
             int clickY = (int) clickPoint.getY();
@@ -275,23 +295,52 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 y = clickY + adjustForPen(y - clickY, 7);
                 picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
             }
-
+            
             // Move the mouse to the tool restricted x/y position (if applicable).
-            if ((robot != null) && ((x != editStatus.getMouseX()) || (y != editStatus.getMouseY()))) {
-                // Make sure the EditStatus has the tool adjusted mouse point.
-                editStatus.setMousePoint(new Point(x, y));
-
-                // Adjust new x/y pos back to screen coords.
-                if (editStatus.getPictureType().equals(PictureType.AGI)) {
-                    x = ((x << 1) * editStatus.getZoomFactor()) + diffX;
-                } else {
-                    x = (x * editStatus.getZoomFactor()) + diffX;
+            if (robot != null) {
+                // Has the picture X/Y position been restricted by a tool (e.g. Pen or Step).
+                if ((x != editStatus.getMouseX()) || (y != editStatus.getMouseY())) {
+                    // Make sure the EditStatus has the tool adjusted mouse point.
+                    editStatus.setMousePoint(new Point(x, y));
                 }
-                y = (y * editStatus.getZoomFactor()) + diffY;
-
-                // Use robot to move the mouse cursor.
-                robot.mouseMove(x, y);
+                
+                // Adjust new x/y pos back to screen coords.
+                int realX = 0;
+                if (editStatus.getPictureType().equals(PictureType.AGI)) {
+                    realX = ((x << 1) * editStatus.getZoomFactor()) + diffX;
+                } else {
+                    realX = (x * editStatus.getZoomFactor()) + diffX;
+                }
+                int realY = (y * editStatus.getZoomFactor()) + diffY;
+                
+                // If the screen coordinates are not the same as the original mouse 
+                // point then we need to move the mouse to this restricted position.
+                if ((realX != mousePoint.x) || (realY != mousePoint.y)) {
+                    if (editStatus.getTool().equals(ToolType.LINE) || 
+                        editStatus.getTool().equals(ToolType.PEN) || 
+                        editStatus.getTool().equals(ToolType.STEP)) {
+                        // Use robot to move the mouse cursor.
+                        robot.mouseMove(realX, realY);
+                    }
+                }
             }
+            
+            
+//            if ((robot != null) && ((x != editStatus.getMouseX()) || (y != editStatus.getMouseY()))) {
+//                // Make sure the EditStatus has the tool adjusted mouse point.
+//                editStatus.setMousePoint(new Point(x, y));
+//
+//                // Adjust new x/y pos back to screen coords.
+//                if (editStatus.getPictureType().equals(PictureType.AGI)) {
+//                    x = ((x << 1) * editStatus.getZoomFactor()) + diffX;
+//                } else {
+//                    x = (x * editStatus.getZoomFactor()) + diffX;
+//                }
+//                y = (y * editStatus.getZoomFactor()) + diffY;
+//
+//                // Use robot to move the mouse cursor.
+//                robot.mouseMove(x, y);
+//            }
         }
     }
 

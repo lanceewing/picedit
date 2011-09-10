@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.KeyboardFocusManager;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +20,7 @@ import javax.swing.JSlider;
  * 
  * @author Lance Ewing
  */
+@SuppressWarnings("serial")
 public class PictureFrame extends JInternalFrame {
 
     /**
@@ -64,12 +63,16 @@ public class PictureFrame extends JInternalFrame {
      * 
      * @param application The PicEdit application.
      */
-    @SuppressWarnings("unchecked")
     public PictureFrame(PicEdit application) {
         this.editStatus = new EditStatus();
         this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), application, 25);
         this.picture = new Picture(editStatus, picGraphics);
-        this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, application);
+        this.picturePanel = new PicturePanel(editStatus, picGraphics, picture);
+        
+        MouseHandler mouseHandler = new MouseHandler(editStatus, picGraphics, picture, application);
+        picturePanel.addMouseListener(mouseHandler);
+        picturePanel.addMouseMotionListener(mouseHandler);
+        picturePanel.addMouseWheelListener(mouseHandler);
         
         this.calculateResizeDimensions();
         this.setLayout(new BorderLayout());
