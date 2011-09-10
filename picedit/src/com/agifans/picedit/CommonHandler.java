@@ -133,11 +133,6 @@ public abstract class CommonHandler {
      */
     public void processTogglePriorityScreen() {
         editStatus.toggleScreen();
-        if (editStatus.isPriorityShowing()) {
-            application.getMenu().getPriorityMenuItem().setSelected(true);
-        } else {
-            application.getMenu().getVisualMenuItem().setSelected(true);
-        }
         editStatus.setTool(ToolType.NONE);
         picture.updateScreen();
     }
@@ -444,6 +439,7 @@ public abstract class CommonHandler {
             }
 
             picture.drawPicture();
+            editStatus.setTool(ToolType.NONE);
             picture.updateScreen();
 
         } catch (FileNotFoundException fnfe) {
