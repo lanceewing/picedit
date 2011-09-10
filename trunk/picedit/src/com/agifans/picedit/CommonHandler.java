@@ -195,7 +195,7 @@ public abstract class CommonHandler {
      */
     protected void showAboutMessage() {
         picGraphics.drawMessageBox(64, 69, 255, 116);
-        picGraphics.drawString("    PICEDIT 1.3M3    ", 72, 77, 0, 15);
+        picGraphics.drawString("    PICEDIT 1.3M4    ", 72, 77, 0, 15);
         picGraphics.drawString("         by          ", 72, 89, 0, 15);
         picGraphics.drawString("     Lance Ewing     ", 72, 101, 0, 15);
         waitForKeyStrokeOrMouseClick(null);

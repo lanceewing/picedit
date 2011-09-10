@@ -18,10 +18,10 @@ public final class PicEdit extends JApplet {
     /**
      * Constant for the name of the current version of PICEDIT.
      */
-    private static final String PICEDIT_NAME = "PICEDIT v1.3M3";
+    private static final String PICEDIT_NAME = "PICEDIT v1.3M4";
     
     /**
-     * The internal frame for the picture panel.
+     * The most recently active picture window.
      */
     private PictureFrame pictureFrame;
     
@@ -106,6 +106,7 @@ public final class PicEdit extends JApplet {
     }
     
     public PictureFrame getPictureFrame() {
+        // TODO: Change this to get the active frame from the desktop and fall back on previous value if it returns null.
         return pictureFrame;
     }
     
