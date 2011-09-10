@@ -30,7 +30,7 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         int keyChar = e.getKeyChar();
-
+        
         if (editStatus.isPaused()) {
             // Ignore key events if the application is paused.
         } else {

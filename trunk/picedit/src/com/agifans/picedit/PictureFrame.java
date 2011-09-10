@@ -78,6 +78,9 @@ public class PictureFrame extends JInternalFrame {
         this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         
+        //KeyboardHandler keyboardHandler = new KeyboardHandler(editStatus, picGraphics, picture, application);
+        //this.addKeyListener(keyboardHandler);
+        
         // Add the panel that holds the picture that is being edited.
         pictureScrollPane = new JScrollPane(picturePanel);
         pictureScrollPane.setMinimumSize(new Dimension(10, 10));

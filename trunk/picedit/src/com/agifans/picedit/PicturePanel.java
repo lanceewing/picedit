@@ -70,12 +70,10 @@ public class PicturePanel extends JPanel {
         this.setPreferredSize(appDimension);
         
         MouseHandler mouseHandler = new MouseHandler(editStatus, picGraphics, picture, application);
-        KeyboardHandler keyboardHandler = new KeyboardHandler(editStatus, picGraphics, picture, application);
         
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
         this.addMouseWheelListener(mouseHandler);
-        this.application.addKeyListener(keyboardHandler);
     }
     
     /**

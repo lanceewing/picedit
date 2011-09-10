@@ -41,19 +41,14 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
     private JCheckBoxMenuItem backgroundMenuItem;
     
     /**
-     * The menu item used for selecting the visual screen.
-     */
-    private JRadioButtonMenuItem visualMenuItem;
-
-    /**
-     * The menu item used for selecting the priority screen.
-     */
-    private JRadioButtonMenuItem priorityMenuItem;
-    
-    /**
      * The Open Recent sub-menu item.
      */
     private JMenu openRecentMenu;
+    
+    /**
+     * The View menu.
+     */
+    private JMenu viewMenu;
     
     /**
      * Constructor for Menu.
@@ -90,24 +85,6 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      */
     public JCheckBoxMenuItem getBackgroundMenuItem() {
         return this.backgroundMenuItem;
-    }
-    
-    /**
-     * Gets the menu item that selects the visual screen.
-     * 
-     * @return The menu item that selects the visual screen.
-     */
-    public JRadioButtonMenuItem getVisualMenuItem() {
-        return this.visualMenuItem;
-    }
-    
-    /**
-     * Gets the menu item that selects the priority screen.
-     * 
-     * @return The menu item that selects the priority screen.
-     */
-    public JRadioButtonMenuItem getPriorityMenuItem() {
-        return this.priorityMenuItem;
     }
     
     /**
@@ -163,13 +140,14 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         menuBar.add(editMenu);
         
         // Create the View menu.
-        JMenu viewMenu = new JMenu("View");
+        viewMenu = new JMenu("View");
         viewMenu.setMnemonic(KeyEvent.VK_V);
         ButtonGroup screenGroup = new ButtonGroup();
-        visualMenuItem = new JRadioButtonMenuItem(MenuOption.VISUAL.getDisplayValue());
+        JRadioButtonMenuItem visualMenuItem = new JRadioButtonMenuItem(MenuOption.VISUAL.getDisplayValue());
         screenGroup.add(visualMenuItem);
         visualMenuItem.setSelected(true);
-        priorityMenuItem = new JRadioButtonMenuItem(MenuOption.PRIORITY.getDisplayValue());
+        JRadioButtonMenuItem priorityMenuItem = new JRadioButtonMenuItem(MenuOption.PRIORITY.getDisplayValue());
+        priorityMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
         screenGroup.add(priorityMenuItem);
         backgroundMenuItem = new JCheckBoxMenuItem(MenuOption.BACKGROUND.getDisplayValue());
         backgroundMenuItem.setMnemonic(KeyEvent.VK_G);
@@ -494,12 +472,14 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
             case VISUAL:
                 if (editStatus.isPriorityShowing()) {
                     processTogglePriorityScreen();
+                    recreateScreenMenuItems();
                 }
                 break;
                 
             case PRIORITY:
                 if (!editStatus.isPriorityShowing()) {
                     processTogglePriorityScreen();
+                    recreateScreenMenuItems();
                 }
                 break;
         }
@@ -508,5 +488,38 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         editStatus.setLastUsedDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
         
         return success;
+    }
+    
+    /**
+     * Recreates the menu items for selecting the picture screen (visual/priority).
+     */
+    private void recreateScreenMenuItems() {
+        // Remove the previously created menu items.
+        viewMenu.remove(0);
+        viewMenu.remove(0);
+        
+        // Create the new menu items for the visual and priority screen selection.
+        JRadioButtonMenuItem visualMenuItem = new JRadioButtonMenuItem(MenuOption.VISUAL.getDisplayValue());
+        JRadioButtonMenuItem priorityMenuItem = new JRadioButtonMenuItem(MenuOption.PRIORITY.getDisplayValue());
+        if (!editStatus.isPriorityShowing()) {
+            visualMenuItem.setSelected(true);
+            priorityMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
+        } else {
+            priorityMenuItem.setSelected(true);
+            visualMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0));
+        }
+        ButtonGroup screenGroup = new ButtonGroup();
+        screenGroup.add(visualMenuItem);
+        screenGroup.add(priorityMenuItem);
+        visualMenuItem.addActionListener(this);
+        priorityMenuItem.addActionListener(this);
+        
+        // Add the new menu items to the View menu.
+        viewMenu.add(visualMenuItem, 0);
+        viewMenu.add(priorityMenuItem, 1);
+        
+        // Make sure that the menu is redrawn, just in case.
+        viewMenu.revalidate();
+        viewMenu.repaint();
     }
 }
