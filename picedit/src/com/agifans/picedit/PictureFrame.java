@@ -74,12 +74,8 @@ public class PictureFrame extends JInternalFrame {
         this.calculateResizeDimensions();
         this.setLayout(new BorderLayout());
         
-        // This allows us to use TAB in the application (default within Java is that it traverses between fields).
-        this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
-        this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
-        
-        //KeyboardHandler keyboardHandler = new KeyboardHandler(editStatus, picGraphics, picture, application);
-        //this.addKeyListener(keyboardHandler);
+        KeyboardHandler keyboardHandler = new KeyboardHandler(editStatus, picGraphics, picture, application);
+        this.getContentPane().addKeyListener(keyboardHandler);
         
         // Add the panel that holds the picture that is being edited.
         pictureScrollPane = new JScrollPane(picturePanel);

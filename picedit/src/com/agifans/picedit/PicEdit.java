@@ -54,6 +54,7 @@ public final class PicEdit extends JApplet {
         // Add the desktop pane that holds the picture that is being edited.
         JDesktopPane desktop = new JDesktopPane();
         desktop.add(pictureFrame);
+        desktop.setFocusable(false);
         this.getContentPane().add(desktop, BorderLayout.CENTER);
         
         // Add the tool panel centered below the picture.

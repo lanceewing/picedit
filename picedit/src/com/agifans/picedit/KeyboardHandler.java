@@ -34,11 +34,6 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
         if (editStatus.isPaused()) {
             // Ignore key events if the application is paused.
         } else {
-            if (key == KeyEvent.VK_TAB) {
-                // Switches between the two screens.
-                processTogglePriorityScreen();
-            }
-
             // Handle picture buffer navigation keys.
             if (key == KeyEvent.VK_HOME) {
                 picture.moveToStartOfPictureBuffer();
