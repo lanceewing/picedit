@@ -24,9 +24,15 @@ public class PicEditDesktopManager extends DefaultDesktopManager {
     private static final String RESIZING = "RESIZING";
 
     /**
+     * The default desktop manager for this platform.
+     */
+    private DesktopManager defaultManager;
+    
+    /**
      * Constructor for PicEditDesktopManager.
      */
-    public PicEditDesktopManager() {
+    public PicEditDesktopManager(DesktopManager defaultManager) {
+        this.defaultManager = defaultManager;
     }
     
     public void beginResizingFrame(JComponent f, int dir) {
@@ -91,5 +97,13 @@ public class PicEditDesktopManager extends DefaultDesktopManager {
     }
     
     public void endDraggingFrame(JComponent f) {
+    }
+    
+    public void iconifyFrame(JInternalFrame f) {
+        defaultManager.iconifyFrame(f);
+    }
+    
+    public void deiconifyFrame(JInternalFrame f) {
+        defaultManager.deiconifyFrame(f);
     }
 }
