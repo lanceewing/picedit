@@ -24,32 +24,16 @@ public class PicEditDesktopManager extends DefaultDesktopManager {
     private static final String RESIZING = "RESIZING";
 
     /**
-     * The default DesktopManager for this platform.
-     */
-    private DesktopManager defaultManager;
-
-    /**
      * Constructor for PicEditDesktopManager.
      */
     public PicEditDesktopManager() {
     }
     
-    /**
-     * Constructor for PicEditDesktopManager.
-     * 
-     * @param defaultManager The default DesktopManager for this platform.
-     */
-    public PicEditDesktopManager(DesktopManager defaultManager) {
-        this.defaultManager = defaultManager;
-    }
-    
     public void beginResizingFrame(JComponent f, int dir) {
-    	System.out.println("here1");
         f.putClientProperty(RESIZING, Boolean.TRUE);
     }
 
     public void endResizingFrame(JComponent f) {
-    	System.out.println("here2");
         f.putClientProperty(RESIZING, Boolean.FALSE);
     }
 
@@ -59,9 +43,7 @@ public class PicEditDesktopManager extends DefaultDesktopManager {
         if (f instanceof JInternalFrame == false) {
             super.setBoundsForFrame(f, x, y, w, h); // only deal w/internal frames
         } else {
-        	System.out.println("here3");
-        	
-            JInternalFrame frame = (JInternalFrame) f;
+        	JInternalFrame frame = (JInternalFrame) f;
 
             // Figure out if we are being resized (otherwise it's just a move)
             boolean resizing = false;
@@ -104,56 +86,10 @@ public class PicEditDesktopManager extends DefaultDesktopManager {
             super.setBoundsForFrame(f, x, y, w, h);
         }
     }
-
-//    public void activateFrame(JInternalFrame f) {
-//        defaultManager.activateFrame(f);
-//    }
-//
+    
     public void beginDraggingFrame(JComponent f) {
-    	System.out.println("drag1");
-    	f.putClientProperty(RESIZING, Boolean.TRUE);
-        //super.beginDraggingFrame(f);
     }
-//
-//    public void closeFrame(JInternalFrame f) {
-//        defaultManager.closeFrame(f);
-//    }
-//
-//    public void deactivateFrame(JInternalFrame f) {
-//        defaultManager.deactivateFrame(f);
-//    }
-//
-//    public void deiconifyFrame(JInternalFrame f) {
-//        defaultManager.deiconifyFrame(f);
-//    }
-//
-//    public void dragFrame(JComponent f, int newX, int newY) {
-//        super.dragFrame(f, newX, newY);
-//    }
-//
+    
     public void endDraggingFrame(JComponent f) {
-    	System.out.println("drag2");
-    	f.putClientProperty(RESIZING, Boolean.FALSE);
-        //super.endDraggingFrame(f);
     }
-//
-//    public void iconifyFrame(JInternalFrame f) {
-//        defaultManager.iconifyFrame(f);
-//    }
-//
-//    public void maximizeFrame(JInternalFrame f) {
-//        defaultManager.maximizeFrame(f);
-//    }
-//
-//    public void minimizeFrame(JInternalFrame f) {
-//        defaultManager.minimizeFrame(f);
-//    }
-//
-//    public void openFrame(JInternalFrame f) {
-//        defaultManager.openFrame(f);
-//    }
-//
-//    public void resizeFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
-//        defaultManager.resizeFrame(f, newX, newY, newWidth, newHeight);
-//    }
 }
