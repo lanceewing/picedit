@@ -192,6 +192,10 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     }
 
     public void internalFrameActivated(InternalFrameEvent event) {
+        Dimension desktopSize = application.getDesktopPane().getSize();
+        int newWidth = Math.min(desktopSize.width, this.getWidth());
+        int newHeight = Math.min(desktopSize.height, this.getHeight());
+        this.setSize(new Dimension(newWidth, newHeight));
     }
 
     public void internalFrameClosed(InternalFrameEvent event) {
