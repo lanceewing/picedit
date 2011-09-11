@@ -3,6 +3,7 @@ package com.agifans.picedit;
 import java.awt.Dimension;
 
 import javax.swing.DefaultDesktopManager;
+import javax.swing.DesktopManager;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
@@ -10,18 +11,32 @@ import javax.swing.JInternalFrame;
 /**
  * DesktopManager for managing the internal frames. This is custom 
  * implementation is required to prevent the frames from moving outside
- * of the desktop area. This code taking from a sample in Oreilly Java
+ * of the desktop area. This code partly based on a sample in Oreilly Java
  * Swing book.
  * 
  * @author Lance Ewing
  */
 @SuppressWarnings("serial")
-public class PicEditDesktopManager extends DefaultDesktopManager {
+public class PicEditDesktopManager extends DefaultDesktopManager implements DesktopManager {
 
     // We'll tag internal frames that are being resized using a client
     // property with the name RESIZING.  Used in setBoundsForFrame().
-    protected static final String RESIZING = "RESIZING";
+    private static final String RESIZING = "RESIZING";
 
+    /**
+     * The default DesktopManager for this platform.
+     */
+    private DesktopManager defaultManager;
+    
+    /**
+     * Constructor for PicEditDesktopManager.
+     * 
+     * @param defaultManager The default DesktopManager for this platform.
+     */
+    public PicEditDesktopManager(DesktopManager defaultManager) {
+        this.defaultManager = defaultManager;
+    }
+    
     public void beginResizingFrame(JComponent f, int dir) {
         f.putClientProperty(RESIZING, Boolean.TRUE);
     }
@@ -78,5 +93,53 @@ public class PicEditDesktopManager extends DefaultDesktopManager {
             // Set 'em the way we like 'em
             super.setBoundsForFrame(f, x, y, w, h);
         }
+    }
+
+    public void activateFrame(JInternalFrame f) {
+        defaultManager.activateFrame(f);
+    }
+
+    public void beginDraggingFrame(JComponent f) {
+        super.beginDraggingFrame(f);
+    }
+
+    public void closeFrame(JInternalFrame f) {
+        defaultManager.closeFrame(f);
+    }
+
+    public void deactivateFrame(JInternalFrame f) {
+        defaultManager.deactivateFrame(f);
+    }
+
+    public void deiconifyFrame(JInternalFrame f) {
+        defaultManager.deiconifyFrame(f);
+    }
+
+    public void dragFrame(JComponent f, int newX, int newY) {
+        super.dragFrame(f, newX, newY);
+    }
+
+    public void endDraggingFrame(JComponent f) {
+        super.endDraggingFrame(f);
+    }
+
+    public void iconifyFrame(JInternalFrame f) {
+        defaultManager.iconifyFrame(f);
+    }
+
+    public void maximizeFrame(JInternalFrame f) {
+        defaultManager.maximizeFrame(f);
+    }
+
+    public void minimizeFrame(JInternalFrame f) {
+        defaultManager.minimizeFrame(f);
+    }
+
+    public void openFrame(JInternalFrame f) {
+        defaultManager.openFrame(f);
+    }
+
+    public void resizeFrame(JComponent f, int newX, int newY, int newWidth, int newHeight) {
+        defaultManager.resizeFrame(f, newX, newY, newWidth, newHeight);
     }
 }
