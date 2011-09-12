@@ -188,19 +188,17 @@ public final class PicEdit extends JApplet {
                 pictureFrame.setSize(new Dimension(newWidth, newHeight));
                 
                 // Now check to see if we need to move it to keep within the viewable area.
-                int newTop = 0;
-                int newLeft = 0;
+                int newTop = pictureFrame.getY();
+                int newLeft = pictureFrame.getX();
                 if ((pictureFrame.getX() + pictureFrame.getWidth()) > desktopSize.width) {
                     newLeft = desktopSize.width - pictureFrame.getWidth();
-                } else {
-                    newLeft = pictureFrame.getX();
                 }
                 if ((pictureFrame.getY() + pictureFrame.getHeight()) > desktopSize.height) {
                     newTop = desktopSize.height - pictureFrame.getHeight();
-                } else {
-                    newTop = pictureFrame.getY();
                 }
-                pictureFrame.setLocation(new Point(newLeft, newTop));
+                if ((newLeft != pictureFrame.getY()) || (newTop != pictureFrame.getX())) {
+                    pictureFrame.setLocation(new Point(newLeft, newTop));
+                }
             }           
         });
         
