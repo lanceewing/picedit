@@ -1,8 +1,14 @@
 package com.agifans.picedit;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.HierarchyBoundsAdapter;
+import java.awt.event.HierarchyBoundsListener;
+import java.awt.event.HierarchyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.*;
@@ -167,6 +173,23 @@ public final class PicEdit extends JApplet {
         frame.setResizable(true);
         frame.setVisible(true);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        
+        // Register a listener for when the window is resizing so that we can resize the 
+        // internal frames. The HierarchyBoundsListener gets events while it is resizing,
+        // whereas the ComponentListener only gets them after the resize.
+        frame.getContentPane().addHierarchyBoundsListener(new HierarchyBoundsAdapter(){
+            @Override
+            public void ancestorResized(HierarchyEvent e) {
+                // Start by checking that the internal frame will fit and adjust if required.
+                PictureFrame pictureFrame = app.getPictureFrame();
+                Dimension desktopSize = app.getDesktopPane().getSize();
+                int newWidth = Math.min(desktopSize.width, pictureFrame.getWidth());
+                int newHeight = Math.min(desktopSize.height, pictureFrame.getHeight());
+                pictureFrame.setSize(new Dimension(newWidth, newHeight));
+                
+                // TODO: Now check to see if we need to move it to keep within the viewable area.
+            }           
+        });
         
         app.requestFocusInWindow();
         app.getDesktopPane().selectFrame(true);
