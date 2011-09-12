@@ -71,7 +71,7 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
             }
             
             // Handle zoom in and zoom out.
-            if ((key == KeyEvent.VK_PLUS) || (keyChar == '+')) {
+            if ((key == KeyEvent.VK_PLUS) || (keyChar == '+') || (keyChar == '=')) {
                 int zoomFactor = editStatus.getZoomFactor();
                 if (zoomFactor < 5) {
                     application.resizeScreen(zoomFactor + 1);
