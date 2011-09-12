@@ -61,22 +61,32 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         } catch (Exception e) {
         }
         
-        // Registers the mouse event listener that handles mouse clicks external to 
-        // the picture panel when a line is active.
+        // Registers a mouse event listener to keep mouse activity within the the
+        // picture panel while in line drawing mode. 
         Toolkit.getDefaultToolkit().addAWTEventListener( new AWTEventListener() {
             public void eventDispatched(AWTEvent e) {
                 MouseEvent mouseEvent = (MouseEvent)e;
-                if (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED) {
-                    if (editStatus.isLineBeingDrawn()) {
-                        // Process the mouse click if it is not within the picture panel.
-                        if (!mouseEvent.getSource().equals(pictureFrame.getPicturePanel())) {
-                            mousePressed(mouseEvent);
-                        }
+                
+                // TODO: Might need to change how this is done when introducing multiple picture frames.
+                
+                // If a line is being drawn and the mouse event is outside the picture...
+                if (editStatus.isLineBeingDrawn() && 
+                    !mouseEvent.getSource().equals(pictureFrame.getPicturePanel())) {
+                    
+                    // If it is a mouse pressed event then we process the click as if 
+                    // it was on the picture.
+                    if (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED) {
+                        mousePressed(mouseEvent);
+                    }
+                    
+                    // If it is a mouse motion event then we use the robot to move it 
+                    // back inside the panel.
+                    if (mouseEvent.getID() == MouseEvent.MOUSE_MOVED) {
+                        moveMouseToPictureCoordinates();
                     }
                 }
             }
-        }, AWTEvent.MOUSE_EVENT_MASK);
-        // TODO: Add motion listener to restrict mouse within panel when line being drawn.
+        }, (AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK));
     }
 
     /**
@@ -308,16 +318,10 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 // Make sure the EditStatus has the tool adjusted mouse point.
                 editStatus.setMousePoint(new Point(x, y));
 
-                // Adjust new x/y pos back to screen coords.
-                if (editStatus.getPictureType().equals(PictureType.AGI)) {
-                    x = ((x << 1) * editStatus.getZoomFactor()) + diffX;
-                } else {
-                    x = (x * editStatus.getZoomFactor()) + diffX;
-                }
-                y = (y * editStatus.getZoomFactor()) + diffY;
-
-                // Use robot to move the mouse cursor.
-                robot.mouseMove(x, y);
+                // Move the mouse back to the tool adjusted point. This is important
+                // when the tool is Pen or Step since these tools are restricted in
+                // their movements.
+                moveMouseToPictureCoordinates();
             }
         }
     }
@@ -536,6 +540,29 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     }
 
     /**
+     * Moves the mouse cursor to the position that matches what the EditStatus says
+     * is the current picture coordinates. This is useful for situations where the
+     * current picture coordinates have been restricted due to the bounds of the
+     * picture or the bounds of the drawing tool (e.g. Pen or Step).
+     */
+    private void moveMouseToPictureCoordinates() {
+        // Get current picture coordinates.
+        int x = editStatus.getMouseX();
+        int y = editStatus.getMouseY();
+        
+        // Adjust the picture coordinates back to screen coordinates.
+        if (editStatus.getPictureType().equals(PictureType.AGI)) {
+            x = ((x << 1) * editStatus.getZoomFactor()) + diffX;
+        } else {
+            x = (x * editStatus.getZoomFactor()) + diffX;
+        }
+        y = (y * editStatus.getZoomFactor()) + diffY;
+      
+        // Use robot to move the mouse cursor to the calculated position.
+        robot.mouseMove(x, y);
+    }
+    
+    /**
      * The Pen tool has a very short distance between two points. This
      * method is used for checking those limits.
      * 
@@ -543,10 +570,12 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param limit the limit in both directs that to enforce.
      */
     private int adjustForPen(int value, int limit) {
-        if (value > limit)
+        if (value > limit) {
             value = limit;
-        if (value < -limit)
+        }
+        if (value < -limit) {
             value = -limit;
+        }
         return value;
     }
 }
