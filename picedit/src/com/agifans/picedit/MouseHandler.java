@@ -67,15 +67,16 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             public void eventDispatched(AWTEvent e) {
                 MouseEvent mouseEvent = (MouseEvent)e;
                 if (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED) {
-                    if (editStatus.getNumOfClicks() > 1) {
+                    if (editStatus.isLineBeingDrawn()) {
                         // Process the mouse click if it is not within the picture panel.
-                        if (!pictureFrame.getPicturePanel().getBounds().contains(mouseEvent.getPoint())) {
+                        if (!mouseEvent.getSource().equals(pictureFrame.getPicturePanel())) {
                             mousePressed(mouseEvent);
                         }
                     }
                 }
             }
         }, AWTEvent.MOUSE_EVENT_MASK);
+        // TODO: Add motion listener to restrict mouse within panel when line being drawn.
     }
 
     /**
@@ -303,31 +304,20 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             }
             
             // Move the mouse to the tool restricted x/y position (if applicable).
-            if (robot != null) {
-                // Has the picture X/Y position been restricted by a tool (e.g. Pen or Step).
-                if ((x != editStatus.getMouseX()) || (y != editStatus.getMouseY())) {
-                    // Make sure the EditStatus has the tool adjusted mouse point.
-                    editStatus.setMousePoint(new Point(x, y));
-                }
-                
+            if ((robot != null) && ((x != editStatus.getMouseX()) || (y != editStatus.getMouseY()))) {
+                // Make sure the EditStatus has the tool adjusted mouse point.
+                editStatus.setMousePoint(new Point(x, y));
+
                 // Adjust new x/y pos back to screen coords.
-                int realX = 0;
                 if (editStatus.getPictureType().equals(PictureType.AGI)) {
-                    realX = ((x << 1) * editStatus.getZoomFactor()) + diffX;
+                    x = ((x << 1) * editStatus.getZoomFactor()) + diffX;
                 } else {
-                    realX = (x * editStatus.getZoomFactor()) + diffX;
+                    x = (x * editStatus.getZoomFactor()) + diffX;
                 }
-                int realY = (y * editStatus.getZoomFactor()) + diffY;
-                
-                // If the screen coordinates are not the same as the original mouse 
-                // point then we need to move the mouse to this restricted position.
-                if ((realX != mousePoint.x) || (realY != mousePoint.y)) {
-                    // Only applies to lines though. Fill and Brush do not have restrictions.
-                    if (editStatus.isLineBeingDrawn()) {
-                        // Use robot to move the mouse cursor.
-                        robot.mouseMove(realX, realY);
-                    }
-                }
+                y = (y * editStatus.getZoomFactor()) + diffY;
+
+                // Use robot to move the mouse cursor.
+                robot.mouseMove(x, y);
             }
         }
     }
