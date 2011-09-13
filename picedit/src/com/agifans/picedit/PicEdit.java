@@ -1,13 +1,7 @@
 package com.agifans.picedit;
 
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.HierarchyBoundsAdapter;
-import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -19,10 +13,9 @@ import javax.swing.*;
  * 
  * @author Lance Ewing
  */
+@SuppressWarnings("serial")
 public final class PicEdit extends JApplet {
 
-    private static final long serialVersionUID = 1L;
-    
     /**
      * Constant for the name of the current version of PICEDIT.
      */
