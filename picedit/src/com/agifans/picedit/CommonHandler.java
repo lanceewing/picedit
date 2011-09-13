@@ -194,11 +194,9 @@ public abstract class CommonHandler {
      * Displays the 'About' PICEDIT message box.
      */
     protected void showAboutMessage() {
-        picGraphics.drawMessageBox(64, 69, 255, 116);
-        picGraphics.drawString("    PICEDIT 1.3M4    ", 72, 77, 0, 15);
-        picGraphics.drawString("         by          ", 72, 89, 0, 15);
-        picGraphics.drawString("     Lance Ewing     ", 72, 101, 0, 15);
-        waitForKeyStrokeOrMouseClick(null);
+        JOptionPane.showMessageDialog(application, 
+                "<html><h2 style=\"text-align: center\">PICEDIT v1.3M4</h2><br/><p style=\"text-align: center\">by Lance Ewing</p><br/></html>", 
+                "About PICEDIT", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
