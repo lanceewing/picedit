@@ -54,7 +54,6 @@ public class PictureCache {
             SortedMap<Integer, PictureCacheEntry> entriesBelow = cache.headMap(fromPicturePosition);
             cache.clear();
             cache.putAll(entriesBelow);
-            System.out.println("Clearing tail map from position " + fromPicturePosition);
         }
     }
     

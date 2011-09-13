@@ -358,9 +358,7 @@ public class Picture {
      * Draws the picture from the beginning up to the current picture position.
      */
     public void drawPicture() {
-    	long before = System.currentTimeMillis();
-    	
-        int action = 0;
+    	int action = 0;
         int index = 0;
 
         PictureCacheEntry cacheEntry = this.pictureCache.getCacheEntry(picturePosition);
@@ -456,7 +454,6 @@ public class Picture {
                 }
                 
                 // Add the current picture state to the picture cache.
-                // TODO: Only cache at certain intervals. Caching everything is very memory consuming.
                 if (isCacheable) {
                     if ((cacheEntry == null) || ((index - cacheEntry.getPicturePosition()) > 100)) {
                         cacheEntry = pictureCache.addCacheEntry(index, visualScreen, priorityScreen, controlScreen);
@@ -466,18 +463,6 @@ public class Picture {
 
             updateScreen();
         }
-        
-        long after = System.currentTimeMillis();
-        System.out.println("position: " + picturePosition);
-        System.out.println("time: " + (after - before));
-        System.out.println("free memory: " + Runtime.getRuntime().freeMemory());
-        System.out.println("max memory: " + Runtime.getRuntime().maxMemory());
-        System.out.println("total memory: " + Runtime.getRuntime().totalMemory());
-        
-        if (cacheEntry != null) {
-            System.out.println("gap: " + (picturePosition - cacheEntry.getPicturePosition()));
-        }
-        System.out.println("cache count: " + pictureCache.size());
     }
 
     /**
