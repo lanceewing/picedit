@@ -177,11 +177,23 @@ public class EditStatus {
         prefs.put("RECENT_PICTURE_4", this.recentPictures.get(3));
     }
     
+    /**
+     * Clears the state of the EditStatus. This method is invoked whenever
+     * a picture is loaded or a new picture is created.
+     */
     public void clear() {
         clear(true);
     }
 
-    public void clear(boolean clearPictureCodes) {
+    /**
+     * Clears the state of the EditStatus. The newPicture flag says whether
+     * the state is being cleared for a completely new picture (e.g. when
+     * a picture is loaded or when a picture is created) or whether it is
+     * just the current picture that is being redrawn from the start again.
+     * 
+     * @param newPicture true if it is being cleared for a new picture; otherwise false.
+     */
+    public void clear(boolean newPicture) {
         tool = ToolType.NONE;
         menuActive = false;
         visualColour = VISUAL_OFF;
@@ -192,7 +204,7 @@ public class EditStatus {
         brushSize = 0;
         brushShape = BrushShape.CIRCLE;
         brushTexture = BrushTexture.SOLID;
-        if (clearPictureCodes) {
+        if (newPicture) {
             // These are the bits that get cleared for a new picture.
             priorityShowing = false;
             pictureType = PictureType.AGI;
@@ -202,9 +214,13 @@ public class EditStatus {
             pictureFile = null;
         }
         clearLastRenderedState();
-        clearTool();
+        resetTool();
     }
 
+    /**
+     * Clears the variables that hold what the last rendered values
+     * were for various details, such as colours, mouse position, etc.
+     */
     public void clearLastRenderedState() {
         lastRenderedBrushCode = LAST_VALUE_NONE;
         lastRenderedPicturePosition = LAST_VALUE_NONE;
@@ -216,10 +232,13 @@ public class EditStatus {
         lastRenderedTool = null;
     }
 
-    public void clearTool() {
-        resetTool();
-    }
-
+    /**
+     * Sets the current tool back to its initial state. For line, pen and
+     * step this means that if a line is currently being drawn then that
+     * line is completed thereby allowing a new line to be drawn using
+     * the same tool. It is this method that is invoked when the right
+     * mouse button is clicked once after drawing a line.
+     */
     public void resetTool() {
         numOfClicks = 0;
         stepType = null;
@@ -228,6 +247,13 @@ public class EditStatus {
         clearBGLineData();
     }
 
+    /**
+     * Gets the colour of the temporary line to draw when line drawing is 
+     * enabled. This is the "rubber band" line that is drawn when a segment
+     * of a line is being placed. 
+     * 
+     * @return the colour of the temporary line.
+     */
     public int getTemporaryLineColour() {
         int lineColour = 0;
         if (isPriorityShowing() && isPriorityDrawEnabled()) {
@@ -238,31 +264,65 @@ public class EditStatus {
         return lineColour;
     }
 
+    /**
+     * Returns true if the priority screen is currently showing.
+     * 
+     * @return true if the priority screen is currently showing.
+     */
     public boolean isPriorityShowing() {
         return priorityShowing;
     }
 
+    /**
+     * Toggles between the visual and priority screens.
+     */
     public void toggleScreen() {
         priorityShowing = !priorityShowing;
     }
 
+    /**
+     * Returns true if the currently active tool is on its first click.
+     *  
+     * @return true if the currently active tool is on its first click; otherwise false.
+     */
     public boolean isFirstClick() {
         return (numOfClicks == 1);
     }
 
+    /**
+     * Gets the number of clicks that have been made since activating the 
+     * current tool. For lines, this is effectively the number of vertices.
+     *  
+     * @return the number of clicks that have been made since activating the current tool.
+     */
     public int getNumOfClicks() {
         return numOfClicks;
     }
 
+    /**
+     * Gets the currently active tool.
+     * 
+     * @return the currently active tool.
+     */
     public ToolType getTool() {
         return tool;
     }
 
+    /**
+     * Sets the given tool to be active.
+     * 
+     * @param tool The tool to activate.
+     */
     public void setTool(ToolType tool) {
         resetTool();
         this.tool = tool;
     }
 
+    /**
+     * Gets the current visual colour.
+     * 
+     * @return the current visual colour.
+     */
     public int getVisualColour() {
         return visualColour;
     }
