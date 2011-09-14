@@ -525,7 +525,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             if (editStatus.getNumOfClicks() > 0) {
                 // If a tool is active (i.e. has a least one click) then right click resets 
                 // number of clicks, which allows the user to move to new location.
-                editStatus.clearTool();
+                editStatus.resetTool();
             } else {
                 // If no clicks performed yet then a right click sets tool to None.
                 editStatus.setTool(ToolType.NONE);
