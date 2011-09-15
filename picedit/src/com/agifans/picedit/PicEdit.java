@@ -55,7 +55,7 @@ public final class PicEdit extends JApplet {
         // Add the status bar above the picture.
         StatusBarPanel statusbar = new StatusBarPanel(pictureFrame.getEditStatus());
         statusbar.setPreferredSize(new Dimension(320, 20));
-        this.getContentPane().add(statusbar, BorderLayout.NORTH);
+        this.getContentPane().add(statusbar, BorderLayout.SOUTH);
         
         // Add the desktop pane that holds the picture that is being edited.
         desktopPane = new JDesktopPane();
@@ -66,15 +66,15 @@ public final class PicEdit extends JApplet {
         desktopPane.setPreferredSize(new Dimension(700, 440));
         this.getContentPane().add(desktopPane, BorderLayout.CENTER);
         
-        // Add the tool panel centered below the picture.
-        JPanel toolPanelContainer = new JPanel();
-        toolPanelContainer.setBackground(EgaPalette.GREY);
-        toolPanelContainer.setOpaque(true);
-        toolPanelContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        ToolPanel toolPanel = new ToolPanel(this);
-        toolPanel.setPreferredSize(new Dimension(640, 46));
-        toolPanelContainer.add(toolPanel);
-        this.getContentPane().add(toolPanelContainer, BorderLayout.SOUTH);
+//        // Add the tool panel centered below the picture.
+//        JPanel toolPanelContainer = new JPanel();
+//        toolPanelContainer.setBackground(EgaPalette.GREY);
+//        toolPanelContainer.setOpaque(true);
+//        toolPanelContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+//        ToolPanel toolPanel = new ToolPanel(this);
+//        toolPanel.setPreferredSize(new Dimension(640, 46));
+//        toolPanelContainer.add(toolPanel);
+//        this.getContentPane().add(toolPanelContainer, BorderLayout.SOUTH);
     }
 
     /**
