@@ -69,8 +69,8 @@ public class ToolPanel extends JPanel {
         lineButton.setPreferredSize(new Dimension(38, 38));
         JToggleButton shortLineButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/shortline.png")));
         shortLineButton.setPreferredSize(new Dimension(38, 38));
-        JToggleButton stepButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/shortline.png")));
-        stepButton.setPreferredSize(new Dimension(38, 38));
+        JToggleButton stepLineButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/stepline.png")));
+        stepLineButton.setPreferredSize(new Dimension(38, 38));
         JToggleButton fillButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/fill.png")));
         fillButton.setPreferredSize(new Dimension(38, 38));
         JToggleButton airbrushButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/airbrush.png")));
@@ -81,29 +81,36 @@ public class ToolPanel extends JPanel {
         rectangleButton.setPreferredSize(new Dimension(38, 38));
         JToggleButton ellipseButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/ellipse.png")));
         ellipseButton.setPreferredSize(new Dimension(38, 38));
-        
+        JToggleButton eyeDropperButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/eyedropper.png")));
+        eyeDropperButton.setPreferredSize(new Dimension(38, 38));
+        JToggleButton eraserButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/eraser.png")));
+        eraserButton.setPreferredSize(new Dimension(38, 38));
         
         toolGroup.add(selectionButton);
         toolGroup.add(zoomButton);
         toolGroup.add(lineButton);
         toolGroup.add(shortLineButton);
-        toolGroup.add(stepButton);
+        toolGroup.add(stepLineButton);
         toolGroup.add(fillButton);
         toolGroup.add(airbrushButton);
         toolGroup.add(brushButton);
         toolGroup.add(rectangleButton);
         toolGroup.add(ellipseButton);
+        toolGroup.add(eyeDropperButton);
+        toolGroup.add(eraserButton);
         
         this.add(selectionButton);
         this.add(zoomButton);
         this.add(lineButton);
         this.add(shortLineButton);
-        this.add(stepButton);
+        this.add(stepLineButton);
         this.add(fillButton);
         this.add(airbrushButton);
         this.add(brushButton);
         this.add(rectangleButton);
         this.add(ellipseButton);
+        this.add(eyeDropperButton);
+        this.add(eraserButton);
         
         //this.picGraphics = new PicGraphics(320, 23, this, 25);
         
