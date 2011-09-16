@@ -5,17 +5,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.LinkedList;
+import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
 
 /**
  * The tool panel that is displayed at the bottom of the picture.
@@ -61,56 +59,19 @@ public class ToolPanel extends JPanel {
         this.setLayout(new GridLayout(6, 2));
         
         ButtonGroup toolGroup = new ButtonGroup();
-        JToggleButton selectionButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/selection.png")));
-        selectionButton.setPreferredSize(new Dimension(38, 38));
-        selectionButton.setFocusable(false);
-        JToggleButton zoomButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/zoom.png")));
-        zoomButton.setPreferredSize(new Dimension(38, 38));
-        zoomButton.setFocusable(false);
-        JToggleButton lineButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/line.png")));
-        lineButton.setPreferredSize(new Dimension(38, 38));
-        lineButton.setFocusable(false);
-        JToggleButton shortLineButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/shortline.png")));
-        shortLineButton.setPreferredSize(new Dimension(38, 38));
-        shortLineButton.setFocusable(false);
-        JToggleButton stepLineButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/stepline.png")));
-        stepLineButton.setPreferredSize(new Dimension(38, 38));
-        stepLineButton.setFocusable(false);
-        JToggleButton fillButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/fill.png")));
-        fillButton.setPreferredSize(new Dimension(38, 38));
-        fillButton.setFocusable(false);
-        JToggleButton airbrushButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/airbrush.png")));
-        airbrushButton.setPreferredSize(new Dimension(38, 38));
-        airbrushButton.setFocusable(false);
-        JToggleButton brushButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/brush.png")));
-        brushButton.setPreferredSize(new Dimension(38, 38));
-        brushButton.setFocusable(false);
-        JToggleButton rectangleButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/rectangle.png")));
-        rectangleButton.setPreferredSize(new Dimension(38, 38));
-        rectangleButton.setFocusable(false);
-        JToggleButton ellipseButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/ellipse.png")));
-        ellipseButton.setPreferredSize(new Dimension(38, 38));
-        ellipseButton.setFocusable(false);
-        JToggleButton eyeDropperButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/eyedropper.png")));
-        eyeDropperButton.setPreferredSize(new Dimension(38, 38));
-        eyeDropperButton.setFocusable(false);
-        JToggleButton eraserButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/eraser.png")));
-        eraserButton.setPreferredSize(new Dimension(38, 38));
-        eraserButton.setFocusable(false);
-        
-        toolGroup.add(selectionButton);
-        toolGroup.add(zoomButton);
-        toolGroup.add(lineButton);
-        toolGroup.add(shortLineButton);
-        toolGroup.add(stepLineButton);
-        toolGroup.add(fillButton);
-        toolGroup.add(airbrushButton);
-        toolGroup.add(brushButton);
-        toolGroup.add(rectangleButton);
-        toolGroup.add(ellipseButton);
-        toolGroup.add(eyeDropperButton);
-        toolGroup.add(eraserButton);
-        
+        ToolButton selectionButton = new ToolButton("selection.png", toolGroup);
+        ToolButton zoomButton = new ToolButton("zoom.png", toolGroup);
+        ToolButton lineButton = new ToolButton("line.png", toolGroup);
+        ToolButton shortLineButton = new ToolButton("shortline.png", toolGroup);
+        ToolButton stepLineButton = new ToolButton("stepline.png", toolGroup);
+        ToolButton fillButton = new ToolButton("fill.png", toolGroup);
+        ToolButton airbrushButton = new ToolButton("airbrush.png", toolGroup);
+        ToolButton brushButton = new ToolButton("brush.png", toolGroup);
+        ToolButton rectangleButton = new ToolButton("rectangle.png", toolGroup);
+        ToolButton ellipseButton = new ToolButton("ellipse.png", toolGroup);
+        ToolButton eyeDropperButton = new ToolButton("eyedropper.png", toolGroup);
+        ToolButton eraserButton = new ToolButton("eraser.png", toolGroup);
+
         this.add(selectionButton);
         this.add(zoomButton);
         this.add(lineButton);
@@ -130,6 +91,60 @@ public class ToolPanel extends JPanel {
         
         //ToolPanelMouseHandler mouseHandler = new ToolPanelMouseHandler(application.getEditStatus(), picGraphics, application.getPicture(), application);
         //this.addMouseListener(mouseHandler);
+    }
+    
+    /**
+     * Tool button class used for all buttons on the internal frames tool bar panel.
+     */
+    @SuppressWarnings("serial")
+    class ToolButton extends JToggleButton {
+        
+        /**
+         * Constructor for PictureTool.
+         * 
+         * @param iconImageName The name of the image file for the button icon.
+         * @param buttonGroup The button group that the button is a part of.
+         * @throws IOException 
+         */
+        ToolButton(String iconImageName, ButtonGroup buttonGroup) {
+            super();
+            Image iconImage = null;
+            Image pressedImage = null;
+            Image hoveredImage = null;
+            try {
+                iconImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/" + iconImageName));
+                pressedImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/pressed.png"));
+                hoveredImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/hovered.png"));
+            } catch (IOException e) {
+            }
+            setIcon(new ImageIcon(iconImage));
+            setSelectedIcon(new ImageIcon(mergeImages(iconImage, pressedImage)));
+            setRolloverIcon(new ImageIcon(mergeImages(iconImage, hoveredImage)));
+            setRolloverSelectedIcon(getSelectedIcon());
+            setPreferredSize(new Dimension(38, 38));
+            setFocusable(false);
+            setFocusPainted(false);
+            setBorderPainted(false);
+            setMargin(new Insets(0, 0, 0, 0));
+            buttonGroup.add(this);
+        }
+        
+        /**
+         * Merges the two images together by firstly drawing the backgroundImage
+         * and then the foregroundImage on top of it.
+         * 
+         * @param foregroundImage The image to draw on top of the background image.
+         * @param backgroundImage The image to draw behind the foreground image.
+         * 
+         * @return the merged Image.
+         */
+        Image mergeImages(Image foregroundImage, Image backgroundImage) {
+            BufferedImage image = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+            Graphics graphics = image.getGraphics();
+            graphics.drawImage(backgroundImage, 0, 0, 32, 32, this);
+            graphics.drawImage(foregroundImage, 0, 0, 32, 32, this);
+            return image;
+        }
     }
     
 //    /**
