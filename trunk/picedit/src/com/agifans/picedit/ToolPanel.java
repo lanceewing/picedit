@@ -77,16 +77,33 @@ public class ToolPanel extends JPanel {
         airbrushButton.setPreferredSize(new Dimension(38, 38));
         JToggleButton brushButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/brush.png")));
         brushButton.setPreferredSize(new Dimension(38, 38));
+        JToggleButton rectangleButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/rectangle.png")));
+        rectangleButton.setPreferredSize(new Dimension(38, 38));
+        JToggleButton ellipseButton = new JToggleButton(new ImageIcon(ClassLoader.getSystemResource("com/agifans/picedit/images/ellipse.png")));
+        ellipseButton.setPreferredSize(new Dimension(38, 38));
+        
         
         toolGroup.add(selectionButton);
         toolGroup.add(zoomButton);
         toolGroup.add(lineButton);
         toolGroup.add(shortLineButton);
+        toolGroup.add(stepButton);
+        toolGroup.add(fillButton);
+        toolGroup.add(airbrushButton);
+        toolGroup.add(brushButton);
+        toolGroup.add(rectangleButton);
+        toolGroup.add(ellipseButton);
         
         this.add(selectionButton);
         this.add(zoomButton);
         this.add(lineButton);
         this.add(shortLineButton);
+        this.add(stepButton);
+        this.add(fillButton);
+        this.add(airbrushButton);
+        this.add(brushButton);
+        this.add(rectangleButton);
+        this.add(ellipseButton);
         
         //this.picGraphics = new PicGraphics(320, 23, this, 25);
         
