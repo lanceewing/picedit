@@ -1,5 +1,6 @@
 package com.agifans.picedit;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -52,11 +53,13 @@ public class ToolPanel extends JPanel {
     public ToolPanel(PicEdit application) {
         this.application = application;
         
-        //this.setPreferredSize(new Dimension(100, 100));
+        //this.setPreferredSize(new Dimension(80, 240));
         
         // TODO: Add a panel below tool panel to fill up remainder of space (i.e. in CENTER).
+        this.setLayout(new BorderLayout());
         
-        this.setLayout(new GridLayout(6, 2));
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(6, 2, 0, 0));
         
         ButtonGroup toolGroup = new ButtonGroup();
         ToolButton selectionButton = new ToolButton("selection.png", toolGroup);
@@ -72,18 +75,21 @@ public class ToolPanel extends JPanel {
         ToolButton eyeDropperButton = new ToolButton("eyedropper.png", toolGroup);
         ToolButton eraserButton = new ToolButton("eraser.png", toolGroup);
 
-        this.add(selectionButton);
-        this.add(zoomButton);
-        this.add(lineButton);
-        this.add(shortLineButton);
-        this.add(stepLineButton);
-        this.add(fillButton);
-        this.add(airbrushButton);
-        this.add(brushButton);
-        this.add(rectangleButton);
-        this.add(ellipseButton);
-        this.add(eyeDropperButton);
-        this.add(eraserButton);
+        buttonPanel.add(selectionButton);
+        buttonPanel.add(zoomButton);
+        buttonPanel.add(lineButton);
+        buttonPanel.add(shortLineButton);
+        buttonPanel.add(stepLineButton);
+        buttonPanel.add(fillButton);
+        buttonPanel.add(airbrushButton);
+        buttonPanel.add(brushButton);
+        buttonPanel.add(rectangleButton);
+        buttonPanel.add(ellipseButton);
+        buttonPanel.add(eyeDropperButton);
+        buttonPanel.add(eraserButton);
+        
+        this.add(buttonPanel, BorderLayout.NORTH);
+        this.add(new JPanel(), BorderLayout.CENTER);
         
         //this.picGraphics = new PicGraphics(320, 23, this, 25);
         
@@ -121,6 +127,7 @@ public class ToolPanel extends JPanel {
             setSelectedIcon(new ImageIcon(mergeImages(iconImage, pressedImage)));
             setRolloverIcon(new ImageIcon(mergeImages(iconImage, hoveredImage)));
             setRolloverSelectedIcon(getSelectedIcon());
+            setPressedIcon(getSelectedIcon());
             setPreferredSize(new Dimension(38, 38));
             setFocusable(false);
             setFocusPainted(false);
