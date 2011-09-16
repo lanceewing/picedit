@@ -2,6 +2,7 @@ package com.agifans.picedit;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -59,7 +60,8 @@ public class ToolPanel extends JPanel {
         this.setLayout(new BorderLayout());
         
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(6, 2, 0, 0));
+        buttonPanel.setPreferredSize(new Dimension(70, 198));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         
         ButtonGroup toolGroup = new ButtonGroup();
         ToolButton selectionButton = new ToolButton("selection.png", toolGroup);
@@ -75,6 +77,9 @@ public class ToolPanel extends JPanel {
         ToolButton eyeDropperButton = new ToolButton("eyedropper.png", toolGroup);
         ToolButton eraserButton = new ToolButton("eraser.png", toolGroup);
 
+        JPanel topGap = new JPanel();
+        topGap.setPreferredSize(new Dimension(70, 3));
+        buttonPanel.add(topGap);
         buttonPanel.add(selectionButton);
         buttonPanel.add(zoomButton);
         buttonPanel.add(lineButton);
@@ -128,7 +133,7 @@ public class ToolPanel extends JPanel {
             setRolloverIcon(new ImageIcon(mergeImages(iconImage, hoveredImage)));
             setRolloverSelectedIcon(getSelectedIcon());
             setPressedIcon(getSelectedIcon());
-            setPreferredSize(new Dimension(38, 38));
+            setPreferredSize(new Dimension(32, 32));
             setFocusable(false);
             setFocusPainted(false);
             setBorderPainted(false);
