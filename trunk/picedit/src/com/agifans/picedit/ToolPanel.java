@@ -108,11 +108,12 @@ public class ToolPanel extends JPanel {
     class ColourButton extends JToggleButton {
         
         public ColourButton() {
+            setFocusPainted(false);
             setPreferredSize(new Dimension(48, 48));
         }
         
-        public void paint(Graphics graphics) {
-            super.paint(graphics);
+        public void paintComponent(Graphics graphics) {
+            super.paintComponent(graphics);
             graphics.setColor(Color.GRAY);
             graphics.drawRoundRect(4, 4, 39, 38, 5, 5);
         }
