@@ -90,17 +90,22 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         KeyboardHandler keyboardHandler = new KeyboardHandler(editStatus, picGraphics, picture, application);
         this.getContentPane().addKeyListener(keyboardHandler);
         
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BorderLayout());
+        
         // Add the panel that holds the picture that is being edited.
         pictureScrollPane = new JScrollPane(picturePanel);
         pictureScrollPane.setMinimumSize(new Dimension(10, 10));
         pictureScrollPane.setOpaque(true);
         pictureScrollPane.setBackground(Color.lightGray);
-        this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
+        rightPanel.add(pictureScrollPane, BorderLayout.CENTER);
         
         positionSlider = new JSlider();
         positionSlider.setModel(new PositionSliderModel(picture));
         positionSlider.setFocusable(false);
-        this.getContentPane().add(positionSlider, BorderLayout.SOUTH);
+        rightPanel.add(positionSlider, BorderLayout.SOUTH);
+        
+        this.getContentPane().add(rightPanel, BorderLayout.CENTER);
         
         ToolPanel toolPanel = new ToolPanel(this, application);
         this.getContentPane().add(toolPanel, BorderLayout.WEST);
