@@ -37,7 +37,7 @@ public class ToolPanel extends JPanel {
         this.setLayout(new BorderLayout());
         
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setPreferredSize(new Dimension(70, 198 + 102));
+        buttonPanel.setPreferredSize(new Dimension(70, 336));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         
         ButtonGroup toolGroup = new ButtonGroup();
@@ -75,18 +75,22 @@ public class ToolPanel extends JPanel {
         buttonPanel.add(middleGap);
         
         // Add colour picker section of the tool panel.
-        JLayeredPane colourPane = new JLayeredPane();
-        colourPane.setPreferredSize(new Dimension(70, 91));
+        //JLayeredPane colourPane = new JLayeredPane();
+        //colourPane.setPreferredSize(new Dimension(70, 91));
         ColourButton visualButton = new ColourButton();
-        visualButton.setBounds(3, 3, 48, 48);
-        colourPane.add(visualButton, 1);
+        //visualButton.setBounds(3, 3, 48, 48);
+        //colourPane.add(visualButton, 1);
+        buttonPanel.add(visualButton);
         ColourButton priorityButton = new ColourButton();
-        priorityButton.setBounds(11, 23, 48, 48);
-        colourPane.add(priorityButton, 2);
+        //priorityButton.setBounds(11, 23, 48, 48);
+        //colourPane.add(priorityButton, 2);
+        buttonPanel.add(priorityButton);
         ColourButton controlButton = new ColourButton();
-        controlButton.setBounds(19, 43, 48, 48);
-        colourPane.add(controlButton, 3);
-        buttonPanel.add(colourPane);
+        //controlButton.setBounds(19, 43, 48, 48);
+        controlButton.setEnabled(false);
+        buttonPanel.add(controlButton);
+        //colourPane.add(controlButton, 3);
+        //buttonPanel.add(colourPane);
         
         this.add(buttonPanel, BorderLayout.NORTH);
         this.add(new JPanel(), BorderLayout.CENTER);
@@ -110,6 +114,7 @@ public class ToolPanel extends JPanel {
         public ColourButton() {
             setFocusPainted(false);
             setPreferredSize(new Dimension(48, 48));
+            this.setMargin(new Insets(0, 0, 0, 0));
         }
         
         public void paintComponent(Graphics graphics) {
