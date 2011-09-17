@@ -181,6 +181,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         // Apply the new maximum size to the frame.
         Dimension maximumSize = maximumSizeMap.get(editStatus.getZoomFactor());
         this.setMaximumSize(maximumSize);
+        this.setMinimumSize(maximumSizeMap.get(2));
         
         // Calculate the new current size. If the current size was below the packed 
         // size then we stick with that; otherwise we set it at the packed size.
