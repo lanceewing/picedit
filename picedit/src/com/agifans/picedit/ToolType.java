@@ -9,10 +9,18 @@ public enum ToolType {
 
     NONE("None"), 
     LINE("Line"), 
-    PEN("Pen"), 
-    STEP("Step"), 
+    SHORTLINE("Short line"), 
+    STEPLINE("Step line"), 
+    AIRBRUSH("Airbrush"),
     BRUSH("Brush"), 
-    FILL("Fill");
+    FILL("Fill"),
+    ZOOM("Zoom"),
+    SELECTION("Selection"),
+    RECTANGLE("Rectangle"),
+    ELLIPSE("Ellipse"),
+    EYEDROPPER("Eyedropper"),
+    ERASER("Eraser")
+    ;
 
     private String displayName;
 

@@ -416,11 +416,11 @@ public class Picture {
                         isCacheable = false;
                         break;
                     case 0xF4:
-                        editStatus.setTool(ToolType.STEP);
+                        editStatus.setTool(ToolType.STEPLINE);
                         index = drawPictureYCorner(pictureCodes, index);
                         break;
                     case 0xF5:
-                        editStatus.setTool(ToolType.STEP);
+                        editStatus.setTool(ToolType.STEPLINE);
                         index = drawPictureXCorner(pictureCodes, index);
                         break;
                     case 0xF6:
@@ -428,7 +428,7 @@ public class Picture {
                         index = drawPictureAbsoluteLine(pictureCodes, index);
                         break;
                     case 0xF7:
-                        editStatus.setTool(ToolType.PEN);
+                        editStatus.setTool(ToolType.SHORTLINE);
                         index = drawPictureRelativeDraw(pictureCodes, index);
                         break;
                     case 0xF8:

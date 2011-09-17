@@ -102,7 +102,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         positionSlider.setFocusable(false);
         this.getContentPane().add(positionSlider, BorderLayout.SOUTH);
         
-        ToolPanel toolPanel = new ToolPanel(application);
+        ToolPanel toolPanel = new ToolPanel(this, application);
         this.getContentPane().add(toolPanel, BorderLayout.WEST);
         
         this.setIconifiable(true);
