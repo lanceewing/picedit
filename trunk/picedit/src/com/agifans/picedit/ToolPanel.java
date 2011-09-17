@@ -1,6 +1,7 @@
 package com.agifans.picedit;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -35,7 +37,7 @@ public class ToolPanel extends JPanel {
         this.setLayout(new BorderLayout());
         
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setPreferredSize(new Dimension(70, 198));
+        buttonPanel.setPreferredSize(new Dimension(70, 198 + 102));
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         
         ButtonGroup toolGroup = new ButtonGroup();
@@ -68,9 +70,52 @@ public class ToolPanel extends JPanel {
         buttonPanel.add(ellipseButton);
         buttonPanel.add(eyeDropperButton);
         buttonPanel.add(eraserButton);
+        JPanel middleGap = new JPanel();
+        middleGap.setPreferredSize(new Dimension(70, 15));
+        buttonPanel.add(middleGap);
+        
+        // Add colour picker section of the tool panel.
+        JLayeredPane colourPane = new JLayeredPane();
+        colourPane.setPreferredSize(new Dimension(70, 91));
+        ColourButton visualButton = new ColourButton();
+        visualButton.setBounds(3, 3, 48, 48);
+        colourPane.add(visualButton, 1);
+        ColourButton priorityButton = new ColourButton();
+        priorityButton.setBounds(11, 23, 48, 48);
+        colourPane.add(priorityButton, 2);
+        ColourButton controlButton = new ColourButton();
+        controlButton.setBounds(19, 43, 48, 48);
+        colourPane.add(controlButton, 3);
+        buttonPanel.add(colourPane);
         
         this.add(buttonPanel, BorderLayout.NORTH);
         this.add(new JPanel(), BorderLayout.CENTER);
+    }
+    
+    public JToggleButton createVisualColourButton() {
+        BufferedImage image = new BufferedImage(48, 48, BufferedImage.TYPE_INT_ARGB);
+        Graphics graphics = image.getGraphics();
+        graphics.setColor(Color.GRAY);
+        graphics.drawRoundRect(4, 4, 40, 40, 5, 5);
+        ImageIcon icon = new ImageIcon(image);
+        JToggleButton button = new JToggleButton();
+        button.setIcon(icon);
+        button.setBorderPainted(false);
+        button.setPreferredSize(new Dimension(48, 48));
+        return button;
+    }
+    
+    class ColourButton extends JToggleButton {
+        
+        public ColourButton() {
+            setPreferredSize(new Dimension(48, 48));
+        }
+        
+        public void paint(Graphics graphics) {
+            super.paint(graphics);
+            graphics.setColor(Color.GRAY);
+            graphics.drawRoundRect(4, 4, 39, 38, 5, 5);
+        }
     }
     
     /**
