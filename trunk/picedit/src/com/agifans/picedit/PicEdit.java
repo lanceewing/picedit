@@ -63,18 +63,8 @@ public final class PicEdit extends JApplet {
         desktopPane.setDesktopManager(new PicEditDesktopManager(desktopPane.getDesktopManager()));
         desktopPane.add(pictureFrame);
         desktopPane.setFocusable(false);
-        desktopPane.setPreferredSize(new Dimension(700, 440));
+        desktopPane.setPreferredSize(new Dimension(770, 440));
         this.getContentPane().add(desktopPane, BorderLayout.CENTER);
-        
-//        // Add the tool panel centered below the picture.
-//        JPanel toolPanelContainer = new JPanel();
-//        toolPanelContainer.setBackground(EgaPalette.GREY);
-//        toolPanelContainer.setOpaque(true);
-//        toolPanelContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-//        ToolPanel toolPanel = new ToolPanel(this);
-//        toolPanel.setPreferredSize(new Dimension(640, 46));
-//        toolPanelContainer.add(toolPanel);
-//        this.getContentPane().add(toolPanelContainer, BorderLayout.SOUTH);
     }
 
     /**
