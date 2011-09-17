@@ -53,10 +53,10 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
                 processToolSelect(ToolType.LINE);
             }
             if ((key == KeyEvent.VK_F2) || (key == KeyEvent.VK_P)) {
-                processToolSelect(ToolType.PEN);
+                processToolSelect(ToolType.SHORTLINE);
             }
             if ((key == KeyEvent.VK_F3) || (key == KeyEvent.VK_S)) {
-                processToolSelect(ToolType.STEP);
+                processToolSelect(ToolType.STEPLINE);
             }
             if ((key == KeyEvent.VK_F4) || (key == KeyEvent.VK_F)) {
                 processToolSelect(ToolType.FILL);

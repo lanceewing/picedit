@@ -430,11 +430,11 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 break;
                 
             case PEN:
-                processToolSelect(ToolType.PEN);
+                processToolSelect(ToolType.SHORTLINE);
                 break;
                 
             case STEP:
-                processToolSelect(ToolType.STEP);
+                processToolSelect(ToolType.STEPLINE);
                 break;
             
             case FILL:

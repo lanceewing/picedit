@@ -526,11 +526,11 @@ public class EditStatus {
     }
 
     public boolean isStepActive() {
-        return (tool == ToolType.STEP);
+        return (tool == ToolType.STEPLINE);
     }
 
     public boolean isPenActive() {
-        return (tool == ToolType.PEN);
+        return (tool == ToolType.SHORTLINE);
     }
 
     public boolean isVisualDrawEnabled() {
