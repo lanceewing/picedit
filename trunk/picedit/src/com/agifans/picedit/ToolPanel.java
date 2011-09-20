@@ -1,23 +1,28 @@
 package com.agifans.picedit;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.LayoutManager2;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+
+import javax.swing.plaf.basic.BasicToolBarUI;
 
 /**
  * The tool panel that is displayed at the bottom of the picture.
@@ -25,7 +30,7 @@ import javax.swing.JToggleButton;
  * @author Lance Ewing
  */
 @SuppressWarnings("serial")
-public class ToolPanel extends JPanel {
+public class ToolPanel extends JToolBar {
 
     /**
      * Constructor for ToolPanel.
@@ -34,11 +39,11 @@ public class ToolPanel extends JPanel {
      * @param application The PicEdit application.
      */
     public ToolPanel(PictureFrame pictureFrame, PicEdit application) {
-        this.setLayout(new BorderLayout());
+        super(JToolBar.VERTICAL);
         
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setPreferredSize(new Dimension(70, 336));
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        this.setMargin(new Insets(0, 0, 0, 0));
+        this.setBackground(Color.pink);
+        this.setMaximumSize(new Dimension(70, 2000));
         
         ButtonGroup toolGroup = new ButtonGroup();
         ToolPanelActionListener actionListener = new ToolPanelActionListener(pictureFrame, application);
@@ -55,45 +60,48 @@ public class ToolPanel extends JPanel {
         ToolButton eyeDropperButton = new ToolButton("eyedropper.png", toolGroup, actionListener, ToolType.EYEDROPPER);
         ToolButton eraserButton = new ToolButton("eraser.png", toolGroup, actionListener, ToolType.ERASER);
 
-        JPanel topGap = new JPanel();
-        topGap.setPreferredSize(new Dimension(70, 3));
-        buttonPanel.add(topGap);
-        buttonPanel.add(selectionButton);
-        buttonPanel.add(zoomButton);
-        buttonPanel.add(lineButton);
-        buttonPanel.add(shortLineButton);
-        buttonPanel.add(stepLineButton);
-        buttonPanel.add(fillButton);
-        buttonPanel.add(airbrushButton);
-        buttonPanel.add(brushButton);
-        buttonPanel.add(rectangleButton);
-        buttonPanel.add(ellipseButton);
-        buttonPanel.add(eyeDropperButton);
-        buttonPanel.add(eraserButton);
-        JPanel middleGap = new JPanel();
-        middleGap.setPreferredSize(new Dimension(70, 15));
-        buttonPanel.add(middleGap);
+        JPanel row1 = new JPanel();
+        FlowLayout layout1 = new FlowLayout(FlowLayout.LEFT, 0, 0);
+        row1.setLayout(layout1);
+        row1.setBackground(Color.orange);
+        row1.setPreferredSize(new Dimension(64, 32));
+        row1.setMaximumSize(new Dimension(64, 32));
+        row1.add(selectionButton);
+        row1.add(zoomButton);
+        this.add(row1);
         
-        // Add colour picker section of the tool panel.
-        //JLayeredPane colourPane = new JLayeredPane();
-        //colourPane.setPreferredSize(new Dimension(70, 91));
-        ColourButton visualButton = new ColourButton();
-        //visualButton.setBounds(3, 3, 48, 48);
-        //colourPane.add(visualButton, 1);
-        buttonPanel.add(visualButton);
-        ColourButton priorityButton = new ColourButton();
-        //priorityButton.setBounds(11, 23, 48, 48);
-        //colourPane.add(priorityButton, 2);
-        buttonPanel.add(priorityButton);
-        ColourButton controlButton = new ColourButton();
-        //controlButton.setBounds(19, 43, 48, 48);
-        controlButton.setEnabled(false);
-        buttonPanel.add(controlButton);
-        //colourPane.add(controlButton, 3);
-        //buttonPanel.add(colourPane);
+        this.addSeparator();
+        this.add(lineButton);
+        this.add(shortLineButton);
+        this.add(stepLineButton);
+        this.add(fillButton);
+        this.add(airbrushButton);
+        this.add(brushButton);
+        this.add(rectangleButton);
+        this.add(ellipseButton);
+        this.addSeparator();
+        this.add(eyeDropperButton);
+        this.add(eraserButton);
         
-        this.add(buttonPanel, BorderLayout.NORTH);
-        this.add(new JPanel(), BorderLayout.CENTER);
+        this.addSeparator();
+        
+//        ColourButton visualButton = new ColourButton();
+//        this.add(visualButton);
+//        ColourButton priorityButton = new ColourButton();
+//        this.add(priorityButton);
+//        ColourButton controlButton = new ColourButton();
+//        controlButton.setEnabled(false);
+//        this.add(controlButton);
+        
+        JPanel filler = new JPanel();
+        this.add(filler);
+        
+        System.out.println("" + this.getUI().getClass().getName());
+        
+        //frame.setUndecorated(true); frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME); frame.setSize(50,50);
+        
+        //((BasicToolBarUI)this.getUI()).setFloatingLocation(500,500);
+        //((BasicToolBarUI)this.getUI()).setFloating(true, new Point(500,500));
     }
     
     public JToggleButton createVisualColourButton() {
@@ -154,6 +162,7 @@ public class ToolPanel extends JPanel {
             setRolloverSelectedIcon(getSelectedIcon());
             setPressedIcon(getSelectedIcon());
             setPreferredSize(new Dimension(32, 32));
+            setMaximumSize(new Dimension(32, 32));
             setFocusable(false);
             setFocusPainted(false);
             setBorderPainted(false);
