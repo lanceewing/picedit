@@ -106,22 +106,29 @@ public class ToolPanel extends JToolBar {
         
         //frame.setUndecorated(true); frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME); frame.setSize(50,50);
         
-        System.out.println("" + this.getUI());
-        BasicToolBarUI ui = new BasicToolBarUI() {
-            protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
-                System.out.println("creating floating window");
-                //JFrame window = new JFrame();
-                JDialog window = new JDialog();
-                //window.setUndecorated(true);
-                window.setResizable(false);
-                window.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-                window.getRootPane().putClientProperty("Window.style", "small");
-                window.setSize(new Dimension(70, 100));
-                return window;
-            }
-        };
+        // TODO: This looks good: http://www.stupidjavatricks.com/?p=4
         
-        this.setUI(ui);
+        // TODO: Try this on the Mac.
+        
+//        System.out.println("" + this.getUI());
+        // NOTE: Creating this custom BasicToolBarUI breaks closing the floating toolbar.
+//        BasicToolBarUI ui = new BasicToolBarUI() {
+//            protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
+//                System.out.println("creating floating window");
+//                // This worked for Windows.
+//                JFrame.setDefaultLookAndFeelDecorated(true);
+//                JFrame window = new JFrame();
+//                //JDialog window = new JDialog();
+//                window.setUndecorated(true);
+//                window.setResizable(false);
+//                //window.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+//                window.getRootPane().putClientProperty("Window.style", "small");
+//                //window.setSize(new Dimension(70, 100));
+//                return window;
+//            }
+//        };
+        
+        //this.setUI(ui);
         
         //((BasicToolBarUI)this.getUI()).setFloatingLocation(500,500);
         //((BasicToolBarUI)this.getUI()).setFloating(true, new Point(500,500));
