@@ -143,7 +143,7 @@ public final class PicEdit extends JApplet {
      */
     public static void main(String[] args) {
         final PicEdit app = new PicEdit();
-
+        JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame();
         frame.setTitle(PICEDIT_NAME);
         frame.addWindowListener(new WindowAdapter() {
