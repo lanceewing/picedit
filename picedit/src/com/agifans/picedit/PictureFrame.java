@@ -110,6 +110,8 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         //ToolPanel toolPanel = new ToolPanel(this, application);
         //this.getContentPane().add(toolPanel, BorderLayout.WEST);
         
+        System.out.println("" + this.getUI());
+        
         this.setIconifiable(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

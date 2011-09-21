@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -27,8 +28,11 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JWindow;
 import javax.swing.RootPaneContainer;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import javax.swing.plaf.basic.BasicToolBarUI;
+import javax.swing.plaf.metal.MetalToolBarUI;
 
 /**
  * The tool panel that is displayed at the bottom of the picture.
@@ -110,10 +114,38 @@ public class ToolPanel extends JToolBar {
         
         // TODO: Try this on the Mac.
         
-//        System.out.println("" + this.getUI());
+        System.out.println("" + this.getUI());
         // NOTE: Creating this custom BasicToolBarUI breaks closing the floating toolbar.
-//        BasicToolBarUI ui = new BasicToolBarUI() {
-//            protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
+        // This works with the cross platform look and feel. But closing toolbar makes it disappear.
+        BasicToolBarUI ui = new BasicToolBarUI() {
+            protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
+
+                // TODO: Try returning an undecorated JDialog that has an internal frame in it where content pane of dialog is set to the internal frame content pane.
+                
+//                JDialog dialog = (JDialog)super.createFloatingWindow(toolbar);
+//                JDesktopPane desktop = new JDesktopPane();
+//                JInternalFrame frame = new JInternalFrame();
+//                desktop.add(frame);
+//                dialog.setUndecorated(true);
+//                dialog.add(desktop);
+//                dialog.setContentPane(frame.getContentPane());
+//                return dialog;
+                
+                try {
+                  UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+                } catch (Exception e) {
+                }
+                JDialog.setDefaultLookAndFeelDecorated(true);
+                JDialog dialog = (JDialog)super.createFloatingWindow(toolbar);
+                dialog.setUndecorated(true);
+                dialog.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
+                dialog.getRootPane().putClientProperty("Window.style", "small");
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception e) {
+                }
+                return dialog;
+                
 //                System.out.println("creating floating window");
 //                // This worked for Windows.
 //                JFrame.setDefaultLookAndFeelDecorated(true);
@@ -121,14 +153,14 @@ public class ToolPanel extends JToolBar {
 //                //JDialog window = new JDialog();
 //                window.setUndecorated(true);
 //                window.setResizable(false);
-//                //window.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+//                window.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 //                window.getRootPane().putClientProperty("Window.style", "small");
 //                //window.setSize(new Dimension(70, 100));
 //                return window;
-//            }
-//        };
+            }
+        };
         
-        //this.setUI(ui);
+        this.setUI(ui);
         
         //((BasicToolBarUI)this.getUI()).setFloatingLocation(500,500);
         //((BasicToolBarUI)this.getUI()).setFloating(true, new Point(500,500));
