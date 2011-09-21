@@ -1,5 +1,6 @@
 package com.agifans.picedit;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -28,6 +29,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JWindow;
 import javax.swing.RootPaneContainer;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -51,10 +53,6 @@ public class ToolPanel extends JToolBar {
     public ToolPanel(PictureFrame pictureFrame, PicEdit application) {
         super(JToolBar.VERTICAL);
         
-        this.setMargin(new Insets(0, 0, 0, 0));
-        this.setBackground(Color.pink);
-        this.setMaximumSize(new Dimension(70, 2000));
-        
         ButtonGroup toolGroup = new ButtonGroup();
         ToolPanelActionListener actionListener = new ToolPanelActionListener(pictureFrame, application);
         ToolButton selectionButton = new ToolButton("selection.png", toolGroup, actionListener, ToolType.SELECTION);
@@ -70,28 +68,12 @@ public class ToolPanel extends JToolBar {
         ToolButton eyeDropperButton = new ToolButton("eyedropper.png", toolGroup, actionListener, ToolType.EYEDROPPER);
         ToolButton eraserButton = new ToolButton("eraser.png", toolGroup, actionListener, ToolType.ERASER);
 
-        JPanel row1 = new JPanel();
-        FlowLayout layout1 = new FlowLayout(FlowLayout.LEFT, 0, 0);
-        row1.setLayout(layout1);
-        row1.setBackground(Color.orange);
-        row1.setPreferredSize(new Dimension(64, 32));
-        row1.setMaximumSize(new Dimension(64, 32));
-        row1.add(selectionButton);
-        row1.add(zoomButton);
-        this.add(row1);
-        
-        this.addSeparator();
-        this.add(lineButton);
-        this.add(shortLineButton);
-        this.add(stepLineButton);
-        this.add(fillButton);
-        this.add(airbrushButton);
-        this.add(brushButton);
-        this.add(rectangleButton);
-        this.add(ellipseButton);
-        this.addSeparator();
-        this.add(eyeDropperButton);
-        this.add(eraserButton);
+        this.add(new ToolButtonRow(selectionButton, zoomButton));
+        this.add(new ToolButtonRow(lineButton, shortLineButton));
+        this.add(new ToolButtonRow(stepLineButton, fillButton));
+        this.add(new ToolButtonRow(airbrushButton, brushButton));
+        this.add(new ToolButtonRow(rectangleButton, ellipseButton));
+        this.add(new ToolButtonRow(eyeDropperButton, eraserButton));
         
         this.addSeparator();
         
@@ -105,32 +87,13 @@ public class ToolPanel extends JToolBar {
         
         JPanel filler = new JPanel();
         this.add(filler);
-        
-// TODO: Try extending the UI to override creation of floating window, to set undecorated and width.
-        
-        //frame.setUndecorated(true); frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME); frame.setSize(50,50);
-        
+
         // TODO: This looks good: http://www.stupidjavatricks.com/?p=4
         
-        // TODO: Try this on the Mac.
-        
-        System.out.println("" + this.getUI());
         // NOTE: Creating this custom BasicToolBarUI breaks closing the floating toolbar.
         // This works with the cross platform look and feel. But closing toolbar makes it disappear.
         BasicToolBarUI ui = new BasicToolBarUI() {
             protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
-
-                // TODO: Try returning an undecorated JDialog that has an internal frame in it where content pane of dialog is set to the internal frame content pane.
-                
-//                JDialog dialog = (JDialog)super.createFloatingWindow(toolbar);
-//                JDesktopPane desktop = new JDesktopPane();
-//                JInternalFrame frame = new JInternalFrame();
-//                desktop.add(frame);
-//                dialog.setUndecorated(true);
-//                dialog.add(desktop);
-//                dialog.setContentPane(frame.getContentPane());
-//                return dialog;
-                
                 try {
                   UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                 } catch (Exception e) {
@@ -145,25 +108,9 @@ public class ToolPanel extends JToolBar {
                 } catch (Exception e) {
                 }
                 return dialog;
-                
-//                System.out.println("creating floating window");
-//                // This worked for Windows.
-//                JFrame.setDefaultLookAndFeelDecorated(true);
-//                JFrame window = new JFrame();
-//                //JDialog window = new JDialog();
-//                window.setUndecorated(true);
-//                window.setResizable(false);
-//                window.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-//                window.getRootPane().putClientProperty("Window.style", "small");
-//                //window.setSize(new Dimension(70, 100));
-//                return window;
             }
         };
-        
         this.setUI(ui);
-        
-        //((BasicToolBarUI)this.getUI()).setFloatingLocation(500,500);
-        //((BasicToolBarUI)this.getUI()).setFloating(true, new Point(500,500));
     }
     
     public JToggleButton createVisualColourButton() {
@@ -181,7 +128,7 @@ public class ToolPanel extends JToolBar {
     
     class ColourButton extends JToggleButton {
         
-        public ColourButton() {
+        ColourButton() {
             setFocusPainted(false);
             setPreferredSize(new Dimension(48, 48));
             this.setMargin(new Insets(0, 0, 0, 0));
@@ -191,6 +138,17 @@ public class ToolPanel extends JToolBar {
             super.paintComponent(graphics);
             graphics.setColor(Color.GRAY);
             graphics.drawRoundRect(4, 4, 39, 38, 5, 5);
+        }
+    }
+    
+    class ToolButtonRow extends JPanel {
+        ToolButtonRow(JToggleButton leftButton, JToggleButton rightButton) {
+            FlowLayout layout = new FlowLayout(FlowLayout.LEFT, 0, 0);
+            this.setLayout(layout);
+            this.setPreferredSize(new Dimension(64, 32));
+            this.setMaximumSize(new Dimension(64, 32));
+            this.add(leftButton);
+            this.add(rightButton);
         }
     }
     
