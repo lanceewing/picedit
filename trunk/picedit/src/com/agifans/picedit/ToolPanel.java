@@ -18,9 +18,15 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.JWindow;
+import javax.swing.RootPaneContainer;
 
 import javax.swing.plaf.basic.BasicToolBarUI;
 
@@ -96,9 +102,26 @@ public class ToolPanel extends JToolBar {
         JPanel filler = new JPanel();
         this.add(filler);
         
-        System.out.println("" + this.getUI().getClass().getName());
+// TODO: Try extending the UI to override creation of floating window, to set undecorated and width.
         
         //frame.setUndecorated(true); frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME); frame.setSize(50,50);
+        
+        System.out.println("" + this.getUI());
+        BasicToolBarUI ui = new BasicToolBarUI() {
+            protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
+                System.out.println("creating floating window");
+                //JFrame window = new JFrame();
+                JDialog window = new JDialog();
+                //window.setUndecorated(true);
+                window.setResizable(false);
+                window.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+                window.getRootPane().putClientProperty("Window.style", "small");
+                window.setSize(new Dimension(70, 100));
+                return window;
+            }
+        };
+        
+        this.setUI(ui);
         
         //((BasicToolBarUI)this.getUI()).setFloatingLocation(500,500);
         //((BasicToolBarUI)this.getUI()).setFloating(true, new Point(500,500));
