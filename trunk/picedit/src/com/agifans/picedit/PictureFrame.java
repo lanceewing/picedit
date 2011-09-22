@@ -107,9 +107,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         
         this.getContentPane().add(rightPanel, BorderLayout.CENTER);
         
-        //ToolPanel toolPanel = new ToolPanel(this, application);
-        //this.getContentPane().add(toolPanel, BorderLayout.WEST);
-        
         this.setIconifiable(true);
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -155,13 +152,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
             rightPanel.add(scrollPane, BorderLayout.CENTER);
             rightPanel.add(slider, BorderLayout.SOUTH);
             frame.getContentPane().add(rightPanel, BorderLayout.CENTER);
-            JPanel toolPanel = new JPanel();
-            toolPanel.setLayout(new BorderLayout());
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.setPreferredSize(new Dimension(70, 300));
-            toolPanel.add(buttonPanel, BorderLayout.NORTH);
-            toolPanel.add(new JPanel(), BorderLayout.CENTER);
-            frame.getContentPane().add(toolPanel, BorderLayout.WEST);
             frame.pack();
             frame.invalidate();
             this.maximumSizeMap.put(i, frame.getSize());
@@ -181,7 +171,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         // Apply the new maximum size to the frame.
         Dimension maximumSize = maximumSizeMap.get(editStatus.getZoomFactor());
         this.setMaximumSize(maximumSize);
-        this.setMinimumSize(maximumSizeMap.get(2));
         
         // Calculate the new current size. If the current size was below the packed 
         // size then we stick with that; otherwise we set it at the packed size.
