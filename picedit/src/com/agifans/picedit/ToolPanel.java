@@ -57,20 +57,23 @@ public class ToolPanel extends JToolBar {
         ToolButton eyeDropperButton = new ToolButton("eyedropper.png", toolGroup, actionListener, ToolType.EYEDROPPER);
         ToolButton eraserButton = new ToolButton("eraser.png", toolGroup, actionListener, ToolType.ERASER);
 
-        
-        
-        final ToolButtonRow buttonRow1 = new ToolButtonRow(selectionButton, zoomButton, lineButton, shortLineButton);
-        final ToolButtonRow buttonRow2 = new ToolButtonRow(stepLineButton, fillButton, airbrushButton, brushButton);
-        final ToolButtonRow buttonRow3 = new ToolButtonRow(rectangleButton, ellipseButton, eyeDropperButton, eraserButton);
-        
-        this.add(buttonRow1);
-        this.add(buttonRow2);
-        this.add(buttonRow3);
-        
-//        this.add(new ToolButtonRow(stepLineButton, fillButton));
-//        this.add(new ToolButtonRow(airbrushButton, brushButton));
-//        this.add(new ToolButtonRow(rectangleButton, ellipseButton));
-//        this.add(new ToolButtonRow(eyeDropperButton, eraserButton));
+        final JPanel buttonContainer = new JPanel();
+        buttonContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        buttonContainer.setPreferredSize(new Dimension(64, 192));
+        buttonContainer.setMaximumSize(new Dimension(64, 192));
+        buttonContainer.add(selectionButton);
+        buttonContainer.add(zoomButton);
+        buttonContainer.add(lineButton);
+        buttonContainer.add(shortLineButton);
+        buttonContainer.add(stepLineButton);
+        buttonContainer.add(fillButton);
+        buttonContainer.add(airbrushButton);
+        buttonContainer.add(brushButton);
+        buttonContainer.add(rectangleButton);
+        buttonContainer.add(ellipseButton);
+        buttonContainer.add(eyeDropperButton);
+        buttonContainer.add(eraserButton);
+        this.add(buttonContainer);
         
         this.addSeparator();
         
@@ -93,25 +96,17 @@ public class ToolPanel extends JToolBar {
                         Window window = SwingUtilities.windowForComponent((JComponent)evt.getNewValue());
                         if (window instanceof PicEditToolBarUI.PicEditToolBarUIDialog) {
                             // Floating.
-                            buttonRow1.setPreferredSize(new Dimension(128, 32));
-                            buttonRow1.setMaximumSize(new Dimension(128, 32));
-                            buttonRow2.setPreferredSize(new Dimension(128, 32));
-                            buttonRow2.setMaximumSize(new Dimension(128, 32));
-                            buttonRow3.setPreferredSize(new Dimension(128, 32));
-                            buttonRow3.setMaximumSize(new Dimension(128, 32));
+                            buttonContainer.setPreferredSize(new Dimension(128, 96));
+                            buttonContainer.setMaximumSize(new Dimension(128, 96));
                             ToolPanel.this.setOrientation(JToolBar.VERTICAL);
                         } else {
                             // Docking.
                             if (ToolPanel.this.getOrientation() == JToolBar.VERTICAL) {
-                                buttonRow1.setPreferredSize(new Dimension(64, 64));
-                                buttonRow1.setMaximumSize(new Dimension(64, 64));
-                                buttonRow2.setPreferredSize(new Dimension(64, 64));
-                                buttonRow2.setMaximumSize(new Dimension(64, 64));
-                                buttonRow3.setPreferredSize(new Dimension(64, 64));
-                                buttonRow3.setMaximumSize(new Dimension(64, 64));
+                                buttonContainer.setPreferredSize(new Dimension(64, 192));
+                                buttonContainer.setMaximumSize(new Dimension(64, 192));
                             } else {
-                                buttonRow1.setPreferredSize(new Dimension(128, 32));
-                                buttonRow1.setMaximumSize(new Dimension(128, 32));
+                                buttonContainer.setPreferredSize(new Dimension(384, 32));
+                                buttonContainer.setMaximumSize(new Dimension(384, 32));
                             }
                         }
                     }
@@ -145,23 +140,6 @@ public class ToolPanel extends JToolBar {
             super.paintComponent(graphics);
             graphics.setColor(Color.GRAY);
             graphics.drawRoundRect(4, 4, 39, 38, 5, 5);
-        }
-    }
-    
-    class ToolButtonRow extends JPanel {
-        ToolButtonRow(JToggleButton button1, JToggleButton button2, JToggleButton button3, JToggleButton button4) {
-            FlowLayout layout = new FlowLayout(FlowLayout.LEFT, 0, 0);
-            this.setLayout(layout);
-            //this.setPreferredSize(new Dimension(64, 32));
-            //this.setMaximumSize(new Dimension(64, 32));
-            //this.add(leftButton);
-            //this.add(rightButton);
-            this.setPreferredSize(new Dimension(64, 64));
-            this.setMaximumSize(new Dimension(64, 64));
-            this.add(button1);
-            this.add(button2);
-            this.add(button3);
-            this.add(button4);
         }
     }
     
