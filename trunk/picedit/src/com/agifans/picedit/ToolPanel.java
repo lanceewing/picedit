@@ -87,30 +87,6 @@ public class ToolPanel extends JToolBar {
         
         JPanel filler = new JPanel();
         this.add(filler);
-
-        // TODO: This looks good: http://www.stupidjavatricks.com/?p=4
-        
-        // NOTE: Creating this custom BasicToolBarUI breaks closing the floating toolbar.
-        // This works with the cross platform look and feel. But closing toolbar makes it disappear.
-        BasicToolBarUI ui = new BasicToolBarUI() {
-            protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
-                try {
-                  UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                } catch (Exception e) {
-                }
-                JDialog.setDefaultLookAndFeelDecorated(true);
-                JDialog dialog = (JDialog)super.createFloatingWindow(toolbar);
-                dialog.setUndecorated(true);
-                dialog.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
-                dialog.getRootPane().putClientProperty("Window.style", "small");
-                try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e) {
-                }
-                return dialog;
-            }
-        };
-        this.setUI(ui);
     }
     
     public JToggleButton createVisualColourButton() {
