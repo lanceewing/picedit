@@ -142,6 +142,12 @@ public final class PicEdit extends JApplet {
      * Run PICEDIT as a standalone Java application.
      */
     public static void main(String[] args) {
+        try {
+          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+          //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+        }
+      
         final PicEdit app = new PicEdit();
         JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame();
