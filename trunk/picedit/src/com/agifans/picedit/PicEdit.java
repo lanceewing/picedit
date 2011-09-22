@@ -143,13 +143,15 @@ public final class PicEdit extends JApplet {
      */
     public static void main(String[] args) {
         try {
+          //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
           UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
           //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {
         }
+        //JDialog.setDefaultLookAndFeelDecorated(true);
+        //JFrame.setDefaultLookAndFeelDecorated(false);
       
         final PicEdit app = new PicEdit();
-        JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame();
         frame.setTitle(PICEDIT_NAME);
         frame.addWindowListener(new WindowAdapter() {
