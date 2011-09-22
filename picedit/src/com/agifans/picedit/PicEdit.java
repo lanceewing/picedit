@@ -63,7 +63,7 @@ public final class PicEdit extends JApplet {
         desktopPane.setDesktopManager(new PicEditDesktopManager(desktopPane.getDesktopManager()));
         desktopPane.add(pictureFrame);
         desktopPane.setFocusable(false);
-        desktopPane.setPreferredSize(new Dimension(770, 440));
+        desktopPane.setPreferredSize(new Dimension(700, 440));
         this.getContentPane().add(desktopPane, BorderLayout.CENTER);
         
         // Tool panel.

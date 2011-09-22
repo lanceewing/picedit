@@ -1,39 +1,28 @@
 package com.agifans.picedit;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.LayoutManager;
-import java.awt.LayoutManager2;
-import java.awt.Point;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.JWindow;
 import javax.swing.RootPaneContainer;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
-import javax.swing.plaf.basic.BasicToolBarUI;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalToolBarUI;
 
 /**
@@ -68,12 +57,20 @@ public class ToolPanel extends JToolBar {
         ToolButton eyeDropperButton = new ToolButton("eyedropper.png", toolGroup, actionListener, ToolType.EYEDROPPER);
         ToolButton eraserButton = new ToolButton("eraser.png", toolGroup, actionListener, ToolType.ERASER);
 
-        this.add(new ToolButtonRow(selectionButton, zoomButton));
-        this.add(new ToolButtonRow(lineButton, shortLineButton));
-        this.add(new ToolButtonRow(stepLineButton, fillButton));
-        this.add(new ToolButtonRow(airbrushButton, brushButton));
-        this.add(new ToolButtonRow(rectangleButton, ellipseButton));
-        this.add(new ToolButtonRow(eyeDropperButton, eraserButton));
+        
+        
+        final ToolButtonRow buttonRow1 = new ToolButtonRow(selectionButton, zoomButton, lineButton, shortLineButton);
+        final ToolButtonRow buttonRow2 = new ToolButtonRow(stepLineButton, fillButton, airbrushButton, brushButton);
+        final ToolButtonRow buttonRow3 = new ToolButtonRow(rectangleButton, ellipseButton, eyeDropperButton, eraserButton);
+        
+        this.add(buttonRow1);
+        this.add(buttonRow2);
+        this.add(buttonRow3);
+        
+//        this.add(new ToolButtonRow(stepLineButton, fillButton));
+//        this.add(new ToolButtonRow(airbrushButton, brushButton));
+//        this.add(new ToolButtonRow(rectangleButton, ellipseButton));
+//        this.add(new ToolButtonRow(eyeDropperButton, eraserButton));
         
         this.addSeparator();
         
@@ -87,6 +84,40 @@ public class ToolPanel extends JToolBar {
         
         JPanel filler = new JPanel();
         this.add(filler);
+        
+        this.setUI(new PicEditToolBarUI());
+        this.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                if ("ancestor".equals(evt.getPropertyName())) {
+                    if (evt.getNewValue() != null) {
+                        Window window = SwingUtilities.windowForComponent((JComponent)evt.getNewValue());
+                        if (window instanceof PicEditToolBarUI.PicEditToolBarUIDialog) {
+                            // Floating.
+                            buttonRow1.setPreferredSize(new Dimension(128, 32));
+                            buttonRow1.setMaximumSize(new Dimension(128, 32));
+                            buttonRow2.setPreferredSize(new Dimension(128, 32));
+                            buttonRow2.setMaximumSize(new Dimension(128, 32));
+                            buttonRow3.setPreferredSize(new Dimension(128, 32));
+                            buttonRow3.setMaximumSize(new Dimension(128, 32));
+                            ToolPanel.this.setOrientation(JToolBar.VERTICAL);
+                        } else {
+                            // Docking.
+                            if (ToolPanel.this.getOrientation() == JToolBar.VERTICAL) {
+                                buttonRow1.setPreferredSize(new Dimension(64, 64));
+                                buttonRow1.setMaximumSize(new Dimension(64, 64));
+                                buttonRow2.setPreferredSize(new Dimension(64, 64));
+                                buttonRow2.setMaximumSize(new Dimension(64, 64));
+                                buttonRow3.setPreferredSize(new Dimension(64, 64));
+                                buttonRow3.setMaximumSize(new Dimension(64, 64));
+                            } else {
+                                buttonRow1.setPreferredSize(new Dimension(128, 32));
+                                buttonRow1.setMaximumSize(new Dimension(128, 32));
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
     
     public JToggleButton createVisualColourButton() {
@@ -118,13 +149,19 @@ public class ToolPanel extends JToolBar {
     }
     
     class ToolButtonRow extends JPanel {
-        ToolButtonRow(JToggleButton leftButton, JToggleButton rightButton) {
+        ToolButtonRow(JToggleButton button1, JToggleButton button2, JToggleButton button3, JToggleButton button4) {
             FlowLayout layout = new FlowLayout(FlowLayout.LEFT, 0, 0);
             this.setLayout(layout);
-            this.setPreferredSize(new Dimension(64, 32));
-            this.setMaximumSize(new Dimension(64, 32));
-            this.add(leftButton);
-            this.add(rightButton);
+            //this.setPreferredSize(new Dimension(64, 32));
+            //this.setMaximumSize(new Dimension(64, 32));
+            //this.add(leftButton);
+            //this.add(rightButton);
+            this.setPreferredSize(new Dimension(64, 64));
+            this.setMaximumSize(new Dimension(64, 64));
+            this.add(button1);
+            this.add(button2);
+            this.add(button3);
+            this.add(button4);
         }
     }
     
@@ -184,6 +221,22 @@ public class ToolPanel extends JToolBar {
             graphics.drawImage(backgroundImage, 0, 0, 32, 32, this);
             graphics.drawImage(foregroundImage, 0, 0, 32, 32, this);
             return image;
+        }
+    }
+    
+    class PicEditToolBarUI extends MetalToolBarUI {
+        protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
+            return new PicEditToolBarUIDialog();
+        }
+        
+        class PicEditToolBarUIDialog extends JDialog {
+            PicEditToolBarUIDialog() {
+                this.getRootPane().putClientProperty("Window.style", "small");
+                this.setResizable(false);
+                this.setAlwaysOnTop(true);
+                WindowListener windowListener = createFrameListener();
+                this.addWindowListener(windowListener);
+            }
         }
     }
     
