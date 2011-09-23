@@ -7,10 +7,14 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -164,11 +168,14 @@ public class ToolPanel extends JToolBar {
                     }
                 }
             });
-            this.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent event) {
+            this.addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent event) {
+                    Point mousePoint = event.getPoint();
+                    Rectangle colourBox = new Rectangle(30, 5, 30, 23);
+                    boolean clickInColourBox = colourBox.contains(mousePoint);
                     switch (colourType) {
                         case VISUAL:
-                            if (application.getEditStatus().isVisualDrawEnabled()) {
+                            if (application.getEditStatus().isVisualDrawEnabled() && !clickInColourBox) {
                                 application.getEditStatus().setVisualColour(EditStatus.VISUAL_OFF);
                             } else {
                                 // TODO: Pop up colour chooser.
@@ -176,7 +183,7 @@ public class ToolPanel extends JToolBar {
                             }
                             break;
                         case PRIORITY:
-                            if (application.getEditStatus().isPriorityDrawEnabled()) {
+                            if (application.getEditStatus().isPriorityDrawEnabled() && !clickInColourBox) {
                                 application.getEditStatus().setPriorityColour(EditStatus.PRIORITY_OFF);
                             } else {
                                 // TODO: Pop up colour chooser.
