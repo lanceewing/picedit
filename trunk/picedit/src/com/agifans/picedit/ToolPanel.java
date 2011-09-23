@@ -12,7 +12,6 @@ import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowListener;
@@ -21,7 +20,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -32,7 +30,6 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.metal.MetalToolBarUI;
 
 /**
@@ -153,8 +150,6 @@ public class ToolPanel extends JToolBar {
             setFocusable(false);
             setFocusPainted(false);
             setMargin(new Insets(0, 0, 0, 0));
-            //this.setText(colourType.getDisplayName());
-            //this.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 9));
             this.setBackground(Color.red);
             this.setModel(new DefaultButtonModel() {
                 public boolean isSelected() {
@@ -180,6 +175,8 @@ public class ToolPanel extends JToolBar {
                             } else {
                                 // TODO: Pop up colour chooser.
                                 application.getEditStatus().setVisualColour(1);
+                                ColourChooserDialog dialog = new ColourChooserDialog();
+                                dialog.setVisible(true);
                             }
                             break;
                         case PRIORITY:
