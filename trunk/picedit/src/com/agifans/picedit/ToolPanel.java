@@ -3,6 +3,7 @@ package com.agifans.picedit;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -81,11 +83,13 @@ public class ToolPanel extends JToolBar {
         colourPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         colourPanel.setPreferredSize(new Dimension(64, 64));
         colourPanel.setMaximumSize(new Dimension(64, 64));
-        ColourButton visualButton = new ColourButton();
+        ColourButton visualButton = new ColourButton("Visual");
         colourPanel.add(visualButton);
-        ColourButton priorityButton = new ColourButton();
+        ColourButton priorityButton = new ColourButton("Priority");
         colourPanel.add(priorityButton);
         this.add(colourPanel);
+        
+        this.addSeparator();
         
         JPanel filler = new JPanel();
         this.add(filler);
@@ -123,53 +127,36 @@ public class ToolPanel extends JToolBar {
         });
     }
     
-    public JToggleButton createVisualColourButton() {
-        BufferedImage image = new BufferedImage(48, 48, BufferedImage.TYPE_INT_ARGB);
-        Graphics graphics = image.getGraphics();
-        graphics.setColor(Color.GRAY);
-        graphics.drawRoundRect(4, 4, 40, 40, 5, 5);
-        ImageIcon icon = new ImageIcon(image);
-        JToggleButton button = new JToggleButton();
-        button.setIcon(icon);
-        button.setBorderPainted(false);
-        button.setPreferredSize(new Dimension(48, 48));
-        return button;
-    }
-    
-    class ColourButton extends JToggleButton {
+    /**
+     * Colour button class used for the visual and priority colour changing buttons.
+     */
+    class ColourButton extends JCheckBox {
         
-        ColourButton() {
+        private String buttonName;
+        
+        ColourButton(String buttonName) {
             super();
-            Image pressedImage = null;
-            Image hoveredImage = null;
-            try {
-                pressedImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/pressed.png"));
-                hoveredImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/hovered.png"));
-            } catch (IOException e) {
-            }
-            BufferedImage stretchedPressedImage = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
-            stretchedPressedImage.getGraphics().drawImage(pressedImage, 0, 0, 64, 32, this);
-            BufferedImage stretchedHoveredImage = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
-            stretchedHoveredImage.getGraphics().drawImage(hoveredImage, 0, 0, 64, 32, this);
-            setIcon(new ImageIcon(stretchedPressedImage));
-            setSelectedIcon(new ImageIcon(stretchedPressedImage));
-            setRolloverIcon(new ImageIcon(stretchedHoveredImage));
-            setRolloverSelectedIcon(getSelectedIcon());
-            setPressedIcon(getSelectedIcon());
+            this.buttonName = buttonName;
             setPreferredSize(new Dimension(64, 32));
             setMaximumSize(new Dimension(64, 32));
-//            setFocusable(false);
-//            setFocusPainted(false);
-//            setBorderPainted(false);
+            setFocusable(false);
+            setFocusPainted(false);
             setMargin(new Insets(0, 0, 0, 0));
+            //this.setText(buttonName);
+            //this.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 9));
             this.setBackground(Color.red);
         }
         
-//        public void paintComponent(Graphics graphics) {
-//            super.paintComponent(graphics);
-//            graphics.setColor(Color.GRAY);
-//            graphics.drawRoundRect(4, 4, 39, 38, 5, 5);
-//        }
+        public void paintComponent(Graphics graphics) {
+            graphics.setColor(Color.ORANGE);
+            graphics.fillRect(2, 2, 60, 28);
+            super.paintComponent(graphics);
+            graphics.setColor(Color.GRAY);
+            graphics.drawRect(2, 2, 60, 28);
+            graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+            //graphics.setColor(Color.BLACK);
+            graphics.drawString("" + buttonName.charAt(0), 35, 22);
+        }
     }
     
     /**
