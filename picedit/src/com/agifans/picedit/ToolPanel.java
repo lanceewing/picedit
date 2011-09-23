@@ -77,13 +77,15 @@ public class ToolPanel extends JToolBar {
         
         this.addSeparator();
         
-//        ColourButton visualButton = new ColourButton();
-//        this.add(visualButton);
-//        ColourButton priorityButton = new ColourButton();
-//        this.add(priorityButton);
-//        ColourButton controlButton = new ColourButton();
-//        controlButton.setEnabled(false);
-//        this.add(controlButton);
+        final JPanel colourPanel = new JPanel();
+        colourPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        colourPanel.setPreferredSize(new Dimension(64, 64));
+        colourPanel.setMaximumSize(new Dimension(64, 64));
+        ColourButton visualButton = new ColourButton();
+        colourPanel.add(visualButton);
+        ColourButton priorityButton = new ColourButton();
+        colourPanel.add(priorityButton);
+        this.add(colourPanel);
         
         JPanel filler = new JPanel();
         this.add(filler);
@@ -98,15 +100,21 @@ public class ToolPanel extends JToolBar {
                             // Floating.
                             buttonContainer.setPreferredSize(new Dimension(128, 96));
                             buttonContainer.setMaximumSize(new Dimension(128, 96));
+                            colourPanel.setPreferredSize(new Dimension(128, 32));
+                            colourPanel.setMaximumSize(new Dimension(128, 32));
                             ToolPanel.this.setOrientation(JToolBar.VERTICAL);
                         } else {
                             // Docking.
                             if (ToolPanel.this.getOrientation() == JToolBar.VERTICAL) {
                                 buttonContainer.setPreferredSize(new Dimension(64, 192));
                                 buttonContainer.setMaximumSize(new Dimension(64, 192));
+                                colourPanel.setPreferredSize(new Dimension(64, 64));
+                                colourPanel.setMaximumSize(new Dimension(64, 64));
                             } else {
                                 buttonContainer.setPreferredSize(new Dimension(384, 32));
                                 buttonContainer.setMaximumSize(new Dimension(384, 32));
+                                colourPanel.setPreferredSize(new Dimension(128, 32));
+                                colourPanel.setMaximumSize(new Dimension(128, 32));
                             }
                         }
                     }
@@ -131,16 +139,37 @@ public class ToolPanel extends JToolBar {
     class ColourButton extends JToggleButton {
         
         ColourButton() {
-            setFocusPainted(false);
-            setPreferredSize(new Dimension(48, 48));
-            this.setMargin(new Insets(0, 0, 0, 0));
+            super();
+            Image pressedImage = null;
+            Image hoveredImage = null;
+            try {
+                pressedImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/pressed.png"));
+                hoveredImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/hovered.png"));
+            } catch (IOException e) {
+            }
+            BufferedImage stretchedPressedImage = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
+            stretchedPressedImage.getGraphics().drawImage(pressedImage, 0, 0, 64, 32, this);
+            BufferedImage stretchedHoveredImage = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
+            stretchedHoveredImage.getGraphics().drawImage(hoveredImage, 0, 0, 64, 32, this);
+            setIcon(new ImageIcon(stretchedPressedImage));
+            setSelectedIcon(new ImageIcon(stretchedPressedImage));
+            setRolloverIcon(new ImageIcon(stretchedHoveredImage));
+            setRolloverSelectedIcon(getSelectedIcon());
+            setPressedIcon(getSelectedIcon());
+            setPreferredSize(new Dimension(64, 32));
+            setMaximumSize(new Dimension(64, 32));
+//            setFocusable(false);
+//            setFocusPainted(false);
+//            setBorderPainted(false);
+            setMargin(new Insets(0, 0, 0, 0));
+            this.setBackground(Color.red);
         }
         
-        public void paintComponent(Graphics graphics) {
-            super.paintComponent(graphics);
-            graphics.setColor(Color.GRAY);
-            graphics.drawRoundRect(4, 4, 39, 38, 5, 5);
-        }
+//        public void paintComponent(Graphics graphics) {
+//            super.paintComponent(graphics);
+//            graphics.setColor(Color.GRAY);
+//            graphics.drawRoundRect(4, 4, 39, 38, 5, 5);
+//        }
     }
     
     /**
