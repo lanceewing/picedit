@@ -175,7 +175,7 @@ public class ToolPanel extends JToolBar {
                             } else {
                                 // TODO: Pop up colour chooser.
                                 application.getEditStatus().setVisualColour(1);
-                                ColourChooserDialog dialog = new ColourChooserDialog();
+                                ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
                                 dialog.setVisible(true);
                             }
                             break;
