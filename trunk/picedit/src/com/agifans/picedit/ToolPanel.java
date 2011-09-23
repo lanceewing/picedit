@@ -10,12 +10,15 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -25,6 +28,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.metal.MetalToolBarUI;
 
 /**
@@ -83,9 +87,9 @@ public class ToolPanel extends JToolBar {
         colourPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         colourPanel.setPreferredSize(new Dimension(64, 64));
         colourPanel.setMaximumSize(new Dimension(64, 64));
-        ColourButton visualButton = new ColourButton("Visual");
+        ColourButton visualButton = new ColourButton(ColourType.VISUAL, application);
         colourPanel.add(visualButton);
-        ColourButton priorityButton = new ColourButton("Priority");
+        ColourButton priorityButton = new ColourButton(ColourType.PRIORITY, application);
         colourPanel.add(priorityButton);
         this.add(colourPanel);
         
@@ -132,30 +136,86 @@ public class ToolPanel extends JToolBar {
      */
     class ColourButton extends JCheckBox {
         
-        private String buttonName;
+        private PicEdit application;
         
-        ColourButton(String buttonName) {
+        private ColourType colourType;
+        
+        ColourButton(final ColourType colourType, final PicEdit application) {
             super();
-            this.buttonName = buttonName;
+            this.colourType = colourType;
+            this.application = application;
             setPreferredSize(new Dimension(64, 32));
             setMaximumSize(new Dimension(64, 32));
             setFocusable(false);
             setFocusPainted(false);
             setMargin(new Insets(0, 0, 0, 0));
-            //this.setText(buttonName);
+            //this.setText(colourType.getDisplayName());
             //this.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 9));
             this.setBackground(Color.red);
+            this.setModel(new DefaultButtonModel() {
+                public boolean isSelected() {
+                    switch (colourType) {
+                        case VISUAL:
+                            return application.getEditStatus().isVisualDrawEnabled();
+                        case PRIORITY:
+                            return application.getEditStatus().isPriorityDrawEnabled();
+                        default:
+                            return false;
+                    }
+                }
+            });
+            this.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent event) {
+                    switch (colourType) {
+                        case VISUAL:
+                            if (application.getEditStatus().isVisualDrawEnabled()) {
+                                application.getEditStatus().setVisualColour(EditStatus.VISUAL_OFF);
+                            } else {
+                                // TODO: Pop up colour chooser.
+                                application.getEditStatus().setVisualColour(1);
+                            }
+                            break;
+                        case PRIORITY:
+                            if (application.getEditStatus().isPriorityDrawEnabled()) {
+                                application.getEditStatus().setPriorityColour(EditStatus.PRIORITY_OFF);
+                            } else {
+                                // TODO: Pop up colour chooser.
+                                application.getEditStatus().setPriorityColour(2);
+                            }
+                            break;
+                    }
+                }
+            });
         }
         
         public void paintComponent(Graphics graphics) {
-            graphics.setColor(Color.ORANGE);
-            graphics.fillRect(2, 2, 60, 28);
+            int colourCode = -1;
+            switch (colourType) {
+                case VISUAL:
+                    if (application.getEditStatus().isVisualDrawEnabled()) {
+                        colourCode = application.getEditStatus().getVisualColour();
+                        graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
+                        graphics.fillRect(30, 5, 30, 23);
+                    }
+                    break;
+                case PRIORITY:
+                    if (application.getEditStatus().isPriorityDrawEnabled()) {
+                        colourCode = application.getEditStatus().getPriorityColour();
+                        graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
+                        graphics.fillRect(30, 5, 30, 23);
+                    }
+                    break;
+            }
             super.paintComponent(graphics);
             graphics.setColor(Color.GRAY);
             graphics.drawRect(2, 2, 60, 28);
             graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-            //graphics.setColor(Color.BLACK);
-            graphics.drawString("" + buttonName.charAt(0), 35, 22);
+            if ((colourCode >= 0) && (colourCode <= 8)) {
+                graphics.setColor(Color.WHITE);
+            } else if ((colourCode >= 9) && (colourCode <= 15)) {
+                graphics.setColor(Color.BLACK);
+            }
+            graphics.drawString("" + colourType.getDisplayName().charAt(0), 38, 23);
         }
     }
     
