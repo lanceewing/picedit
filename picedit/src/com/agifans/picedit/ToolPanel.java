@@ -154,68 +154,25 @@ public class ToolPanel extends JToolBar {
          */
         ColourButton(final ColourType colourType, final PicEdit application) {
             super();
+            
             this.colourType = colourType;
             this.application = application;
-            setPreferredSize(new Dimension(64, 32));
-            setMaximumSize(new Dimension(64, 32));
-            setFocusable(false);
-            setFocusPainted(false);
-            setMargin(new Insets(0, 0, 0, 0));
-            this.setBackground(Color.red);
-            this.setModel(new DefaultButtonModel() {
-                public boolean isSelected() {
-                    switch (colourType) {
-                        case VISUAL:
-                            return application.getEditStatus().isVisualDrawEnabled();
-                        case PRIORITY:
-                            return application.getEditStatus().isPriorityDrawEnabled();
-                        default:
-                            return false;
-                    }
-                }
-            });
-            this.addMouseListener(new MouseAdapter() {
-                public void mousePressed(MouseEvent event) {
-                    Point mousePoint = event.getPoint();
-                    Rectangle colourBox = new Rectangle(30, 5, 30, 23);
-                    boolean clickInColourBox = colourBox.contains(mousePoint);
-                    EditStatus editStatus = application.getEditStatus();
-                    Picture picture = application.getPicture();
-                    
-                    switch (colourType) {
-                        case VISUAL:
-                            if (editStatus.isVisualDrawEnabled() && !clickInColourBox) {
-                                // If click is on the visual button but not in the colour box and visual
-                                // drawing is currently on then turn off visual drawing.
-                                picture.processVisualColourOff();
-                            } else {
-                                // Pop up colour chooser.
-                                ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
-                                dialog.setVisible(true);
-                                
-                                // Process the chosen visual colour.
-                                picture.processVisualColourChange(dialog.getChosenColour());
-                            }
-                            break;
-                        case PRIORITY:
-                            if (editStatus.isPriorityDrawEnabled() && !clickInColourBox) {
-                                // If click is on the priority button but not in the colour box and priority
-                                // drawing is currently on then turn off priority drawing.
-                                picture.processPriorityColourOff();
-                            } else {
-                                // Pop up colour chooser.
-                                ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
-                                dialog.setVisible(true);
-                                
-                                // Process the chosen priority colour.
-                                picture.processPriorityColourChange(dialog.getChosenColour());
-                            }
-                            break;
-                    }
-                }
-            });
+            
+            this.setPreferredSize(new Dimension(64, 32));
+            this.setMaximumSize(new Dimension(64, 32));
+            this.setFocusable(false);
+            this.setFocusPainted(false);
+            this.setMargin(new Insets(0, 0, 0, 0));
+            this.setToolTipText(colourType.getDisplayName());
+            this.setModel(new ColourButtonModel());
+            this.addMouseListener(new ColourButtonMouseListener());
         }
         
+        /**
+         * Paints the ColourButton component.
+         * 
+         * @param graphics The Graphics to use to drawn the ColourButton component.
+         */
         public void paintComponent(Graphics graphics) {
             int colourCode = -1;
             switch (colourType) {
@@ -244,6 +201,79 @@ public class ToolPanel extends JToolBar {
                 graphics.setColor(Color.BLACK);
             }
             graphics.drawString("" + colourType.getDisplayName().charAt(0), 38, 23);
+        }
+        
+        /**
+         * ButtonModel used to determine the ColourButton state.
+         */
+        class ColourButtonModel extends DefaultButtonModel {
+            
+            /**
+             * Determines whether the ColourButton checkbox is checked on not based on the
+             * visual or priority enabled flag in the EditStatus.
+             * 
+             * @return true if the ColourButton is selected; otherwise false.
+             */
+            public boolean isSelected() {
+                switch (colourType) {
+                    case VISUAL:
+                        return application.getEditStatus().isVisualDrawEnabled();
+                    case PRIORITY:
+                        return application.getEditStatus().isPriorityDrawEnabled();
+                    default:
+                        return false;
+                }
+            }
+        }
+        
+        /**
+         * MouseListener that processes clicks on a ColourButton.
+         */
+        class ColourButtonMouseListener extends MouseAdapter {
+            
+            /**
+             * Processes mouse pressed events on the ColourButton.
+             * 
+             * @param event The mouse pressed event to process.
+             */
+            public void mousePressed(MouseEvent event) {
+                Point mousePoint = event.getPoint();
+                Rectangle colourBox = new Rectangle(30, 5, 30, 23);
+                boolean clickInColourBox = colourBox.contains(mousePoint);
+                EditStatus editStatus = application.getEditStatus();
+                Picture picture = application.getPicture();
+                
+                switch (colourType) {
+                    case VISUAL:
+                        if (editStatus.isVisualDrawEnabled() && !clickInColourBox) {
+                            // If click is on the visual button but not in the colour box and visual
+                            // drawing is currently on then turn off visual drawing.
+                            picture.processVisualColourOff();
+                        } else {
+                            // Pop up colour chooser.
+                            ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
+                            dialog.setVisible(true);
+                            
+                            // Process the chosen visual colour.
+                            picture.processVisualColourChange(dialog.getChosenColour());
+                        }
+                        break;
+                    case PRIORITY:
+                        if (editStatus.isPriorityDrawEnabled() && !clickInColourBox) {
+                            // If click is on the priority button but not in the colour box and priority
+                            // drawing is currently on then turn off priority drawing.
+                            picture.processPriorityColourOff();
+                        } else {
+                            // Pop up colour chooser.
+                            ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
+                            dialog.setVisible(true);
+                            
+                            // Process the chosen priority colour.
+                            picture.processPriorityColourChange(dialog.getChosenColour());
+                        }
+                        break;
+                }
+            }
         }
     }
     
