@@ -43,14 +43,13 @@ public class ToolPanel extends JToolBar {
     /**
      * Constructor for ToolPanel.
      * 
-     * @param pictureFrame The PictureFrame that this tool panel is a part of.
      * @param application The PicEdit application.
      */
-    public ToolPanel(PictureFrame pictureFrame, PicEdit application) {
+    public ToolPanel(PicEdit application) {
         super(JToolBar.VERTICAL);
         
         ButtonGroup toolGroup = new ButtonGroup();
-        ToolPanelActionListener actionListener = new ToolPanelActionListener(pictureFrame, application);
+        ToolPanelActionListener actionListener = new ToolPanelActionListener(application);
         ToolButton selectionButton = new ToolButton("selection.png", toolGroup, actionListener, ToolType.SELECTION);
         ToolButton zoomButton = new ToolButton("zoom.png", toolGroup, actionListener, ToolType.ZOOM);
         ToolButton lineButton = new ToolButton("line.png", toolGroup, actionListener, ToolType.LINE);
@@ -137,10 +136,22 @@ public class ToolPanel extends JToolBar {
      */
     class ColourButton extends JCheckBox {
         
+        /**
+         * The PicEdit application.
+         */
         private PicEdit application;
         
+        /**
+         * The type of colour button.
+         */
         private ColourType colourType;
         
+        /**
+         * Constructor for ColourButton.
+         * 
+         * @param colourType The type of colour button.
+         * @param application The PicEdit application.
+         */
         ColourButton(final ColourType colourType, final PicEdit application) {
             super();
             this.colourType = colourType;
@@ -168,23 +179,36 @@ public class ToolPanel extends JToolBar {
                     Point mousePoint = event.getPoint();
                     Rectangle colourBox = new Rectangle(30, 5, 30, 23);
                     boolean clickInColourBox = colourBox.contains(mousePoint);
+                    EditStatus editStatus = application.getEditStatus();
+                    Picture picture = application.getPicture();
+                    
                     switch (colourType) {
                         case VISUAL:
-                            if (application.getEditStatus().isVisualDrawEnabled() && !clickInColourBox) {
-                                application.getEditStatus().setVisualColour(EditStatus.VISUAL_OFF);
+                            if (editStatus.isVisualDrawEnabled() && !clickInColourBox) {
+                                // If click is on the visual button but not in the colour box and visual
+                                // drawing is currently on then turn off visual drawing.
+                                picture.processVisualColourOff();
                             } else {
-                                // TODO: Pop up colour chooser.
-                                application.getEditStatus().setVisualColour(1);
+                                // Pop up colour chooser.
                                 ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
                                 dialog.setVisible(true);
+                                
+                                // Process the chosen visual colour.
+                                picture.processVisualColourChange(dialog.getChosenColour());
                             }
                             break;
                         case PRIORITY:
-                            if (application.getEditStatus().isPriorityDrawEnabled() && !clickInColourBox) {
-                                application.getEditStatus().setPriorityColour(EditStatus.PRIORITY_OFF);
+                            if (editStatus.isPriorityDrawEnabled() && !clickInColourBox) {
+                                // If click is on the priority button but not in the colour box and priority
+                                // drawing is currently on then turn off priority drawing.
+                                picture.processPriorityColourOff();
                             } else {
-                                // TODO: Pop up colour chooser.
-                                application.getEditStatus().setPriorityColour(2);
+                                // Pop up colour chooser.
+                                ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
+                                dialog.setVisible(true);
+                                
+                                // Process the chosen priority colour.
+                                picture.processPriorityColourChange(dialog.getChosenColour());
                             }
                             break;
                     }
@@ -282,6 +306,9 @@ public class ToolPanel extends JToolBar {
         }
     }
     
+    /**
+     * ToolBar UI that customises the behaviour of the floating toolbar dialog.
+     */
     class PicEditToolBarUI extends MetalToolBarUI {
         protected RootPaneContainer createFloatingWindow(JToolBar toolbar) {
             return new PicEditToolBarUIDialog();
@@ -306,11 +333,10 @@ public class ToolPanel extends JToolBar {
         /**
          * Constructor for ToolPanelActionListener.
          * 
-         * @param pictureFrame The PictureFrame that this tool panel is a part of.
          * @param application The PicEdit application.
          */
-        public ToolPanelActionListener(PictureFrame pictureFrame, PicEdit application) {
-            super(pictureFrame.getEditStatus(), pictureFrame.getPicGraphics(), pictureFrame.getPicture(), application);
+        public ToolPanelActionListener(PicEdit application) {
+            super(application.getEditStatus(), application.getPicGraphics(), application.getPicture(), application);
         }
 
         /**

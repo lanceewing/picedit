@@ -10,9 +10,24 @@ import java.awt.event.MouseEvent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+/**
+ * Colour chooser dialog used when selecting visual, priority and control colours.
+ * 
+ * @author Lance Ewing
+ */
 @SuppressWarnings("serial")
 public class ColourChooserDialog extends JDialog {
 
+    /**
+     * Holds the colour that the user clicked on.
+     */
+    private int chosenColour;
+    
+    /**
+     * Constructor for ColourChooserDialog.
+     * 
+     * @param button The button component under which the palette will be drawn.
+     */
     public ColourChooserDialog(Component button) {
         this.setModal(true);
         this.setUndecorated(true);
@@ -39,11 +54,25 @@ public class ColourChooserDialog extends JDialog {
         palettePanel.setLocation(2, 2);
         this.add(palettePanel);
         
-        this.addMouseListener(new ColourChooserMouseHandler());
+        palettePanel.addMouseListener(new ColourChooserMouseHandler());
     }
     
+    /**
+     * Returns the colour that the user clicked on.
+     * 
+     * @return The colour that the user clicked on.
+     */
+    public int getChosenColour() {
+        return chosenColour;
+    }
+    
+    /**
+     * Handler that processes the mouse click event on the colour chooser palette.
+     */
     class ColourChooserMouseHandler extends MouseAdapter {
         public void mousePressed(MouseEvent event) {
+            Point clickPoint = event.getPoint();
+            chosenColour = (((int)(clickPoint.y / 16)) * 4) + (clickPoint.x / 16);
             ColourChooserDialog.this.dispose();
         }
     }

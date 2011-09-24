@@ -77,18 +77,6 @@ public abstract class CommonHandler {
     }
 
     /**
-     * Processes the changing of the visual colour.
-     * 
-     * @param newVisualColour the new visual colour.
-     */
-    protected void processVisualColourChange(int newVisualColour) {
-        editStatus.setVisualColour(newVisualColour);
-        picture.addPictureCode(0xF0);
-        picture.addPictureCode(newVisualColour);
-        picture.updateScreen();
-    }
-
-    /**
      * Processes the selection of a new tool.
      * 
      * @param tool the tool to process the selection of.

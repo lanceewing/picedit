@@ -67,7 +67,7 @@ public final class PicEdit extends JApplet {
         this.getContentPane().add(desktopPane, BorderLayout.CENTER);
         
         // Tool panel.
-        ToolPanel toolPanel = new ToolPanel(pictureFrame, this);
+        ToolPanel toolPanel = new ToolPanel(this);
         this.getContentPane().add(toolPanel, BorderLayout.EAST);
     }
 
@@ -86,7 +86,16 @@ public final class PicEdit extends JApplet {
      * @return The Picture that is currently being edited.
      */
     public Picture getPicture() {
-        return pictureFrame.getPicture();
+        return getPictureFrame().getPicture();
+    }
+    
+    /**
+     * Gets the PicGraphics associated with the currently selected PictureFrame.
+     * 
+     * @return The PicGraphics associated with the currently selected PictureFrame.
+     */
+    public PicGraphics getPicGraphics() {
+        return getPictureFrame().getPicGraphics();
     }
     
     /**
@@ -96,7 +105,7 @@ public final class PicEdit extends JApplet {
      * @return The EditStatus.
      */
     public EditStatus getEditStatus() {
-        return pictureFrame.getEditStatus();
+        return getPictureFrame().getEditStatus();
     }
     
     /**
@@ -114,7 +123,7 @@ public final class PicEdit extends JApplet {
      * @return The panel that holds the picture.
      */
     public PicturePanel getPicturePanel() {
-        return pictureFrame.getPicturePanel();
+        return getPictureFrame().getPicturePanel();
     }
     
     public PictureFrame getPictureFrame() {
@@ -128,7 +137,7 @@ public final class PicEdit extends JApplet {
      * @param zoomFactor the new zoom factor.
      */
     public void resizeScreen(int zoomFactor) {
-        pictureFrame.resizeForZoomFactor(zoomFactor);
+        getPictureFrame().resizeForZoomFactor(zoomFactor);
     }
 
     /**
