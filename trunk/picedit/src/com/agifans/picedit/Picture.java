@@ -192,6 +192,48 @@ public class Picture {
     }
 
     /**
+     * Processes the setting of a new visual colour.
+     * 
+     * @param newVisualColour The new visual colour.
+     */
+    public void processVisualColourChange(int newVisualColour) {
+        editStatus.setVisualColour(newVisualColour);
+        this.addPictureCode(0xF0);
+        this.addPictureCode(newVisualColour);
+        this.updateScreen();
+    }
+    
+    /**
+     * Processes the turning off of the visual colour.
+     */
+    public void processVisualColourOff() {
+        editStatus.setVisualColour(EditStatus.VISUAL_OFF);
+        this.addPictureCode(0xF1);
+        this.updateScreen();
+    }
+    
+    /**
+     * Processes the setting of a new priority colour.
+     * 
+     * @param newPriorityColour The new priority colour.
+     */
+    public void processPriorityColourChange(int newPriorityColour) {
+        editStatus.setPriorityColour(newPriorityColour);
+        this.addPictureCode(0xF2);
+        this.addPictureCode(newPriorityColour);
+        this.updateScreen();
+    }
+    
+    /**
+     * Processes the turning off of the priority colour.
+     */
+    public void processPriorityColourOff() {
+        editStatus.setPriorityColour(EditStatus.PRIORITY_OFF);
+        this.addPictureCode(0xF3);
+        this.updateScreen();
+    }
+    
+    /**
      * Gets the picture code buffer.
      * 
      * @return The picture code buffer.
