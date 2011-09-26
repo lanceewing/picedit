@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 /**
  * The status bar that appears above the picture showing the current mouse position,
@@ -27,6 +28,7 @@ public class StatusBarPanel extends JPanel {
      */
     public StatusBarPanel(EditStatus editStatus) {
         this.editStatus = editStatus;
+        this.setBorder(new BevelBorder(BevelBorder.LOWERED));
     }
     
     /**
@@ -35,6 +37,7 @@ public class StatusBarPanel extends JPanel {
      * @param g the Graphics object to paint on.
      */
     public void paint(Graphics g) {
+        super.paint(g);
         drawStatusBar((Graphics2D)g);
     }
     
