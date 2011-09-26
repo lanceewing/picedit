@@ -90,10 +90,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         KeyboardHandler keyboardHandler = new KeyboardHandler(editStatus, picGraphics, picture, application);
         this.getContentPane().addKeyListener(keyboardHandler);
         
-        StatusBarPanel statusbar = new StatusBarPanel(this.getEditStatus());
-        statusbar.setPreferredSize(new Dimension(320, 20));
-        this.getContentPane().add(statusbar, BorderLayout.NORTH);
-        
         // Add the panel that holds the picture that is being edited.
         pictureScrollPane = new JScrollPane(picturePanel);
         pictureScrollPane.setMinimumSize(new Dimension(10, 10));
