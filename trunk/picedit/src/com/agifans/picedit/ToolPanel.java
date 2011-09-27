@@ -1,6 +1,7 @@
 package com.agifans.picedit;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -375,7 +376,21 @@ public class ToolPanel extends JToolBar {
          * @param event The ActionEvent triggered when the tool bar button was pressed.
          */
         public void actionPerformed(ActionEvent event) {
-            processToolSelect(ToolType.valueOf(event.getActionCommand()));
+            ToolType tool = ToolType.valueOf(event.getActionCommand());
+            switch (tool) {
+                case BRUSH:
+                    // Pop up brush chooser.
+                    BrushChooserDialog brushDialog = new BrushChooserDialog((Component)event.getSource(), false);
+                    brushDialog.setVisible(true);
+                    break;
+                case AIRBRUSH:
+                    // Pop up brush chooser.
+                    BrushChooserDialog airBrushDialog = new BrushChooserDialog((Component)event.getSource(), true);
+                    airBrushDialog.setVisible(true);
+                    break;
+            }
+            
+            processToolSelect(tool);
         }
     }
 }
