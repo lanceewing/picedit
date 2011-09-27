@@ -33,7 +33,7 @@ public class BrushChooserDialog extends JDialog {
     public BrushChooserDialog(Component button, final boolean airBrush) {
         this.setModal(true);
         this.setUndecorated(true);
-        this.setSize(new Dimension(68, 68));
+        this.setSize(new Dimension(148, 148));
         this.setResizable(false);
         Point buttonLocation = button.getLocationOnScreen();
         this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
@@ -44,27 +44,26 @@ public class BrushChooserDialog extends JDialog {
             public void paintComponent(Graphics graphics) {
                 super.paintComponents(graphics);
                 
-                graphics.setColor(Color.BLACK);
-                
                 // Plot the circle shaped brushes first.
                 int penSize = 0;
-                for (int row = 0; row < 64; row = row + 16) {
-                    for (int column=0; column < 32; column = column + 16) {
+                for (int column=0; column < 36; column = column + 18) {
+                    for (int row = 0; row < 72; row = row + 18) {
                         plotBrush(column, row, penSize++, false, airBrush, graphics);
                     }
                 }
                 
                 // Now plot the square shaped brushes.
                 penSize = 0;
-                for (int row = 0; row < 64; row = row + 16) {
-                  for (int column=32; column < 64; column = column + 16) {
-                      plotBrush(column, row, penSize++, true, airBrush, graphics);
-                  }
+                for (int column=36; column < 72; column = column + 18) {
+                    for (int row = 0; row < 72; row = row + 18) {
+                        plotBrush(column, row, penSize++, true, airBrush, graphics);
+                    }
                 }
             }
         };
-        palettePanel.setSize(new Dimension(64, 64));
+        palettePanel.setSize(new Dimension(144, 144));
         palettePanel.setLocation(2, 2);
+        palettePanel.setBackground(Color.LIGHT_GRAY);
         this.add(palettePanel);
         
         palettePanel.addMouseListener(new BrushChooserMouseHandler());
@@ -82,14 +81,15 @@ public class BrushChooserDialog extends JDialog {
      */
     public void plotBrush(int x, int y, int penSize, boolean isSquare, boolean isAirBrush, Graphics graphics) {
         int circlePos = 0;
+        //int bitPos = Picture.splatterStart[(new Random()).nextInt(120)];
         int bitPos = Picture.splatterStart[10];
 
-        for (int y1 = y - penSize; y1 <= y + penSize; y1++) {
-            for (int x1 = x - ((int) Math.ceil((float) penSize / 2)); x1 <= x + ((int) Math.floor((float) penSize / 2)); x1++) {
+        for (int y1 = (y + 8) - penSize; y1 <= (y + 8) + penSize; y1++) {
+            for (int x1 = (x + 8) - penSize; x1 <= (x + 8) + penSize; x1+=2) {
                 if (isSquare) {
                     if (isAirBrush) {
                         if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                            graphics.fillRect(x1<<1, y1<<1, 2, 2);
+                            graphics.fillRect(x1<<1, y1<<1, 4, 2);
                         }
                         bitPos++;
                         if (bitPos == 0xff) {
@@ -97,14 +97,14 @@ public class BrushChooserDialog extends JDialog {
                         }
                     } else {
                         // Not an airbrush implies a solid brush.
-                        graphics.fillRect(x1<<1, y1<<1, 2, 2);
+                        graphics.fillRect(x1<<1, y1<<1, 4, 2);
                     }
                 } else { 
                     // Not a square implies circle.
                     if (((Picture.circles[penSize][circlePos >> 3] >> (7 - (circlePos & 7))) & 1) > 0) {
                         if (isAirBrush) {
                             if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                                graphics.fillRect(x1<<1, y1<<1, 2, 2);
+                                graphics.fillRect(x1<<1, y1<<1, 4, 2);
                             }
                             bitPos++;
                             if (bitPos == 0xff) {
@@ -112,7 +112,7 @@ public class BrushChooserDialog extends JDialog {
                             }
                         } else {
                             // Not an airbrush implies a solid brush.
-                            graphics.fillRect(x1<<1, y1<<1, 2, 2);
+                            graphics.fillRect(x1<<1, y1<<1, 4, 2);
                         }
                     }
                     circlePos++;
