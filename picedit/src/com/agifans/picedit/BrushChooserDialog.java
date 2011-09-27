@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -59,6 +60,8 @@ public class BrushChooserDialog extends JDialog {
                         plotBrush(column, row, penSize++, true, airBrush, graphics);
                     }
                 }
+                
+                // TODO: Show the brush that is currently selected.
             }
         };
         palettePanel.setSize(new Dimension(144, 144));
@@ -66,7 +69,7 @@ public class BrushChooserDialog extends JDialog {
         palettePanel.setBackground(Color.LIGHT_GRAY);
         this.add(palettePanel);
         
-        palettePanel.addMouseListener(new BrushChooserMouseHandler());
+        palettePanel.addMouseListener(new BrushChooserMouseListener());
     }
     
     /**
@@ -133,11 +136,21 @@ public class BrushChooserDialog extends JDialog {
     /**
      * Handler that processes the mouse click event on the brush chooser dialog.
      */
-    class BrushChooserMouseHandler extends MouseAdapter {
+    class BrushChooserMouseListener extends MouseAdapter {
         public void mousePressed(MouseEvent event) {
             Point clickPoint = event.getPoint();
             chosenBrush = (((int)(clickPoint.y / 16)) * 4) + (clickPoint.x / 16);
             BrushChooserDialog.this.dispose();
+        }
+    }
+    
+    /**
+     * Handler that processes mouse movement over the brush chooser dialog.
+     */
+    class BrushChooserMouseMotionListener extends MouseMotionAdapter {
+        public void mouseMoved(MouseEvent event) {
+            // TODO: Highlight the brush that the mouse is currently over.
+            // TODO: Add tooltip over the same brush??
         }
     }
 }
