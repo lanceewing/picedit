@@ -1,5 +1,6 @@
 package com.agifans.picedit;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -43,23 +44,22 @@ public class BrushChooserDialog extends JDialog {
             public void paintComponent(Graphics graphics) {
                 super.paintComponents(graphics);
                 
-                // Pick a random pattern number.
-                int bitPos = Picture.splatterStart[10];
+                graphics.setColor(Color.BLACK);
                 
+                // Plot the circle shaped brushes first.
+                int penSize = 0;
                 for (int row = 0; row < 64; row = row + 16) {
-                    for (int column=0; column < 64; column = column + 16) {
-                        
-                        
-                        
+                    for (int column=0; column < 32; column = column + 16) {
+                        plotBrush(column, row, penSize++, false, airBrush, graphics);
                     }
                 }
                 
-                int colourCode = 0;
+                // Now plot the square shaped brushes.
+                penSize = 0;
                 for (int row = 0; row < 64; row = row + 16) {
-                    for (int column=0; column < 64; column = column + 16) {
-                        graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode++]);
-                        graphics.fillRect(column, row, 16, 16);
-                    }
+                  for (int column=32; column < 64; column = column + 16) {
+                      plotBrush(column, row, penSize++, true, airBrush, graphics);
+                  }
                 }
             }
         };
@@ -70,73 +70,49 @@ public class BrushChooserDialog extends JDialog {
         palettePanel.addMouseListener(new BrushChooserMouseHandler());
     }
     
-    public void plotPattern(int patNum, int x, int y) {
+    /**
+     * Plots a brush for the given parameters.
+     * 
+     * @param x The X position to plot the brush at.
+     * @param y The Y position to plot the brush at.
+     * @param penSize The size of the brush (0-7).
+     * @param isSquare true if the brush is square; false if circle.
+     * @param isAirBrush true if the brush is an airbrush; false if solid brush.
+     * @param graphics The Graphics to use to draw the brush with.
+     */
+    public void plotBrush(int x, int y, int penSize, boolean isSquare, boolean isAirBrush, Graphics graphics) {
         int circlePos = 0;
-        int x1, y1, penSize, bitPos = Picture.splatterStart[10];
-        int patCode = 0;
+        int bitPos = Picture.splatterStart[10];
 
-        penSize = (patCode & 7);
-
-        if (x < ((penSize / 2) + 1)) {
-            x = ((penSize / 2) + 1);
-
-        } else if (x > 160 - ((penSize / 2) + 1)) {
-            x = 160 - ((penSize / 2) + 1);
-        }
-
-        if (y < penSize) {
-            y = penSize;
-
-        } else if (y >= 168 - penSize) {
-            y = 167 - penSize;
-        }
-
-        for (y1 = y - penSize; y1 <= y + penSize; y1++) {
-            for (x1 = x - ((int) Math.ceil((float) penSize / 2)); x1 <= x + ((int) Math.floor((float) penSize / 2)); x1++) {
-                if ((patCode & 0x10) > 0) { /* Square */
-                    if ((patCode & 0x20) > 0) {
+        for (int y1 = y - penSize; y1 <= y + penSize; y1++) {
+            for (int x1 = x - ((int) Math.ceil((float) penSize / 2)); x1 <= x + ((int) Math.floor((float) penSize / 2)); x1++) {
+                if (isSquare) {
+                    if (isAirBrush) {
                         if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                            if (editStatus.isVisualDrawEnabled()) {
-                                visualScreen[(y1 << 7) + (y1 << 5) + x1] = visualRGBCode;
-                            }
-                            if (editStatus.isPriorityDrawEnabled()) {
-                                priorityScreen[(y1 << 7) + (y1 << 5) + x1] = priorityRGBCode;
-                            }
+                            graphics.fillRect(x1, y1, 1, 1);
                         }
                         bitPos++;
                         if (bitPos == 0xff) {
                             bitPos = 0;
                         }
                     } else {
-                        if (editStatus.isVisualDrawEnabled()) {
-                            visualScreen[(y1 << 7) + (y1 << 5) + x1] = visualRGBCode;
-                        }
-                        if (editStatus.isPriorityDrawEnabled()) {
-                            priorityScreen[(y1 << 7) + (y1 << 5) + x1] = priorityRGBCode;
-                        }
+                        // Not an airbrush implies a solid brush.
+                        graphics.fillRect(x1, y1, 1, 1);
                     }
-                } else { /* Circle */
-                    if (((circles[patCode & 7][circlePos >> 3] >> (7 - (circlePos & 7))) & 1) > 0) {
-                        if ((patCode & 0x20) > 0) {
-                            if (((splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                                if (editStatus.isVisualDrawEnabled()) {
-                                    visualScreen[(y1 << 7) + (y1 << 5) + x1] = visualRGBCode;
-                                }
-                                if (editStatus.isPriorityDrawEnabled()) {
-                                    priorityScreen[(y1 << 7) + (y1 << 5) + x1] = priorityRGBCode;
-                                }
+                } else { 
+                    // Not a square implies circle.
+                    if (((Picture.circles[penSize][circlePos >> 3] >> (7 - (circlePos & 7))) & 1) > 0) {
+                        if (isAirBrush) {
+                            if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
+                                graphics.fillRect(x1, y1, 1, 1);
                             }
                             bitPos++;
                             if (bitPos == 0xff) {
                                 bitPos = 0;
                             }
                         } else {
-                            if (editStatus.isVisualDrawEnabled()) {
-                                visualScreen[(y1 << 7) + (y1 << 5) + x1] = visualRGBCode;
-                            }
-                            if (editStatus.isPriorityDrawEnabled()) {
-                                priorityScreen[(y1 << 7) + (y1 << 5) + x1] = priorityRGBCode;
-                            }
+                            // Not an airbrush implies a solid brush.
+                            graphics.fillRect(x1, y1, 1, 1);
                         }
                     }
                     circlePos++;
