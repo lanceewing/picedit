@@ -89,7 +89,7 @@ public class BrushChooserDialog extends JDialog {
                 if (isSquare) {
                     if (isAirBrush) {
                         if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                            graphics.fillRect(x1, y1, 1, 1);
+                            graphics.fillRect(x1<<1, y1<<1, 2, 2);
                         }
                         bitPos++;
                         if (bitPos == 0xff) {
@@ -97,14 +97,14 @@ public class BrushChooserDialog extends JDialog {
                         }
                     } else {
                         // Not an airbrush implies a solid brush.
-                        graphics.fillRect(x1, y1, 1, 1);
+                        graphics.fillRect(x1<<1, y1<<1, 2, 2);
                     }
                 } else { 
                     // Not a square implies circle.
                     if (((Picture.circles[penSize][circlePos >> 3] >> (7 - (circlePos & 7))) & 1) > 0) {
                         if (isAirBrush) {
                             if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                                graphics.fillRect(x1, y1, 1, 1);
+                                graphics.fillRect(x1<<1, y1<<1, 2, 2);
                             }
                             bitPos++;
                             if (bitPos == 0xff) {
@@ -112,7 +112,7 @@ public class BrushChooserDialog extends JDialog {
                             }
                         } else {
                             // Not an airbrush implies a solid brush.
-                            graphics.fillRect(x1, y1, 1, 1);
+                            graphics.fillRect(x1<<1, y1<<1, 2, 2);
                         }
                     }
                     circlePos++;
