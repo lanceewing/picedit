@@ -26,6 +26,11 @@ public class BrushChooserDialog extends JDialog {
     private int chosenBrush;
     
     /**
+     * Holds the current mouse point.
+     */
+    private Point mousePoint;
+    
+    /**
      * Constructor for BrushChooserDialog.
      * 
      * @param button The button component under which the dialog will be drawn.
@@ -44,6 +49,16 @@ public class BrushChooserDialog extends JDialog {
         JPanel palettePanel = new JPanel() {
             public void paintComponent(Graphics graphics) {
                 super.paintComponents(graphics);
+                
+                // TODO: Don't think this is going to work. Replace with either grid or separate buttons.
+                if (mousePoint != null) {
+                    int x = ((int)(mousePoint.x / 36)) * 36;
+                    int y = ((int)(mousePoint.y / 36)) * 36;
+                    System.out.println("x: " + x + ", y:  " + y);
+                    graphics.setColor(Color.GRAY);
+                    graphics.drawRect(x, y, 35, 35);
+                    graphics.setColor(Color.BLACK);
+                }
                 
                 // Plot the circle shaped brushes first.
                 int penSize = 0;
@@ -70,6 +85,7 @@ public class BrushChooserDialog extends JDialog {
         this.add(palettePanel);
         
         palettePanel.addMouseListener(new BrushChooserMouseListener());
+        palettePanel.addMouseMotionListener(new BrushChooserMouseMotionListener());
     }
     
     /**
@@ -149,7 +165,10 @@ public class BrushChooserDialog extends JDialog {
      */
     class BrushChooserMouseMotionListener extends MouseMotionAdapter {
         public void mouseMoved(MouseEvent event) {
-            // TODO: Highlight the brush that the mouse is currently over.
+            mousePoint = event.getPoint();
+            System.out.println("Storing mouse point: " + mousePoint);
+            ((JPanel)event.getSource()).repaint();
+            
             // TODO: Add tooltip over the same brush??
         }
     }
