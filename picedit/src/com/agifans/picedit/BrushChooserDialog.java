@@ -3,14 +3,21 @@ package com.agifans.picedit;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 /**
  * Brush chooser dialog used when selecting brush and airbrush shapes and sizes.
@@ -45,47 +52,7 @@ public class BrushChooserDialog extends JDialog {
         this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
         this.setAlwaysOnTop(true);
         this.setLayout(null);
-        
-        JPanel palettePanel = new JPanel() {
-            public void paintComponent(Graphics graphics) {
-                super.paintComponents(graphics);
-                
-                // TODO: Don't think this is going to work. Replace with either grid or separate buttons.
-                if (mousePoint != null) {
-                    int x = ((int)(mousePoint.x / 36)) * 36;
-                    int y = ((int)(mousePoint.y / 36)) * 36;
-                    System.out.println("x: " + x + ", y:  " + y);
-                    graphics.setColor(Color.GRAY);
-                    graphics.drawRect(x, y, 35, 35);
-                    graphics.setColor(Color.BLACK);
-                }
-                
-                // Plot the circle shaped brushes first.
-                int penSize = 0;
-                for (int column=0; column < 36; column = column + 18) {
-                    for (int row = 0; row < 72; row = row + 18) {
-                        plotBrush(column, row, penSize++, false, airBrush, graphics);
-                    }
-                }
-                
-                // Now plot the square shaped brushes.
-                penSize = 0;
-                for (int column=36; column < 72; column = column + 18) {
-                    for (int row = 0; row < 72; row = row + 18) {
-                        plotBrush(column, row, penSize++, true, airBrush, graphics);
-                    }
-                }
-                
-                // TODO: Show the brush that is currently selected.
-            }
-        };
-        palettePanel.setSize(new Dimension(144, 144));
-        palettePanel.setLocation(2, 2);
-        palettePanel.setBackground(Color.LIGHT_GRAY);
-        this.add(palettePanel);
-        
-        palettePanel.addMouseListener(new BrushChooserMouseListener());
-        palettePanel.addMouseMotionListener(new BrushChooserMouseMotionListener());
+        this.add(new BrushChooserButtonPanel(airBrush));
     }
     
     /**
@@ -147,6 +114,109 @@ public class BrushChooserDialog extends JDialog {
      */
     public int getChosenBrush() {
         return chosenBrush;
+    }
+    
+    /**
+     * Panel for holding the brush buttons.
+     */
+    class BrushChooserButtonPanel extends JPanel {
+
+        /**
+         * Whether the brush is an air brush or not.
+         */
+        private boolean airBrush;
+      
+        /**
+         * Constructor for BrushChooserButtonPanel.
+         */
+        BrushChooserButtonPanel(boolean airBrush) {
+          this.setSize(new Dimension(144, 144));
+          this.setLocation(2, 2);
+          this.setBackground(Color.LIGHT_GRAY);
+          
+          this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+          
+          ButtonGroup brushButtonGroup = new ButtonGroup();
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          this.add(new BrushChooserButton(brushButtonGroup));
+          
+          this.addMouseListener(new BrushChooserMouseListener());
+          this.addMouseMotionListener(new BrushChooserMouseMotionListener());
+        }
+        
+        class BrushChooserButton extends JToggleButton {
+            BrushChooserButton(ButtonGroup buttonGroup) {
+                super();
+                Image pressedImage = null;
+                Image hoveredImage = null;
+                try {
+                    pressedImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/pressed.png"));
+                    hoveredImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/hovered.png"));
+                } catch (IOException e) {
+                }
+                //setIcon(new ImageIcon(iconImage));
+                //setSelectedIcon(new ImageIcon(mergeImages(iconImage, pressedImage)));
+                //setRolloverIcon(new ImageIcon(mergeImages(iconImage, hoveredImage)));
+                //setRolloverSelectedIcon(getSelectedIcon());
+                //setPressedIcon(getSelectedIcon());
+                setPreferredSize(new Dimension(32, 32));
+                setMaximumSize(new Dimension(32, 32));
+                setFocusable(false);
+                setFocusPainted(false);
+                setBorderPainted(false);
+                setMargin(new Insets(0, 0, 0, 0));
+                //setToolTipText();
+                //setActionCommand();
+                //addActionListener(actionListener);
+                buttonGroup.add(this);
+            }
+        }
+        
+//        public void paintComponent(Graphics graphics) {
+//            super.paintComponents(graphics);
+//            
+//            // TODO: Don't think this is going to work. Replace with either grid or separate buttons.
+//            if (mousePoint != null) {
+//                int x = ((int)(mousePoint.x / 36)) * 36;
+//                int y = ((int)(mousePoint.y / 36)) * 36;
+//                System.out.println("x: " + x + ", y:  " + y);
+//                graphics.setColor(Color.GRAY);
+//                graphics.drawRect(x, y, 35, 35);
+//                graphics.setColor(Color.BLACK);
+//            }
+//            
+//            // Plot the circle shaped brushes first.
+//            int penSize = 0;
+//            for (int column=0; column < 36; column = column + 18) {
+//                for (int row = 0; row < 72; row = row + 18) {
+//                    plotBrush(column, row, penSize++, false, airBrush, graphics);
+//                }
+//            }
+//            
+//            // Now plot the square shaped brushes.
+//            penSize = 0;
+//            for (int column=36; column < 72; column = column + 18) {
+//                for (int row = 0; row < 72; row = row + 18) {
+//                    plotBrush(column, row, penSize++, true, airBrush, graphics);
+//                }
+//            }
+//            
+//            // TODO: Show the brush that is currently selected.
+//        }
     }
     
     /**

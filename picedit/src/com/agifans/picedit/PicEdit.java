@@ -19,7 +19,7 @@ public final class PicEdit extends JApplet {
     /**
      * Constant for the name of the current version of PICEDIT.
      */
-    private static final String PICEDIT_NAME = "PICEDIT v1.3M4";
+    private static final String PICEDIT_NAME = "PICEDIT v1.3M5";
     
     /**
      * The most recently active picture window.
