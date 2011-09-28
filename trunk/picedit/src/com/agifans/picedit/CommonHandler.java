@@ -183,7 +183,7 @@ public abstract class CommonHandler {
      */
     protected void showAboutMessage() {
         JOptionPane.showMessageDialog(application, 
-                "<html><h2 style=\"text-align: center\">PICEDIT v1.3M4</h2><br/><p style=\"text-align: center\">by Lance Ewing</p><br/></html>", 
+                "<html><h2 style=\"text-align: center\">PICEDIT v1.3M5</h2><br/><p style=\"text-align: center\">by Lance Ewing</p><br/></html>", 
                 "About PICEDIT", JOptionPane.INFORMATION_MESSAGE);
     }
 
