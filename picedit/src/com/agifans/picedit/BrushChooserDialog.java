@@ -206,6 +206,12 @@ public class BrushChooserDialog extends JDialog {
                 //addActionListener(actionListener);
                 buttonGroup.add(this);
             }
+            
+	        public void paintComponent(Graphics graphics) {
+	        	super.paintComponents(graphics);
+	        	
+	        	plotBrush(0, 0, brushType.getSize(), brushType.getShape().equals(BrushShape.SQUARE), brushType.getTexture().equals(BrushTexture.SPRAY), graphics);
+	        }
         }
         
 //        public void paintComponent(Graphics graphics) {
