@@ -137,30 +137,52 @@ public class BrushChooserDialog extends JDialog {
           this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
           
           ButtonGroup brushButtonGroup = new ButtonGroup();
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
-          this.add(new BrushChooserButton(brushButtonGroup));
+          if (airBrush) {
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SPRAY_0));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SPRAY_4));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SPRAY_0));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SPRAY_4));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SPRAY_1));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SPRAY_5));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SPRAY_1));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SPRAY_5));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SPRAY_2));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SPRAY_6));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SPRAY_2));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SPRAY_6));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SPRAY_3));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SPRAY_7));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SPRAY_3));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SPRAY_7));
+          } else {
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SOLID_0));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SOLID_4));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_0));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_4));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SOLID_1));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SOLID_5));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_1));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_5));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SOLID_2));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SOLID_6));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_2));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_6));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SOLID_3));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.CIRCLE_SOLID_7));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_3));
+              this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_7));
+          }
           
           this.addMouseListener(new BrushChooserMouseListener());
           this.addMouseMotionListener(new BrushChooserMouseMotionListener());
         }
         
         class BrushChooserButton extends JToggleButton {
-            BrushChooserButton(ButtonGroup buttonGroup) {
+            private BrushType brushType;
+          
+            BrushChooserButton(ButtonGroup buttonGroup, BrushType brushType) {
                 super();
+                this.brushType = brushType;
                 Image pressedImage = null;
                 Image hoveredImage = null;
                 try {
