@@ -8,13 +8,17 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -46,7 +50,7 @@ public class BrushChooserDialog extends JDialog {
     public BrushChooserDialog(Component button, final boolean airBrush) {
         this.setModal(true);
         this.setUndecorated(true);
-        this.setSize(new Dimension(148, 148));
+        this.setSize(new Dimension(128, 128));
         this.setResizable(false);
         Point buttonLocation = button.getLocationOnScreen();
         this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
@@ -130,7 +134,7 @@ public class BrushChooserDialog extends JDialog {
          * Constructor for BrushChooserButtonPanel.
          */
         BrushChooserButtonPanel(boolean airBrush) {
-          this.setSize(new Dimension(144, 144));
+          this.setSize(new Dimension(128, 128));
           this.setLocation(2, 2);
           this.setBackground(Color.LIGHT_GRAY);
           
@@ -190,27 +194,42 @@ public class BrushChooserDialog extends JDialog {
                     hoveredImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/hovered.png"));
                 } catch (IOException e) {
                 }
-                //setIcon(new ImageIcon(iconImage));
-                //setSelectedIcon(new ImageIcon(mergeImages(iconImage, pressedImage)));
-                //setRolloverIcon(new ImageIcon(mergeImages(iconImage, hoveredImage)));
-                //setRolloverSelectedIcon(getSelectedIcon());
-                //setPressedIcon(getSelectedIcon());
+                BufferedImage iconImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+	            Graphics graphics = iconImage.getGraphics();
+	            graphics.setColor(Color.BLACK);
+	            plotBrush(0, 0, brushType.getSize(), brushType.getShape().equals(BrushShape.SQUARE), brushType.getTexture().equals(BrushTexture.SPRAY), graphics);
+                setIcon(new ImageIcon(iconImage));
+                setSelectedIcon(new ImageIcon(mergeImages(iconImage, pressedImage)));
+                setRolloverIcon(new ImageIcon(mergeImages(iconImage, hoveredImage)));
+                setRolloverSelectedIcon(getSelectedIcon());
+                setPressedIcon(getSelectedIcon());
                 setPreferredSize(new Dimension(32, 32));
                 setMaximumSize(new Dimension(32, 32));
                 setFocusable(false);
                 setFocusPainted(false);
                 setBorderPainted(false);
                 setMargin(new Insets(0, 0, 0, 0));
-                //setToolTipText();
-                //setActionCommand();
-                //addActionListener(actionListener);
+                setToolTipText(brushType.getDisplayName());
+                setActionCommand(brushType.name());
+                addActionListener(new BrushChooserButtonActionListener());
                 buttonGroup.add(this);
             }
-            
-	        public void paintComponent(Graphics graphics) {
-	        	super.paintComponents(graphics);
-	        	
-	        	plotBrush(0, 0, brushType.getSize(), brushType.getShape().equals(BrushShape.SQUARE), brushType.getTexture().equals(BrushTexture.SPRAY), graphics);
+	        
+	        /**
+	         * Merges the two images together by firstly drawing the backgroundImage
+	         * and then the foregroundImage on top of it.
+	         * 
+	         * @param foregroundImage The image to draw on top of the background image.
+	         * @param backgroundImage The image to draw behind the foreground image.
+	         * 
+	         * @return the merged Image.
+	         */
+	        Image mergeImages(Image foregroundImage, Image backgroundImage) {
+	            BufferedImage image = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+	            Graphics graphics = image.getGraphics();
+	            graphics.drawImage(backgroundImage, 0, 0, 32, 32, this);
+	            graphics.drawImage(foregroundImage, 0, 0, 32, 32, this);
+	            return image;
 	        }
         }
         
@@ -245,6 +264,12 @@ public class BrushChooserDialog extends JDialog {
 //            
 //            // TODO: Show the brush that is currently selected.
 //        }
+    }
+    
+    class BrushChooserButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			BrushChooserDialog.this.dispose();
+		}
     }
     
     /**
