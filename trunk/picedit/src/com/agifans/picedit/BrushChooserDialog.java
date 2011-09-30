@@ -10,9 +10,6 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -34,12 +31,7 @@ public class BrushChooserDialog extends JDialog {
     /**
      * Holds the brush that the user clicked on.
      */
-    private int chosenBrush;
-    
-    /**
-     * Holds the current mouse point.
-     */
-    private Point mousePoint;
+    private BrushType chosenBrush;
     
     /**
      * Constructor for BrushChooserDialog.
@@ -50,7 +42,7 @@ public class BrushChooserDialog extends JDialog {
     public BrushChooserDialog(Component button, final boolean airBrush) {
         this.setModal(true);
         this.setUndecorated(true);
-        this.setSize(new Dimension(128, 128));
+        this.setSize(new Dimension(132, 132));
         this.setResizable(false);
         Point buttonLocation = button.getLocationOnScreen();
         this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
@@ -71,7 +63,6 @@ public class BrushChooserDialog extends JDialog {
      */
     public void plotBrush(int x, int y, int penSize, boolean isSquare, boolean isAirBrush, Graphics graphics) {
         int circlePos = 0;
-        //int bitPos = Picture.splatterStart[(new Random()).nextInt(120)];
         int bitPos = Picture.splatterStart[10];
 
         for (int y1 = (y + 8) - penSize; y1 <= (y + 8) + penSize; y1++) {
@@ -79,7 +70,7 @@ public class BrushChooserDialog extends JDialog {
                 if (isSquare) {
                     if (isAirBrush) {
                         if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                            graphics.fillRect(x1<<1, y1<<1, 4, 2);
+                            graphics.fillRect((x1<<1) - 2, (y1<<1) - 1, 4, 2);
                         }
                         bitPos++;
                         if (bitPos == 0xff) {
@@ -87,14 +78,14 @@ public class BrushChooserDialog extends JDialog {
                         }
                     } else {
                         // Not an airbrush implies a solid brush.
-                        graphics.fillRect(x1<<1, y1<<1, 4, 2);
+                        graphics.fillRect((x1<<1) - 2, (y1<<1) - 1, 4, 2);
                     }
                 } else { 
                     // Not a square implies circle.
                     if (((Picture.circles[penSize][circlePos >> 3] >> (7 - (circlePos & 7))) & 1) > 0) {
                         if (isAirBrush) {
                             if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                                graphics.fillRect(x1<<1, y1<<1, 4, 2);
+                                graphics.fillRect((x1<<1) - 2, (y1<<1) - 1, 4, 2);
                             }
                             bitPos++;
                             if (bitPos == 0xff) {
@@ -102,7 +93,7 @@ public class BrushChooserDialog extends JDialog {
                             }
                         } else {
                             // Not an airbrush implies a solid brush.
-                            graphics.fillRect(x1<<1, y1<<1, 4, 2);
+                            graphics.fillRect((x1<<1) - 2, (y1<<1) - 1, 4, 2);
                         }
                     }
                     circlePos++;
@@ -116,7 +107,7 @@ public class BrushChooserDialog extends JDialog {
      * 
      * @return The brush that the user clicked on.
      */
-    public int getChosenBrush() {
+    public BrushType getChosenBrush() {
         return chosenBrush;
     }
     
@@ -125,11 +116,6 @@ public class BrushChooserDialog extends JDialog {
      */
     class BrushChooserButtonPanel extends JPanel {
 
-        /**
-         * Whether the brush is an air brush or not.
-         */
-        private boolean airBrush;
-      
         /**
          * Constructor for BrushChooserButtonPanel.
          */
@@ -176,11 +162,11 @@ public class BrushChooserDialog extends JDialog {
               this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_3));
               this.add(new BrushChooserButton(brushButtonGroup, BrushType.SQUARE_SOLID_7));
           }
-          
-          this.addMouseListener(new BrushChooserMouseListener());
-          this.addMouseMotionListener(new BrushChooserMouseMotionListener());
         }
         
+        /**
+         * Toggle button used for showing the various brush types for selection.
+         */
         class BrushChooserButton extends JToggleButton {
             private BrushType brushType;
           
@@ -215,6 +201,16 @@ public class BrushChooserDialog extends JDialog {
                 buttonGroup.add(this);
             }
 	        
+            /**
+             * ActionListener for the BrushChooserButtons. Stores the selected brush.
+             */
+            class BrushChooserButtonActionListener implements ActionListener {
+                public void actionPerformed(ActionEvent event) {
+                    chosenBrush = ((BrushChooserButton)event.getSource()).brushType;
+                    BrushChooserDialog.this.dispose();
+                }
+            }
+            
 	        /**
 	         * Merges the two images together by firstly drawing the backgroundImage
 	         * and then the foregroundImage on top of it.
@@ -231,68 +227,6 @@ public class BrushChooserDialog extends JDialog {
 	            graphics.drawImage(foregroundImage, 0, 0, 32, 32, this);
 	            return image;
 	        }
-        }
-        
-//        public void paintComponent(Graphics graphics) {
-//            super.paintComponents(graphics);
-//            
-//            // TODO: Don't think this is going to work. Replace with either grid or separate buttons.
-//            if (mousePoint != null) {
-//                int x = ((int)(mousePoint.x / 36)) * 36;
-//                int y = ((int)(mousePoint.y / 36)) * 36;
-//                System.out.println("x: " + x + ", y:  " + y);
-//                graphics.setColor(Color.GRAY);
-//                graphics.drawRect(x, y, 35, 35);
-//                graphics.setColor(Color.BLACK);
-//            }
-//            
-//            // Plot the circle shaped brushes first.
-//            int penSize = 0;
-//            for (int column=0; column < 36; column = column + 18) {
-//                for (int row = 0; row < 72; row = row + 18) {
-//                    plotBrush(column, row, penSize++, false, airBrush, graphics);
-//                }
-//            }
-//            
-//            // Now plot the square shaped brushes.
-//            penSize = 0;
-//            for (int column=36; column < 72; column = column + 18) {
-//                for (int row = 0; row < 72; row = row + 18) {
-//                    plotBrush(column, row, penSize++, true, airBrush, graphics);
-//                }
-//            }
-//            
-//            // TODO: Show the brush that is currently selected.
-//        }
-    }
-    
-    class BrushChooserButtonActionListener implements ActionListener {
-		public void actionPerformed(ActionEvent arg0) {
-			BrushChooserDialog.this.dispose();
-		}
-    }
-    
-    /**
-     * Handler that processes the mouse click event on the brush chooser dialog.
-     */
-    class BrushChooserMouseListener extends MouseAdapter {
-        public void mousePressed(MouseEvent event) {
-            Point clickPoint = event.getPoint();
-            chosenBrush = (((int)(clickPoint.y / 16)) * 4) + (clickPoint.x / 16);
-            BrushChooserDialog.this.dispose();
-        }
-    }
-    
-    /**
-     * Handler that processes mouse movement over the brush chooser dialog.
-     */
-    class BrushChooserMouseMotionListener extends MouseMotionAdapter {
-        public void mouseMoved(MouseEvent event) {
-            mousePoint = event.getPoint();
-            System.out.println("Storing mouse point: " + mousePoint);
-            ((JPanel)event.getSource()).repaint();
-            
-            // TODO: Add tooltip over the same brush??
         }
     }
 }
