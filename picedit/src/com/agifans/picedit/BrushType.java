@@ -121,14 +121,14 @@ public enum BrushType {
     public String getDisplayName() {
         StringBuilder displayName = new StringBuilder();
         if (shape.equals(BrushShape.SQUARE)) {
-          displayName.append("Square ");
+            displayName.append("Square ");
         } else {
-          displayName.append("Circle ");
+            displayName.append("Circle ");
         }
-        if (shape.equals(BrushTexture.SPRAY)) {
-          displayName.append("Aibrush ");
+        if (texture.equals(BrushTexture.SPRAY)) {
+            displayName.append("Aibrush ");
         } else {
-          displayName.append("Brush ");
+            displayName.append("Brush ");
         }
         displayName.append(size);
         return displayName.toString();
