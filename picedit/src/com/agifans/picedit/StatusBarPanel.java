@@ -1,5 +1,8 @@
 package com.agifans.picedit;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -33,41 +36,65 @@ public class StatusBarPanel extends JPanel {
         this.editStatus = editStatus;
         //this.setBorder(new BevelBorder(BevelBorder.LOWERED));
         
-        this.setLayout(new GridBagLayout());
-        
-        // TODO: Zoom factor?
-        
-        JPanel toolNamePanel = new JPanel();
-        toolNamePanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        toolNamePanel.add(new JLabel("Tool"));
-        
-        JPanel xPanel = new JPanel();
-        xPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        xPanel.add(new JLabel("X=100"));
-        
-        JPanel yPanel = new JPanel();
-        yPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        yPanel.add(new JLabel("Y=25"));
-        
-        JPanel priBandPanel = new JPanel();
-        priBandPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        priBandPanel.add(new JLabel("Priority:13"));
-        
-        JPanel positionPanel = new JPanel();
-        positionPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        positionPanel.add(new JLabel("1200"));
+        this.setLayout(new BorderLayout());
         
         JPanel fillerPanel = new JPanel();
         fillerPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        GridBagConstraints fillerConstraints = new GridBagConstraints();
-        fillerConstraints.weightx = 1.0;
+        this.add(fillerPanel, BorderLayout.CENTER);
         
-        this.add(fillerPanel);
-        this.add(toolNamePanel);
-        this.add(positionPanel);
-        this.add(xPanel);
-        this.add(yPanel);
-        this.add(priBandPanel);
+        // TODO: Zoom factor?
+        
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        
+        JPanel toolNamePanel = new JPanel();
+        toolNamePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        toolNamePanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        toolNamePanel.add(new JLabel("Tool"));
+        toolNamePanel.setPreferredSize(new Dimension(200, 25));
+        toolNamePanel.setMaximumSize(new Dimension(200, 25));
+        
+        JPanel xPanel = new JPanel();
+        xPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        xPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        xPanel.add(new JLabel("X: 100"));
+        xPanel.setPreferredSize(new Dimension(60, 25));
+        xPanel.setMaximumSize(new Dimension(60, 25));
+        
+        JPanel yPanel = new JPanel();
+        yPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        yPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        yPanel.add(new JLabel("Y: 25"));
+        yPanel.setPreferredSize(new Dimension(60, 25));
+        yPanel.setMaximumSize(new Dimension(60, 25));
+        
+        JPanel priBandPanel = new JPanel();
+        priBandPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        priBandPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        priBandPanel.add(new JLabel("Priority: 13"));
+        priBandPanel.setPreferredSize(new Dimension(150, 25));
+        priBandPanel.setMaximumSize(new Dimension(150, 25));
+        
+        JPanel positionPanel = new JPanel();
+        positionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        positionPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        positionPanel.add(new JLabel("Position: 1200/2500"));
+        positionPanel.setPreferredSize(new Dimension(150, 25));
+        positionPanel.setMaximumSize(new Dimension(150, 25));
+        
+        JPanel gapPanel = new JPanel();
+        gapPanel.setPreferredSize(new Dimension(100, 25));
+        gapPanel.setMaximumSize(new Dimension(100, 25));
+        gapPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        
+        mainPanel.add(toolNamePanel);
+        mainPanel.add(positionPanel);
+        mainPanel.add(xPanel);
+        mainPanel.add(yPanel);
+        mainPanel.add(priBandPanel);
+        mainPanel.add(gapPanel);
+        
+        this.add(mainPanel, BorderLayout.EAST);
     }
     
 //    /**
