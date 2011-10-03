@@ -54,7 +54,7 @@ public final class PicEdit extends JApplet {
         
         // Add the status bar above the picture.
         StatusBarPanel statusbar = new StatusBarPanel(pictureFrame.getEditStatus());
-        statusbar.setPreferredSize(new Dimension(320, 20));
+        statusbar.setPreferredSize(new Dimension(320, 30));
         this.getContentPane().add(statusbar, BorderLayout.SOUTH);
         
         // Add the desktop pane that holds the picture that is being edited.

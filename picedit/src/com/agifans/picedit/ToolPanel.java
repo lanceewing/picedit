@@ -382,11 +382,13 @@ public class ToolPanel extends JToolBar {
                     // Pop up brush chooser.
                     BrushChooserDialog brushDialog = new BrushChooserDialog((Component)event.getSource(), false);
                     brushDialog.setVisible(true);
+                    application.getEditStatus().setBrushCode(brushDialog.getChosenBrush().getBrushCode());
                     break;
                 case AIRBRUSH:
                     // Pop up brush chooser.
                     BrushChooserDialog airBrushDialog = new BrushChooserDialog((Component)event.getSource(), true);
                     airBrushDialog.setVisible(true);
+                    application.getEditStatus().setBrushCode(airBrushDialog.getChosenBrush().getBrushCode());
                     break;
             }
             
