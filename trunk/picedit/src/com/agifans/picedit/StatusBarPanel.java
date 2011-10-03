@@ -2,7 +2,10 @@ package com.agifans.picedit;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
@@ -28,18 +31,54 @@ public class StatusBarPanel extends JPanel {
      */
     public StatusBarPanel(EditStatus editStatus) {
         this.editStatus = editStatus;
-        this.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        //this.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        
+        this.setLayout(new GridBagLayout());
+        
+        // TODO: Zoom factor?
+        
+        JPanel toolNamePanel = new JPanel();
+        toolNamePanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        toolNamePanel.add(new JLabel("Tool"));
+        
+        JPanel xPanel = new JPanel();
+        xPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        xPanel.add(new JLabel("X=100"));
+        
+        JPanel yPanel = new JPanel();
+        yPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        yPanel.add(new JLabel("Y=25"));
+        
+        JPanel priBandPanel = new JPanel();
+        priBandPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        priBandPanel.add(new JLabel("Priority:13"));
+        
+        JPanel positionPanel = new JPanel();
+        positionPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        positionPanel.add(new JLabel("1200"));
+        
+        JPanel fillerPanel = new JPanel();
+        fillerPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        GridBagConstraints fillerConstraints = new GridBagConstraints();
+        fillerConstraints.weightx = 1.0;
+        
+        this.add(fillerPanel);
+        this.add(toolNamePanel);
+        this.add(positionPanel);
+        this.add(xPanel);
+        this.add(yPanel);
+        this.add(priBandPanel);
     }
     
-    /**
-     * Paints the status bar.
-     * 
-     * @param g the Graphics object to paint on.
-     */
-    public void paint(Graphics g) {
-        super.paint(g);
-        drawStatusBar((Graphics2D)g);
-    }
+//    /**
+//     * Paints the status bar.
+//     * 
+//     * @param g the Graphics object to paint on.
+//     */
+//    public void paint(Graphics g) {
+//        super.paint(g);
+//        drawStatusBar((Graphics2D)g);
+//    }
     
     /**
      * Override the default update behaviour to stop the screen from being
