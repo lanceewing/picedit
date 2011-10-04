@@ -1,5 +1,6 @@
 package com.agifans.picedit;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -47,8 +48,7 @@ public class BrushChooserDialog extends JDialog {
         Point buttonLocation = button.getLocationOnScreen();
         this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
         this.setAlwaysOnTop(true);
-        this.setLayout(null);
-        this.add(new BrushChooserButtonPanel(airBrush));
+        this.add(new BrushChooserButtonPanel(airBrush), BorderLayout.CENTER);
     }
     
     /**
@@ -120,8 +120,8 @@ public class BrushChooserDialog extends JDialog {
          * Constructor for BrushChooserButtonPanel.
          */
         BrushChooserButtonPanel(boolean airBrush) {
-          this.setSize(new Dimension(128, 128));
-          this.setLocation(2, 2);
+          this.setSize(new Dimension(136, 136));
+          this.setMaximumSize(new Dimension(136, 136));
           this.setBackground(Color.LIGHT_GRAY);
           
           this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -180,7 +180,7 @@ public class BrushChooserDialog extends JDialog {
                     hoveredImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/hovered.png"));
                 } catch (IOException e) {
                 }
-                BufferedImage iconImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+                BufferedImage iconImage = new BufferedImage(34, 34, BufferedImage.TYPE_INT_ARGB);
 	            Graphics graphics = iconImage.getGraphics();
 	            graphics.setColor(Color.BLACK);
 	            plotBrush(0, 0, brushType.getSize(), brushType.getShape().equals(BrushShape.SQUARE), brushType.getTexture().equals(BrushTexture.SPRAY), graphics);
@@ -189,8 +189,8 @@ public class BrushChooserDialog extends JDialog {
                 setRolloverIcon(new ImageIcon(mergeImages(iconImage, hoveredImage)));
                 setRolloverSelectedIcon(getSelectedIcon());
                 setPressedIcon(getSelectedIcon());
-                setPreferredSize(new Dimension(32, 32));
-                setMaximumSize(new Dimension(32, 32));
+                setPreferredSize(new Dimension(34, 34));
+                setMaximumSize(new Dimension(34, 34));
                 setFocusable(false);
                 setFocusPainted(false);
                 setBorderPainted(false);
@@ -221,10 +221,10 @@ public class BrushChooserDialog extends JDialog {
 	         * @return the merged Image.
 	         */
 	        Image mergeImages(Image foregroundImage, Image backgroundImage) {
-	            BufferedImage image = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+	            BufferedImage image = new BufferedImage(34, 34, BufferedImage.TYPE_INT_ARGB);
 	            Graphics graphics = image.getGraphics();
-	            graphics.drawImage(backgroundImage, 0, 0, 32, 32, this);
-	            graphics.drawImage(foregroundImage, 0, 0, 32, 32, this);
+	            graphics.drawImage(backgroundImage, 0, 0, 34, 34, this);
+	            graphics.drawImage(foregroundImage, 0, 0, 34, 34, this);
 	            return image;
 	        }
         }
