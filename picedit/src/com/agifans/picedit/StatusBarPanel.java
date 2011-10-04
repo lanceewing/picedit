@@ -34,7 +34,6 @@ public class StatusBarPanel extends JPanel {
      */
     public StatusBarPanel(EditStatus editStatus) {
         this.editStatus = editStatus;
-        //this.setBorder(new BevelBorder(BevelBorder.LOWERED));
         
         this.setLayout(new BorderLayout());
         
@@ -58,29 +57,29 @@ public class StatusBarPanel extends JPanel {
         xPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         xPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         xPanel.add(new JLabel("X: 100"));
-        xPanel.setPreferredSize(new Dimension(60, 25));
-        xPanel.setMaximumSize(new Dimension(60, 25));
+        xPanel.setPreferredSize(new Dimension(75, 25));
+        xPanel.setMaximumSize(new Dimension(75, 25));
         
         JPanel yPanel = new JPanel();
         yPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         yPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         yPanel.add(new JLabel("Y: 25"));
-        yPanel.setPreferredSize(new Dimension(60, 25));
-        yPanel.setMaximumSize(new Dimension(60, 25));
+        yPanel.setPreferredSize(new Dimension(75, 25));
+        yPanel.setMaximumSize(new Dimension(75, 25));
         
         JPanel priBandPanel = new JPanel();
         priBandPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         priBandPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         priBandPanel.add(new JLabel("Priority: 13"));
-        priBandPanel.setPreferredSize(new Dimension(150, 25));
-        priBandPanel.setMaximumSize(new Dimension(150, 25));
+        priBandPanel.setPreferredSize(new Dimension(200, 25));
+        priBandPanel.setMaximumSize(new Dimension(200, 25));
         
         JPanel positionPanel = new JPanel();
         positionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         positionPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         positionPanel.add(new JLabel("Position: 1200/2500"));
-        positionPanel.setPreferredSize(new Dimension(150, 25));
-        positionPanel.setMaximumSize(new Dimension(150, 25));
+        positionPanel.setPreferredSize(new Dimension(200, 25));
+        positionPanel.setMaximumSize(new Dimension(200, 25));
         
         JPanel gapPanel = new JPanel();
         gapPanel.setPreferredSize(new Dimension(100, 25));
@@ -92,9 +91,9 @@ public class StatusBarPanel extends JPanel {
         mainPanel.add(xPanel);
         mainPanel.add(yPanel);
         mainPanel.add(priBandPanel);
-        mainPanel.add(gapPanel);
+        //mainPanel.add(gapPanel);
         
-        this.add(mainPanel, BorderLayout.EAST);
+        this.add(mainPanel, BorderLayout.WEST);
     }
     
 //    /**
@@ -129,49 +128,49 @@ public class StatusBarPanel extends JPanel {
         int controlOffColour = (editStatus.getPictureType().equals(PictureType.AGI) ? 7 : 0);
 
         // Draw tool section.
-        String toolStr = String.format("Tool: %-5s  ", editStatus.getTool().toString());
+        String toolStr = String.format("%s  ", editStatus.getTool().toString());
         graphics.setColor(EgaPalette.BLACK);
         graphics.setBackground(EgaPalette.WHITE);
         graphics.drawString(toolStr, 5, 15);
         editStatus.setLastRenderedTool(editStatus.getTool());
 
-        // Draw visual colour section.
-        int visualColour = (editStatus.getVisualColour() == EditStatus.TRANSPARENT ? 15 : editStatus.getVisualColour());
-        graphics.drawString("V", 85, 15);
-        if (visualColour == EditStatus.VISUAL_OFF) {
-            graphics.setColor(EgaPalette.BLACK);
-            graphics.drawOval(100, 5, 9, 9);
-        } else {
-            graphics.setColor(EgaPalette.COLOR_OBJECTS[visualColour]);
-            graphics.fillRect(96, 4, 18, 12);
-        }
-        graphics.setColor(EgaPalette.BLACK);
-        editStatus.setLastRenderedVisualColour(visualColour);
-
-        // Draw priority colour section.
-        int priorityColour = (editStatus.getPriorityColour() == EditStatus.TRANSPARENT ? 4 : editStatus.getPriorityColour());
-        graphics.drawString("P", 118, 15);
-        if (priorityColour == EditStatus.PRIORITY_OFF) {
-            graphics.setColor(EgaPalette.BLACK);
-            graphics.drawOval(133, 5, 9, 9);
-        } else {
-            graphics.setColor(EgaPalette.COLOR_OBJECTS[priorityColour]);
-            graphics.fillRect(128, 4, 18, 12);
-        }
-        graphics.setColor(EgaPalette.COLOR_OBJECTS[controlOffColour]);
-        editStatus.setLastRenderedPriorityColour(priorityColour);
-
-        // Draw control colour section.
-        int controlColour = (editStatus.getControlColour() == EditStatus.TRANSPARENT ? 4 : editStatus.getControlColour());
-        graphics.drawString("C", 151, 15);
-        if (controlColour == EditStatus.CONTROL_OFF) {
-            graphics.setColor(EgaPalette.COLOR_OBJECTS[controlOffColour]);
-            graphics.drawOval(166, 5, 9, 9);
-        } else {
-            graphics.setColor(EgaPalette.COLOR_OBJECTS[controlColour]);
-            graphics.fillRect(162, 4, 18, 12);
-        }
-        editStatus.setLastRenderedControlColour(controlColour);
+//        // Draw visual colour section.
+//        int visualColour = (editStatus.getVisualColour() == EditStatus.TRANSPARENT ? 15 : editStatus.getVisualColour());
+//        graphics.drawString("V", 85, 15);
+//        if (visualColour == EditStatus.VISUAL_OFF) {
+//            graphics.setColor(EgaPalette.BLACK);
+//            graphics.drawOval(100, 5, 9, 9);
+//        } else {
+//            graphics.setColor(EgaPalette.COLOR_OBJECTS[visualColour]);
+//            graphics.fillRect(96, 4, 18, 12);
+//        }
+//        graphics.setColor(EgaPalette.BLACK);
+//        editStatus.setLastRenderedVisualColour(visualColour);
+//
+//        // Draw priority colour section.
+//        int priorityColour = (editStatus.getPriorityColour() == EditStatus.TRANSPARENT ? 4 : editStatus.getPriorityColour());
+//        graphics.drawString("P", 118, 15);
+//        if (priorityColour == EditStatus.PRIORITY_OFF) {
+//            graphics.setColor(EgaPalette.BLACK);
+//            graphics.drawOval(133, 5, 9, 9);
+//        } else {
+//            graphics.setColor(EgaPalette.COLOR_OBJECTS[priorityColour]);
+//            graphics.fillRect(128, 4, 18, 12);
+//        }
+//        graphics.setColor(EgaPalette.COLOR_OBJECTS[controlOffColour]);
+//        editStatus.setLastRenderedPriorityColour(priorityColour);
+//
+//        // Draw control colour section.
+//        int controlColour = (editStatus.getControlColour() == EditStatus.TRANSPARENT ? 4 : editStatus.getControlColour());
+//        graphics.drawString("C", 151, 15);
+//        if (controlColour == EditStatus.CONTROL_OFF) {
+//            graphics.setColor(EgaPalette.COLOR_OBJECTS[controlOffColour]);
+//            graphics.drawOval(166, 5, 9, 9);
+//        } else {
+//            graphics.setColor(EgaPalette.COLOR_OBJECTS[controlColour]);
+//            graphics.fillRect(162, 4, 18, 12);
+//        }
+//        editStatus.setLastRenderedControlColour(controlColour);
 
         // Draw X/Y position and priority band section.
         String xStr = String.format("X=%-3d", x);
