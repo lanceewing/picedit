@@ -23,17 +23,17 @@ public class StatusBarPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Holds the current "editing" state of everything within PICEDIT.
+     * The PicEdit application. Provides access to active EditStatus.
      */
-    private EditStatus editStatus;
+    private PicEdit application;
     
     /**
      * Constructor for StatusBarPanel.
      * 
      * @param editStatus The EditStatus holding current picture editor state.
      */
-    public StatusBarPanel(EditStatus editStatus) {
-        this.editStatus = editStatus;
+    public StatusBarPanel(final PicEdit application) {
+        this.application = application;
         
         this.setLayout(new BorderLayout());
         
@@ -46,40 +46,46 @@ public class StatusBarPanel extends JPanel {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         
-        JPanel toolNamePanel = new JPanel();
-        toolNamePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        toolNamePanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        toolNamePanel.add(new JLabel("Tool"));
-        toolNamePanel.setPreferredSize(new Dimension(200, 25));
-        toolNamePanel.setMaximumSize(new Dimension(200, 25));
+        StatusBarSection toolNamePanel = new StatusBarSection(200) {
+            void drawSectionDetail(Graphics2D graphics) {
+                graphics.setColor(EgaPalette.BLACK);
+                graphics.drawString(String.format("%s", application.getEditStatus().getTool().toString()), 8, 15);
+            }
+        };
         
-        JPanel xPanel = new JPanel();
-        xPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        xPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        xPanel.add(new JLabel("X: 100"));
-        xPanel.setPreferredSize(new Dimension(75, 25));
-        xPanel.setMaximumSize(new Dimension(75, 25));
+        StatusBarSection xPanel = new StatusBarSection(75) {
+            void drawSectionDetail(Graphics2D graphics) {
+                graphics.setColor(EgaPalette.BLACK);
+                graphics.drawString(String.format("X: %-3d", application.getEditStatus().getMouseX()), 8, 15);
+            }
+        };
         
-        JPanel yPanel = new JPanel();
-        yPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        yPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        yPanel.add(new JLabel("Y: 25"));
-        yPanel.setPreferredSize(new Dimension(75, 25));
-        yPanel.setMaximumSize(new Dimension(75, 25));
+        StatusBarSection yPanel = new StatusBarSection(75) {
+            void drawSectionDetail(Graphics2D graphics) {
+                graphics.setColor(EgaPalette.BLACK);
+                graphics.drawString(String.format("Y: %-3d", application.getEditStatus().getMouseY()), 8, 15);
+            }
+        };
         
-        JPanel priBandPanel = new JPanel();
-        priBandPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        priBandPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        priBandPanel.add(new JLabel("Priority: 13"));
-        priBandPanel.setPreferredSize(new Dimension(200, 25));
-        priBandPanel.setMaximumSize(new Dimension(200, 25));
+        StatusBarSection priBandPanel = new StatusBarSection(200) {
+            void drawSectionDetail(Graphics2D graphics) {
+                EditStatus editStatus = application.getEditStatus();
+                int priorityBand = editStatus.getPriorityBand();
+                graphics.drawString("Priority: " + priorityBand, 8, 15);
+                graphics.setColor(EgaPalette.COLOR_OBJECTS[priorityBand]);
+                graphics.fillRect(70, 4, 18, 12);
+            }
+        };
         
-        JPanel positionPanel = new JPanel();
-        positionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        positionPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        positionPanel.add(new JLabel("Position: 1200/2500"));
-        positionPanel.setPreferredSize(new Dimension(200, 25));
-        positionPanel.setMaximumSize(new Dimension(200, 25));
+        StatusBarSection positionPanel = new StatusBarSection(200) {
+            void drawSectionDetail(Graphics2D graphics) {
+                Picture picture = application.getPicture();
+                int picturePosition = picture.getPicturePosition();
+                int pictureSize = picture.getPictureCodes().size() - 1;
+                String posStr = String.format("Position: %d/%d", picturePosition, pictureSize);
+                graphics.drawString(posStr, 8, 15);
+            }
+        };
         
         JPanel gapPanel = new JPanel();
         gapPanel.setPreferredSize(new Dimension(100, 25));
@@ -94,6 +100,38 @@ public class StatusBarPanel extends JPanel {
         //mainPanel.add(gapPanel);
         
         this.add(mainPanel, BorderLayout.WEST);
+    }
+    
+    @SuppressWarnings("serial")
+    abstract class StatusBarSection extends JPanel {
+      
+        StatusBarSection(int width) {
+          this.setBorder(new BevelBorder(BevelBorder.LOWERED));
+          this.setPreferredSize(new Dimension(width, 20));
+          this.setMaximumSize(new Dimension(width, 20));
+        }
+      
+        /**
+         * Paints the status section.
+         * 
+         * @param g the Graphics object to paint on.
+         */
+        public void paint(Graphics g) {
+            super.paint(g);
+            drawSectionDetail((Graphics2D)g);
+        }
+   
+        /**
+         * Override the default update behaviour to stop the screen from being
+         * cleared each time.
+         * 
+         * @param g the Graphics object to update.
+         */
+        public void update(Graphics g) {
+            paint(g);
+        }
+      
+        abstract void drawSectionDetail(Graphics2D graphics);
     }
     
 //    /**
@@ -122,6 +160,7 @@ public class StatusBarPanel extends JPanel {
      * @param graphics The Graphics2D to draw on.
      */
     public void drawStatusBar(Graphics2D graphics) {
+        EditStatus editStatus = application.getEditStatus();
         int x = editStatus.getMouseX();
         int y = editStatus.getMouseY();
         int priorityBand = editStatus.getPriorityBand();
