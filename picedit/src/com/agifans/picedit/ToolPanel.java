@@ -52,7 +52,9 @@ public class ToolPanel extends JToolBar {
         ButtonGroup toolGroup = new ButtonGroup();
         ToolPanelActionListener actionListener = new ToolPanelActionListener(application);
         ToolButton selectionButton = new ToolButton("selection.png", toolGroup, actionListener, ToolType.SELECTION);
+        selectionButton.setEnabled(false);
         ToolButton zoomButton = new ToolButton("zoom.png", toolGroup, actionListener, ToolType.ZOOM);
+        zoomButton.setEnabled(false);
         ToolButton lineButton = new ToolButton("line.png", toolGroup, actionListener, ToolType.LINE);
         ToolButton shortLineButton = new ToolButton("shortline.png", toolGroup, actionListener, ToolType.SHORTLINE);
         ToolButton stepLineButton = new ToolButton("stepline.png", toolGroup, actionListener, ToolType.STEPLINE);
@@ -60,9 +62,13 @@ public class ToolPanel extends JToolBar {
         ToolButton airbrushButton = new ToolButton("airbrush.png", toolGroup, actionListener, ToolType.AIRBRUSH);
         ToolButton brushButton = new ToolButton("brush.png", toolGroup, actionListener, ToolType.BRUSH);
         ToolButton rectangleButton = new ToolButton("rectangle.png", toolGroup, actionListener, ToolType.RECTANGLE);
+        rectangleButton.setEnabled(false);
         ToolButton ellipseButton = new ToolButton("ellipse.png", toolGroup, actionListener, ToolType.ELLIPSE);
+        ellipseButton.setEnabled(false);
         ToolButton eyeDropperButton = new ToolButton("eyedropper.png", toolGroup, actionListener, ToolType.EYEDROPPER);
+        eyeDropperButton.setEnabled(false);
         ToolButton eraserButton = new ToolButton("eraser.png", toolGroup, actionListener, ToolType.ERASER);
+        eraserButton.setEnabled(false);
 
         final JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
