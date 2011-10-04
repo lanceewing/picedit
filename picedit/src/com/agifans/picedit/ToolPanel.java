@@ -13,7 +13,6 @@ import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowListener;
@@ -21,8 +20,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -33,7 +30,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeListener;
+import javax.swing.plaf.metal.MetalCheckBoxUI;
 import javax.swing.plaf.metal.MetalToolBarUI;
 
 /**
@@ -175,6 +172,7 @@ public class ToolPanel extends JToolBar {
             this.setToolTipText(colourType.getDisplayName());
             this.setModel(new ColourButtonModel());
             this.addMouseListener(new ColourButtonMouseListener());
+            this.setUI(new MetalCheckBoxUI());
         }
         
         /**
@@ -183,6 +181,7 @@ public class ToolPanel extends JToolBar {
          * @param graphics The Graphics to use to drawn the ColourButton component.
          */
         public void paintComponent(Graphics graphics) {
+        	super.paintComponent(graphics);
             int colourCode = -1;
             switch (colourType) {
                 case VISUAL:
@@ -200,7 +199,7 @@ public class ToolPanel extends JToolBar {
                     }
                     break;
             }
-            super.paintComponent(graphics);
+            //super.paintComponent(graphics);
             graphics.setColor(Color.GRAY);
             graphics.drawRect(2, 2, 60, 28);
             graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
