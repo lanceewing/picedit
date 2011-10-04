@@ -13,6 +13,7 @@ import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowListener;
@@ -21,6 +22,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -31,6 +33,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.metal.MetalToolBarUI;
 
 /**
@@ -49,25 +52,24 @@ public class ToolPanel extends JToolBar {
     public ToolPanel(PicEdit application) {
         super(JToolBar.VERTICAL);
         
-        ButtonGroup toolGroup = new ButtonGroup();
         ToolPanelActionListener actionListener = new ToolPanelActionListener(application);
-        ToolButton selectionButton = new ToolButton("selection.png", toolGroup, actionListener, ToolType.SELECTION);
+        ToolButton selectionButton = new ToolButton("selection.png", application, actionListener, ToolType.SELECTION);
         selectionButton.setEnabled(false);
-        ToolButton zoomButton = new ToolButton("zoom.png", toolGroup, actionListener, ToolType.ZOOM);
+        ToolButton zoomButton = new ToolButton("zoom.png", application, actionListener, ToolType.ZOOM);
         zoomButton.setEnabled(false);
-        ToolButton lineButton = new ToolButton("line.png", toolGroup, actionListener, ToolType.LINE);
-        ToolButton shortLineButton = new ToolButton("shortline.png", toolGroup, actionListener, ToolType.SHORTLINE);
-        ToolButton stepLineButton = new ToolButton("stepline.png", toolGroup, actionListener, ToolType.STEPLINE);
-        ToolButton fillButton = new ToolButton("fill.png", toolGroup, actionListener, ToolType.FILL);
-        ToolButton airbrushButton = new ToolButton("airbrush.png", toolGroup, actionListener, ToolType.AIRBRUSH);
-        ToolButton brushButton = new ToolButton("brush.png", toolGroup, actionListener, ToolType.BRUSH);
-        ToolButton rectangleButton = new ToolButton("rectangle.png", toolGroup, actionListener, ToolType.RECTANGLE);
+        ToolButton lineButton = new ToolButton("line.png", application, actionListener, ToolType.LINE);
+        ToolButton shortLineButton = new ToolButton("shortline.png", application, actionListener, ToolType.SHORTLINE);
+        ToolButton stepLineButton = new ToolButton("stepline.png", application, actionListener, ToolType.STEPLINE);
+        ToolButton fillButton = new ToolButton("fill.png", application, actionListener, ToolType.FILL);
+        ToolButton airbrushButton = new ToolButton("airbrush.png", application, actionListener, ToolType.AIRBRUSH);
+        ToolButton brushButton = new ToolButton("brush.png", application, actionListener, ToolType.BRUSH);
+        ToolButton rectangleButton = new ToolButton("rectangle.png", application, actionListener, ToolType.RECTANGLE);
         rectangleButton.setEnabled(false);
-        ToolButton ellipseButton = new ToolButton("ellipse.png", toolGroup, actionListener, ToolType.ELLIPSE);
+        ToolButton ellipseButton = new ToolButton("ellipse.png", application, actionListener, ToolType.ELLIPSE);
         ellipseButton.setEnabled(false);
-        ToolButton eyeDropperButton = new ToolButton("eyedropper.png", toolGroup, actionListener, ToolType.EYEDROPPER);
+        ToolButton eyeDropperButton = new ToolButton("eyedropper.png", application, actionListener, ToolType.EYEDROPPER);
         eyeDropperButton.setEnabled(false);
-        ToolButton eraserButton = new ToolButton("eraser.png", toolGroup, actionListener, ToolType.ERASER);
+        ToolButton eraserButton = new ToolButton("eraser.png", application, actionListener, ToolType.ERASER);
         eraserButton.setEnabled(false);
 
         final JPanel buttonContainer = new JPanel();
@@ -293,12 +295,13 @@ public class ToolPanel extends JToolBar {
          * Constructor for PictureTool.
          * 
          * @param iconImageName The name of the image file for the button icon.
-         * @param buttonGroup The button group that the button is a part of.
+         * @param application The PicEdit application.
          * @param actionListener The action listener that processes actions on this button.
          * @param tool The tool that this ToolButton is associated with.
          */
-        ToolButton(String iconImageName, ButtonGroup buttonGroup, ActionListener actionListener, ToolType tool) {
+        ToolButton(String iconImageName, PicEdit application, ActionListener actionListener, ToolType tool) {
             super();
+            setModel(new ToolButtonModel(tool, application));
             Image iconImage = null;
             Image pressedImage = null;
             Image hoveredImage = null;
@@ -322,7 +325,6 @@ public class ToolPanel extends JToolBar {
             setToolTipText(tool.toString());
             setActionCommand(tool.name());
             addActionListener(actionListener);
-            buttonGroup.add(this);
         }
         
         /**
@@ -340,6 +342,43 @@ public class ToolPanel extends JToolBar {
             graphics.drawImage(backgroundImage, 0, 0, 32, 32, this);
             graphics.drawImage(foregroundImage, 0, 0, 32, 32, this);
             return image;
+        }
+    }
+    
+    /**
+     * Model for the ToolButton class. Uses the EditStatus's currently selected tool to determine
+     * whether this toggle button is selected or not.
+     */
+    class ToolButtonModel extends JToggleButton.ToggleButtonModel {
+        
+        /**
+         * The type of tool that the button selects.
+         */
+        private ToolType tool;
+        
+        /**
+         * The PicEdit application.
+         */
+        private PicEdit application;
+        
+        /**
+         * Constructor for ToolButtonModel.
+         * 
+         * @param tool The type of tool that the button selects.
+         * @param application The PicEdit application.
+         */
+        ToolButtonModel(ToolType tool, PicEdit application) {
+            this.tool = tool;
+            this.application = application;
+        }
+        
+        /**
+         * Returns true if the currently selected tool is this tool; otherwise false.
+         * 
+         * @return true if the currently selected tool is this tool; otherwise false.
+         */
+        public boolean isSelected() {
+            return application.getEditStatus().getTool().equals(tool);
         }
     }
     
