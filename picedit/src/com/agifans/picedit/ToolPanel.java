@@ -186,6 +186,7 @@ public class ToolPanel extends JToolBar {
                 case VISUAL:
                     if (application.getEditStatus().isVisualDrawEnabled()) {
                         colourCode = application.getEditStatus().getVisualColour();
+                        colourCode = (colourCode == EditStatus.TRANSPARENT? 15 : colourCode);
                         graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
                         graphics.fillRect(30, 5, 30, 23);
                     }
@@ -193,6 +194,7 @@ public class ToolPanel extends JToolBar {
                 case PRIORITY:
                     if (application.getEditStatus().isPriorityDrawEnabled()) {
                         colourCode = application.getEditStatus().getPriorityColour();
+                        colourCode = (colourCode == EditStatus.TRANSPARENT? 4 : colourCode);
                         graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
                         graphics.fillRect(30, 5, 30, 23);
                     }
