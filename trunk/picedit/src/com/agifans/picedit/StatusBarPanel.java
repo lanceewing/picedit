@@ -39,6 +39,12 @@ public class StatusBarPanel extends JPanel {
         StatusBarSection toolNamePanel = new StatusBarSection(200) {
             void drawSectionDetail(Graphics2D graphics) {
                 graphics.setColor(EgaPalette.BLACK);
+                StringBuilder toolName = new StringBuilder();
+                toolName.append(application.getEditStatus().getTool().toString());
+                toolName.append(" (");
+                // TODO: Add brush spec.
+                toolName.append(")");
+                
                 graphics.drawString(String.format("%s", application.getEditStatus().getTool().toString()), 8, 15);
             }
         };

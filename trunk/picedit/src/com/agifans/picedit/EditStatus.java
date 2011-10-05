@@ -514,7 +514,7 @@ public class EditStatus {
     }
 
     public boolean isBrushActive() {
-        return (tool == ToolType.BRUSH);
+        return (tool == ToolType.BRUSH) || (tool == ToolType.AIRBRUSH);
     }
 
     public boolean isFillActive() {
