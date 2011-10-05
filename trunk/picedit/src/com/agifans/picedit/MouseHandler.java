@@ -234,7 +234,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param event the mouse wheel moved event.
      */
     public void mouseWheelMoved(MouseWheelEvent event) {
-    	if (event.getWheelRotation() > 0) {
+    	if (event.getWheelRotation() < 0) {
     		// Zoom in.
             int zoomFactor = editStatus.getZoomFactor();
             if (zoomFactor < 5) {
