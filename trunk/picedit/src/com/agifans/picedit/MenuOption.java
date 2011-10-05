@@ -35,6 +35,7 @@ public enum MenuOption {
     STEP("Step"),
     FILL("Fill"),
     BRUSH("Brush"),
+    AIRBRUSH("Airbrush"),
     START("Start"),
     NEXT("Next"),
     PREV("Previous"),
