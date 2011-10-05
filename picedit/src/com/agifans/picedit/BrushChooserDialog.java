@@ -44,7 +44,7 @@ public class BrushChooserDialog extends JDialog {
     public BrushChooserDialog(Component button, final boolean airBrush) {
         this.setModal(true);
         this.setUndecorated(true);
-        this.setSize(new Dimension(132, 132));
+        this.setSize(new Dimension(140, 140));
         this.setResizable(false);
         Point buttonLocation = button.getLocationOnScreen();
         this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
@@ -71,7 +71,7 @@ public class BrushChooserDialog extends JDialog {
                 if (isSquare) {
                     if (isAirBrush) {
                         if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                            graphics.fillRect((x1<<1) - 2, (y1<<1) - 1, 4, 2);
+                            graphics.fillRect((x1<<1) - 1, (y1<<1), 4, 2);
                         }
                         bitPos++;
                         if (bitPos == 0xff) {
@@ -79,14 +79,14 @@ public class BrushChooserDialog extends JDialog {
                         }
                     } else {
                         // Not an airbrush implies a solid brush.
-                        graphics.fillRect((x1<<1) - 2, (y1<<1) - 1, 4, 2);
+                        graphics.fillRect((x1<<1) - 1, (y1<<1), 4, 2);
                     }
                 } else { 
                     // Not a square implies circle.
                     if (((Picture.circles[penSize][circlePos >> 3] >> (7 - (circlePos & 7))) & 1) > 0) {
                         if (isAirBrush) {
                             if (((Picture.splatterMap[bitPos >> 3] >> (7 - (bitPos & 7))) & 1) > 0) {
-                                graphics.fillRect((x1<<1) - 2, (y1<<1) - 1, 4, 2);
+                                graphics.fillRect((x1<<1) - 1, (y1<<1), 4, 2);
                             }
                             bitPos++;
                             if (bitPos == 0xff) {
@@ -94,7 +94,7 @@ public class BrushChooserDialog extends JDialog {
                             }
                         } else {
                             // Not an airbrush implies a solid brush.
-                            graphics.fillRect((x1<<1) - 2, (y1<<1) - 1, 4, 2);
+                            graphics.fillRect((x1<<1) - 1, (y1<<1), 4, 2);
                         }
                     }
                     circlePos++;
@@ -121,8 +121,8 @@ public class BrushChooserDialog extends JDialog {
          * Constructor for BrushChooserButtonPanel.
          */
         BrushChooserButtonPanel(boolean airBrush) {
-          this.setSize(new Dimension(136, 136));
-          this.setMaximumSize(new Dimension(136, 136));
+          this.setSize(new Dimension(140, 140));
+          this.setMaximumSize(new Dimension(140, 140));
           this.setBackground(Color.LIGHT_GRAY);
           this.setBorder(new BevelBorder(BevelBorder.RAISED));
           this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
