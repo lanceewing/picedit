@@ -156,9 +156,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     public void resizeForZoomFactor(int zoomFactor) {
         this.editStatus.setZoomFactor(zoomFactor);
         
-        // Get the current size of the picture frame.
-        Dimension currentSize = getSize();
-        
         // Update the size of the picture according to new zoom factor.
         picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
         picturePanel.resizeOffscreenImage();
@@ -167,11 +164,8 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         Dimension maximumSize = maximumSizeMap.get(editStatus.getZoomFactor());
         this.setMaximumSize(maximumSize);
         
-        // Calculate the new current size. If the current size was below the packed 
-        // size then we stick with that; otherwise we set it at the packed size.
-        this.setSize(new Dimension(
-            (int)Math.min(currentSize.getWidth(), maximumSize.getWidth()),
-            (int)Math.min(currentSize.getHeight(), maximumSize.getHeight())));
+        // Use max size for the new size of the frame. Works best this way when zooming out and in.
+        this.setSize(new Dimension(maximumSize.width, maximumSize.height));
         
         // This will tell the scroll pane to adjust itself.
         picturePanel.revalidate();
