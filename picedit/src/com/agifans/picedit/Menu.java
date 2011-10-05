@@ -236,16 +236,20 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         fillMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, 0));
         JMenuItem brushMenuItem = new JMenuItem(MenuOption.BRUSH.getDisplayValue(), KeyEvent.VK_B);
         brushMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, 0));
+        JMenuItem airbrushMenuItem = new JMenuItem(MenuOption.AIRBRUSH.getDisplayValue(), KeyEvent.VK_A);
+        airbrushMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0));
         lineMenuItem.addActionListener(this);
         penMenuItem.addActionListener(this);
         stepMenuItem.addActionListener(this);
         fillMenuItem.addActionListener(this);
         brushMenuItem.addActionListener(this);
+        airbrushMenuItem.addActionListener(this);
         toolsMenu.add(lineMenuItem);
         toolsMenu.add(penMenuItem);
         toolsMenu.add(stepMenuItem);
         toolsMenu.add(fillMenuItem);
         toolsMenu.add(brushMenuItem);
+        toolsMenu.add(airbrushMenuItem);
         toolsMenu.addMenuListener(this);
         menuBar.add(toolsMenu);
         
@@ -443,6 +447,16 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
             
             case BRUSH:
                 processToolSelect(ToolType.BRUSH);
+                application.getEditStatus().setBrushShape(BrushShape.CIRCLE);
+                application.getEditStatus().setBrushTexture(BrushTexture.SOLID);
+                application.getEditStatus().setBrushSize(0);
+                break;
+                
+            case AIRBRUSH:
+                processToolSelect(ToolType.AIRBRUSH);
+                application.getEditStatus().setBrushShape(BrushShape.CIRCLE);
+                application.getEditStatus().setBrushTexture(BrushTexture.SPRAY);
+                application.getEditStatus().setBrushSize(0);
                 break;
             
             case START:
