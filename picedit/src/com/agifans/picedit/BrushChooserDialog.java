@@ -20,6 +20,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.border.BevelBorder;
 
 /**
  * Brush chooser dialog used when selecting brush and airbrush shapes and sizes.
@@ -123,7 +124,7 @@ public class BrushChooserDialog extends JDialog {
           this.setSize(new Dimension(136, 136));
           this.setMaximumSize(new Dimension(136, 136));
           this.setBackground(Color.LIGHT_GRAY);
-          
+          this.setBorder(new BevelBorder(BevelBorder.RAISED));
           this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
           
           ButtonGroup brushButtonGroup = new ButtonGroup();
