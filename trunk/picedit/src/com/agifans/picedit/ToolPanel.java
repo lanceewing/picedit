@@ -198,7 +198,6 @@ public class ToolPanel extends JToolBar {
                     }
                     break;
             }
-            //super.paintComponent(graphics);
             graphics.setColor(Color.GRAY);
             graphics.drawRect(2, 2, 60, 28);
             graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
