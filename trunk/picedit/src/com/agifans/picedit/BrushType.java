@@ -133,4 +133,28 @@ public enum BrushType {
         displayName.append(size);
         return displayName.toString();
     }
+    
+    /**
+     * Gets the BrushType that matches the given brush code.
+     * 
+     * @param brushCode The brush code to get the BrushType for.
+     * 
+     * @return The matching BrushType.
+     */
+    public static BrushType getBrushTypeForBrushCode(int brushCode) {
+    	BrushShape brushShape = ((brushCode & 0x10) > 0 ? BrushShape.SQUARE : BrushShape.CIRCLE);
+        BrushTexture brushTexture = ((brushCode & 0x20) > 0 ? BrushTexture.SPRAY : BrushTexture.SOLID);
+        int brushSize = (brushCode & 0x07);
+        
+        for (BrushType brushType : BrushType.values()) {
+        	if ((brushType.getShape().equals(brushShape)) && 
+        		(brushType.getTexture().equals(brushTexture)) && 
+        		(brushType.getSize() == brushSize)) {
+        		
+        		return brushType;
+        	}
+        }
+        
+        return null;
+    }
 }

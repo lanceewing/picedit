@@ -38,14 +38,15 @@ public class StatusBarPanel extends JPanel {
         
         StatusBarSection toolNamePanel = new StatusBarSection(200) {
             void drawSectionDetail(Graphics2D graphics) {
+            	EditStatus editStatus = application.getEditStatus();
                 graphics.setColor(EgaPalette.BLACK);
-                StringBuilder toolName = new StringBuilder();
-                toolName.append(application.getEditStatus().getTool().toString());
-                toolName.append(" (");
-                // TODO: Add brush spec.
-                toolName.append(")");
-                
-                graphics.drawString(String.format("%s", application.getEditStatus().getTool().toString()), 8, 15);
+                String toolName = null;
+                if (editStatus.getTool().equals(ToolType.AIRBRUSH) || editStatus.getTool().equals(ToolType.BRUSH)) {
+                	toolName = BrushType.getBrushTypeForBrushCode(editStatus.getBrushCode()).getDisplayName();
+                } else {
+                	toolName = application.getEditStatus().getTool().toString();
+                }
+                graphics.drawString(toolName, 8, 15);
             }
         };
         
