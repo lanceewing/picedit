@@ -172,7 +172,6 @@ public class ToolPanel extends JToolBar {
             this.setToolTipText(colourType.getDisplayName());
             this.setModel(new ColourButtonModel());
             this.addMouseListener(new ColourButtonMouseListener());
-            this.setUI(new MetalCheckBoxUI());
         }
         
         /**
