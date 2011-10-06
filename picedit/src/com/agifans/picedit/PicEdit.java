@@ -3,6 +3,8 @@ package com.agifans.picedit;
 import java.awt.*;
 import java.awt.event.HierarchyBoundsAdapter;
 import java.awt.event.HierarchyEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.*;
@@ -65,6 +67,11 @@ public final class PicEdit extends JApplet {
         desktopPane.add(pictureFrame);
         desktopPane.setFocusable(false);
         desktopPane.setPreferredSize(new Dimension(700, 440));
+        desktopPane.addMouseWheelListener(new MouseWheelListener() {
+        	public void mouseWheelMoved(MouseWheelEvent event) {
+        		getPictureFrame().getMouseHandler().mouseWheelMoved(event);
+			}
+        });
         this.getContentPane().add(desktopPane, BorderLayout.CENTER);
         
         // Tool panel.
