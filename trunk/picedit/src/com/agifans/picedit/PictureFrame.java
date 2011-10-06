@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;
@@ -165,7 +166,11 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.setMaximumSize(maximumSize);
         
         // Use max size for the new size of the frame. Works best this way when zooming out and in.
-        this.setSize(new Dimension(maximumSize.width, maximumSize.height));
+        Dimension desktopSize = this.application.getDesktopPane().getSize();
+        Point frameLocation = this.getLocation();
+        this.setSize(new Dimension(
+                Math.min(maximumSize.width, desktopSize.width - frameLocation.x),
+                Math.min(maximumSize.height, desktopSize.height - frameLocation.y)));
         
         // This will tell the scroll pane to adjust itself.
         picturePanel.revalidate();
