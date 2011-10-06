@@ -1,5 +1,6 @@
 package com.agifans.picedit;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -40,6 +41,18 @@ import javax.swing.plaf.metal.MetalToolBarUI;
 @SuppressWarnings("serial")
 public class ToolPanel extends JToolBar {
 
+	/**
+	 * Enum representing the four possible placements of the tool panel. 
+	 */
+	private enum ToolPanelLocation {
+		DOCKED_LEFT, DOCKED_TOP, DOCKED_RIGHT, FLOATING;
+	};
+	
+	/**
+	 * Where the tool panel currently is. Starts on the left.
+	 */
+	private ToolPanelLocation toolPanelLocation = ToolPanelLocation.DOCKED_LEFT;
+	
     /**
      * Constructor for ToolPanel.
      * 
@@ -105,7 +118,7 @@ public class ToolPanel extends JToolBar {
         
         this.setUI(new PicEditToolBarUI());
         this.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+            public void propertyChange(final java.beans.PropertyChangeEvent evt) {
                 if ("ancestor".equals(evt.getPropertyName())) {
                     if (evt.getNewValue() != null) {
                         Window window = SwingUtilities.windowForComponent((JComponent)evt.getNewValue());
@@ -116,6 +129,7 @@ public class ToolPanel extends JToolBar {
                             colourPanel.setPreferredSize(new Dimension(128, 32));
                             colourPanel.setMaximumSize(new Dimension(128, 32));
                             ToolPanel.this.setOrientation(JToolBar.VERTICAL);
+                            toolPanelLocation = ToolPanelLocation.FLOATING;
                         } else {
                             // Docking.
                             if (ToolPanel.this.getOrientation() == JToolBar.VERTICAL) {
@@ -123,11 +137,22 @@ public class ToolPanel extends JToolBar {
                                 buttonContainer.setMaximumSize(new Dimension(64, 192));
                                 colourPanel.setPreferredSize(new Dimension(64, 64));
                                 colourPanel.setMaximumSize(new Dimension(64, 64));
+                                SwingUtilities.invokeLater(new Runnable() {
+									public void run() {
+										String borderConstraints = (String)((BorderLayout)((JComponent)evt.getNewValue()).getLayout()).getConstraints(ToolPanel.this);
+										if (BorderLayout.EAST.equals(borderConstraints)) {
+											toolPanelLocation = ToolPanelLocation.DOCKED_RIGHT;
+										} else {
+											toolPanelLocation = ToolPanelLocation.DOCKED_LEFT;
+										}
+									}
+                                });
                             } else {
                                 buttonContainer.setPreferredSize(new Dimension(384, 32));
                                 buttonContainer.setMaximumSize(new Dimension(384, 32));
                                 colourPanel.setPreferredSize(new Dimension(128, 32));
                                 colourPanel.setMaximumSize(new Dimension(128, 32));
+                                toolPanelLocation = ToolPanelLocation.DOCKED_TOP;
                             }
                         }
                     }
