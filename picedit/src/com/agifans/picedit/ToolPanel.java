@@ -30,7 +30,6 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
-import javax.swing.plaf.metal.MetalCheckBoxUI;
 import javax.swing.plaf.metal.MetalToolBarUI;
 
 /**
@@ -372,12 +371,26 @@ public class ToolPanel extends JToolBar {
         }
         
         /**
+         * Invoked when one of the tool panel buttons is pressed or depressed.
+         * 
+         * @param pressed true if the button was pressed; false if it was depressed.
+         */
+        public void setPressed(boolean pressed) {
+        	super.setPressed(pressed);
+        	if (pressed) {
+        		// Clear the previous tool as soon as a new one is pressed down.
+        		application.getEditStatus().setTool(ToolType.NONE);
+        		ToolPanel.this.repaint();
+        	}
+        }
+        
+        /**
          * Returns true if the currently selected tool is this tool; otherwise false.
          * 
          * @return true if the currently selected tool is this tool; otherwise false.
          */
         public boolean isSelected() {
-            return application.getEditStatus().getTool().equals(tool);
+        	return application.getEditStatus().getTool().equals(tool);
         }
     }
     
