@@ -69,6 +69,11 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     private JSlider positionSlider;
     
     /**
+     * The mouse handler for this picture frame.
+     */
+    private MouseHandler mouseHandler;
+    
+    /**
      * Constructor for PictureFrame.
      * 
      * @param application The PicEdit application.
@@ -80,7 +85,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.picture = new Picture(editStatus, picGraphics);
         this.picturePanel = new PicturePanel(editStatus, picGraphics, picture);
         
-        MouseHandler mouseHandler = new MouseHandler(this, application);
+        mouseHandler = new MouseHandler(this, application);
         picturePanel.addMouseListener(mouseHandler);
         picturePanel.addMouseMotionListener(mouseHandler);
         picturePanel.addMouseWheelListener(mouseHandler);
@@ -110,6 +115,10 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.setMaximumSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
         this.addInternalFrameListener(this);
         this.setVisible(true);
+    }
+    
+    public MouseHandler getMouseHandler() {
+    	return mouseHandler;
     }
     
     public EditStatus getEditStatus() {
