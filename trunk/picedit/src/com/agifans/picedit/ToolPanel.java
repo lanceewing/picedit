@@ -336,7 +336,9 @@ public class ToolPanel extends JToolBar {
                             dialog.setVisible(true);
                             
                             // Process the chosen visual colour.
-                            picture.processVisualColourChange(dialog.getChosenColour());
+                            if (dialog.getChosenColour() != -1) {
+                                picture.processVisualColourChange(dialog.getChosenColour());
+                            }
                         }
                         break;
                     case PRIORITY:
@@ -350,7 +352,9 @@ public class ToolPanel extends JToolBar {
                             dialog.setVisible(true);
                             
                             // Process the chosen priority colour.
-                            picture.processPriorityColourChange(dialog.getChosenColour());
+                            if (dialog.getChosenColour() != -1) {
+                                picture.processPriorityColourChange(dialog.getChosenColour());
+                            }
                         }
                         break;
                 }
@@ -513,13 +517,17 @@ public class ToolPanel extends JToolBar {
                     // Pop up brush chooser.
                     BrushChooserDialog brushDialog = new BrushChooserDialog((Component)event.getSource(), false, toolPanelLocation);
                     brushDialog.setVisible(true);
-                    application.getEditStatus().setBrushCode(brushDialog.getChosenBrush().getBrushCode());
+                    if (brushDialog.getChosenBrush() != null) {
+                        application.getEditStatus().setBrushCode(brushDialog.getChosenBrush().getBrushCode());
+                    }
                     break;
                 case AIRBRUSH:
                     // Pop up brush chooser.
                     BrushChooserDialog airBrushDialog = new BrushChooserDialog((Component)event.getSource(), true, toolPanelLocation);
                     airBrushDialog.setVisible(true);
-                    application.getEditStatus().setBrushCode(airBrushDialog.getChosenBrush().getBrushCode());
+                    if (airBrushDialog.getChosenBrush() != null) {
+                        application.getEditStatus().setBrushCode(airBrushDialog.getChosenBrush().getBrushCode());
+                    }
                     break;
             }
             
