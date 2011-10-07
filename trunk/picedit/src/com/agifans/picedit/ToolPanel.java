@@ -21,7 +21,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -33,6 +32,8 @@ import javax.swing.JToolBar;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalToolBarUI;
+
+import com.agifans.picedit.utils.OSChecker;
 
 /**
  * The tool panel that is displayed at the bottom of the picture.
@@ -173,7 +174,11 @@ public class ToolPanel extends JToolBar {
             this.setMaximumSize(new Dimension(64, 32));
             this.setLayout(null);
             ColourButton colourButton = new ColourButton(colourType, application);
-            colourButton.setBounds(6, 3, 54, 26);
+            if (OSChecker.isMac()) {
+                colourButton.setBounds(3, 3, 58, 26);
+            } else {
+                colourButton.setBounds(6, 3, 54, 26);
+            }
             this.add(colourButton);
         }
         
@@ -216,8 +221,13 @@ public class ToolPanel extends JToolBar {
             this.colourType = colourType;
             this.application = application;
             
-            this.setPreferredSize(new Dimension(54, 26));
-            this.setMaximumSize(new Dimension(54, 26));
+            if (OSChecker.isMac()) {
+                this.setPreferredSize(new Dimension(58, 26));
+                this.setMaximumSize(new Dimension(58, 26));
+            } else {
+                this.setPreferredSize(new Dimension(54, 26));
+                this.setMaximumSize(new Dimension(54, 26));
+            }
             this.setFocusable(false);
             this.setFocusPainted(false);
             this.setMargin(new Insets(0, 0, 0, 0));
@@ -240,7 +250,11 @@ public class ToolPanel extends JToolBar {
                         colourCode = application.getEditStatus().getVisualColour();
                         colourCode = (colourCode == EditStatus.TRANSPARENT? 15 : colourCode);
                         graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
-                        graphics.fillRect(26, 2, 28, 22);
+                        if (OSChecker.isMac()) {
+                            graphics.fillRect(26, 2, 31, 22);
+                        } else {
+                            graphics.fillRect(26, 2, 28, 22);
+                        }
                     }
                     break;
                 case PRIORITY:
@@ -248,7 +262,11 @@ public class ToolPanel extends JToolBar {
                         colourCode = application.getEditStatus().getPriorityColour();
                         colourCode = (colourCode == EditStatus.TRANSPARENT? 4 : colourCode);
                         graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
-                        graphics.fillRect(26, 2, 28, 22);
+                        if (OSChecker.isMac()) {
+                            graphics.fillRect(26, 2, 31, 22);
+                        } else {
+                            graphics.fillRect(26, 2, 28, 22);
+                        }
                     }
                     break;
             }
