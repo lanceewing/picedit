@@ -30,12 +30,20 @@ public class ColourChooserDialog extends JDialog {
      * @param button The button component under which the palette will be drawn.
      */
     public ColourChooserDialog(Component button) {
+        this(new Point(button.getLocationOnScreen().x, button.getLocationOnScreen().y + button.getSize().height));
+    }
+    
+    /**
+     * Constructor for ColourChooserDialog.
+     * 
+     * @param point The point at which the palette will be drawn.
+     */
+    public ColourChooserDialog(Point point) {
         this.setModal(true);
         this.setUndecorated(true);
         this.setSize(new Dimension(68, 68));
         this.setResizable(false);
-        Point buttonLocation = button.getLocationOnScreen();
-        this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
+        this.setLocation(point);
         this.setAlwaysOnTop(true);
         this.setLayout(null);
         

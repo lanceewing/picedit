@@ -14,6 +14,8 @@ import java.awt.event.MouseWheelListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.agifans.picedit.ToolPanel.ColourButton;
+
 /**
  * Handles processing of PICEDIT mouse click and mouse move events.
  * 
@@ -211,6 +213,20 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         } else {
             // Otherwise process mouse click as per normal.
             processMouseClick(mousePoint, event.getButton());
+            
+            // Mouse wheel button, AKA. the middle button. This is not a picture related action, so
+            // we process outside of the normal processMouseClick.
+            if (event.getButton() == MouseEvent.BUTTON2) {
+                Point eventPoint = event.getLocationOnScreen();
+                Point dialogPoint = new Point(eventPoint.x - 32, eventPoint.y - 32);
+                
+                // Pop up colour chooser.
+                ColourChooserDialog dialog = new ColourChooserDialog(dialogPoint);
+                dialog.setVisible(true);
+                
+                // Process the chosen visual colour.
+                application.getPicture().processVisualColourChange(dialog.getChosenColour());
+            }
         }
 
         // Change mouse cursor depending on position.
@@ -349,8 +365,10 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         int x = (int) mousePoint.getX();
         int y = (int) mousePoint.getY();
 
-        // Mouse click clears the stored temporary line making it permanent.
-        editStatus.clearBGLineData();
+        if (mouseButton != MouseEvent.BUTTON2) {
+            // Mouse click clears the stored temporary line making it permanent.
+            editStatus.clearBGLineData();
+        }
 
         // Is it the LEFT mouse button?
         if (mouseButton == MouseEvent.BUTTON1) {
@@ -497,9 +515,9 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 }
             }
         }
-
+        
         // Is it the RIGHT mouse button?
-        if (mouseButton == MouseEvent.BUTTON3) {
+        if (mouseButton == MouseEvent.BUTTON3 || mouseButton == MouseEvent.BUTTON2) {
             // Right-clicking on the AGI picture will clear the current tool selection.
             if ((editStatus.getNumOfClicks() == 1) && (editStatus.isStepActive())) {
                 // Single point line support for the Step tool.
