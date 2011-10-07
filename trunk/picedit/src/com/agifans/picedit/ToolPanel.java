@@ -98,9 +98,9 @@ public class ToolPanel extends JToolBar {
         colourPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         colourPanel.setPreferredSize(new Dimension(64, 64));
         colourPanel.setMaximumSize(new Dimension(64, 64));
-        ColourButton visualButton = new ColourButton(ColourType.VISUAL, application);
+        ColourButtonPanel visualButton = new ColourButtonPanel(ColourType.VISUAL, application);
         colourPanel.add(visualButton);
-        ColourButton priorityButton = new ColourButton(ColourType.PRIORITY, application);
+        ColourButtonPanel priorityButton = new ColourButtonPanel(ColourType.PRIORITY, application);
         colourPanel.add(priorityButton);
         this.add(colourPanel);
         
@@ -155,6 +155,31 @@ public class ToolPanel extends JToolBar {
     }
     
     /**
+     * A panel to hold the ColourButton. This panel will make sure there is a visually
+     * sufficient gap between the left side and the checkbox.
+     */
+    class ColourButtonPanel extends JPanel {
+        
+        /**
+         * Constructor for ColourButtonPanel.
+         * 
+         * @param colourType The type of colour button.
+         * @param application The PicEdit application.
+         */
+        ColourButtonPanel(ColourType colourType, PicEdit application) {
+            this.setPreferredSize(new Dimension(64, 32));
+            this.setMaximumSize(new Dimension(64, 32));
+            this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            ColourButton colourButton = new ColourButton(colourType, application);
+            JPanel gapPanel = new JPanel();
+            gapPanel.setPreferredSize(new Dimension(4, 32));
+            gapPanel.setMaximumSize(new Dimension(4, 32));
+            this.add(gapPanel);
+            this.add(colourButton);
+        }
+    }
+    
+    /**
      * Colour button class used for the visual and priority colour changing buttons.
      */
     class ColourButton extends JCheckBox {
@@ -181,8 +206,8 @@ public class ToolPanel extends JToolBar {
             this.colourType = colourType;
             this.application = application;
             
-            this.setPreferredSize(new Dimension(64, 32));
-            this.setMaximumSize(new Dimension(64, 32));
+            this.setPreferredSize(new Dimension(60, 32));
+            this.setMaximumSize(new Dimension(60, 32));
             this.setFocusable(false);
             this.setFocusPainted(false);
             this.setMargin(new Insets(0, 0, 0, 0));
@@ -205,7 +230,7 @@ public class ToolPanel extends JToolBar {
                         colourCode = application.getEditStatus().getVisualColour();
                         colourCode = (colourCode == EditStatus.TRANSPARENT? 15 : colourCode);
                         graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
-                        graphics.fillRect(30, 5, 30, 23);
+                        graphics.fillRect(30, 5, 26, 23);
                     }
                     break;
                 case PRIORITY:
@@ -213,12 +238,12 @@ public class ToolPanel extends JToolBar {
                         colourCode = application.getEditStatus().getPriorityColour();
                         colourCode = (colourCode == EditStatus.TRANSPARENT? 4 : colourCode);
                         graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
-                        graphics.fillRect(30, 5, 30, 23);
+                        graphics.fillRect(30, 5, 26, 23);
                     }
                     break;
             }
             graphics.setColor(Color.GRAY);
-            graphics.drawRect(2, 2, 60, 28);
+            //graphics.drawRect(2, 2, 60, 28);
             graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
             if ((colourCode >= 0) && (colourCode <= 8)) {
                 graphics.setColor(Color.WHITE);
