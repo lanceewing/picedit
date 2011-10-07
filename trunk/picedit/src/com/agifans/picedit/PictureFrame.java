@@ -4,11 +4,19 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -103,10 +111,16 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         pictureScrollPane.setBackground(Color.lightGray);
         this.add(pictureScrollPane, BorderLayout.CENTER);
         
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.add(new NavigationButton("Back24.gif", NavigationButtonType.BACK), BorderLayout.WEST);
+        bottomPanel.add(new NavigationButton("Forward24.gif", NavigationButtonType.FORWARD), BorderLayout.EAST);
+        
         positionSlider = new JSlider();
         positionSlider.setModel(new PositionSliderModel(picture));
         positionSlider.setFocusable(false);
-        this.add(positionSlider, BorderLayout.SOUTH);
+        bottomPanel.add(positionSlider, BorderLayout.CENTER);
+        this.add(bottomPanel, BorderLayout.SOUTH);
         
         this.setIconifiable(true);
         this.setResizable(true);
@@ -115,6 +129,45 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.setMaximumSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
         this.addInternalFrameListener(this);
         this.setVisible(true);
+    }
+    
+    /**
+     * Buttons used for picture navigation.
+     */
+    class NavigationButton extends JButton implements ActionListener {
+        NavigationButton(String iconImageName, NavigationButtonType type) {
+            Image iconImage = null;
+            try {
+                iconImage = ImageIO.read(ClassLoader.getSystemResource("com/agifans/picedit/images/" + iconImageName));
+            } catch (IOException e) {
+            }
+            setIcon(new ImageIcon(iconImage));
+            setPreferredSize(new Dimension(24, 24));
+            setMaximumSize(new Dimension(24, 24));
+            setFocusable(false);
+            setFocusPainted(false);
+            setBorderPainted(false);
+            setMargin(new Insets(0, 0, 0, 0));
+            setActionCommand(type.name());
+            addActionListener(this);
+        }
+
+        /**
+         * Processes the navigation button clicks.
+         * 
+         * @param event The ActionEvent for the button click.
+         */
+        public void actionPerformed(ActionEvent event) {
+            NavigationButtonType type = NavigationButtonType.valueOf(event.getActionCommand());
+            switch (type) {
+                case FORWARD:
+                    application.getPicture().moveForwardOnePictureAction();
+                    break;
+                case BACK:
+                    application.getPicture().moveBackOnePictureAction();
+                    break;
+            }
+        }
     }
     
     public MouseHandler getMouseHandler() {
@@ -148,15 +201,21 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
             JPanel panel = new JPanel();
             Dimension appDimension = new Dimension(320 * i, editStatus.getPictureType().getHeight() * i);
             panel.setPreferredSize(appDimension);
-            JPanel rightPanel = new JPanel();
-            rightPanel.setLayout(new BorderLayout());
             JScrollPane scrollPane = new JScrollPane(panel);
             scrollPane.setMinimumSize(new Dimension(10, 10));
             frame.setLayout(new BorderLayout());
+            JPanel bottomPanel = new JPanel();
+            bottomPanel.setLayout(new BorderLayout());
             JSlider slider = new JSlider();
-            rightPanel.add(scrollPane, BorderLayout.CENTER);
-            rightPanel.add(slider, BorderLayout.SOUTH);
-            frame.getContentPane().add(rightPanel, BorderLayout.CENTER);
+            JButton backButton = new JButton();
+            backButton.setPreferredSize(new Dimension(24, 24));
+            JButton forwardButton = new JButton();
+            forwardButton.setPreferredSize(new Dimension(24, 24));
+            bottomPanel.add(backButton, BorderLayout.WEST);
+            bottomPanel.add(slider, BorderLayout.CENTER);
+            bottomPanel.add(forwardButton, BorderLayout.EAST);
+            frame.add(scrollPane, BorderLayout.CENTER);
+            frame.add(bottomPanel, BorderLayout.SOUTH);
             frame.pack();
             frame.invalidate();
             this.maximumSizeMap.put(i, frame.getSize());
