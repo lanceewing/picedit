@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -131,15 +132,16 @@ public class ToolPanel extends JToolBar {
                                 colourPanel.setPreferredSize(new Dimension(64, 64));
                                 colourPanel.setMaximumSize(new Dimension(64, 64));
                                 SwingUtilities.invokeLater(new Runnable() {
-									public void run() {
-										String borderConstraints = (String)((BorderLayout)((JComponent)evt.getNewValue()).getLayout()).getConstraints(ToolPanel.this);
-										if (BorderLayout.EAST.equals(borderConstraints)) {
-											toolPanelLocation = ToolPanelLocation.DOCKED_RIGHT;
-										} else {
-											toolPanelLocation = ToolPanelLocation.DOCKED_LEFT;
-										}
-									}
-                                });
+                                    public void run() {
+                                        String borderConstraints = (String)((BorderLayout)((JComponent)evt.getNewValue()).getLayout()).getConstraints(ToolPanel.this);
+                                            if (BorderLayout.EAST.equals(borderConstraints)) {
+                                                toolPanelLocation = ToolPanelLocation.DOCKED_RIGHT;
+                                            } else {
+                                                toolPanelLocation = ToolPanelLocation.DOCKED_LEFT;
+                                            }
+                                        }
+                                    }
+                                );
                             } else {
                                 buttonContainer.setPreferredSize(new Dimension(384, 32));
                                 buttonContainer.setMaximumSize(new Dimension(384, 32));
@@ -169,13 +171,27 @@ public class ToolPanel extends JToolBar {
         ColourButtonPanel(ColourType colourType, PicEdit application) {
             this.setPreferredSize(new Dimension(64, 32));
             this.setMaximumSize(new Dimension(64, 32));
-            this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            //this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            this.setLayout(null);
             ColourButton colourButton = new ColourButton(colourType, application);
-            JPanel gapPanel = new JPanel();
-            gapPanel.setPreferredSize(new Dimension(4, 32));
-            gapPanel.setMaximumSize(new Dimension(4, 32));
-            this.add(gapPanel);
+            colourButton.setBounds(5, 3, 54, 26);
+            //colourButton.setLocation(3, 3);
+            //JPanel gapPanel = new JPanel();
+            //gapPanel.setPreferredSize(new Dimension(4, 32));
+            //gapPanel.setMaximumSize(new Dimension(4, 32));
+            //this.add(gapPanel);
             this.add(colourButton);
+        }
+        
+        /**
+         * Paints the ColourButtonPanel component.
+         * 
+         * @param graphics The Graphics to use to drawn the ColourButtonPanel component.
+         */
+        public void paintComponent(Graphics graphics) {
+          super.paintComponent(graphics);
+          graphics.setColor(Color.GRAY);
+          graphics.drawRect(2, 2, 60, 28);
         }
     }
     
@@ -206,8 +222,10 @@ public class ToolPanel extends JToolBar {
             this.colourType = colourType;
             this.application = application;
             
-            this.setPreferredSize(new Dimension(60, 32));
-            this.setMaximumSize(new Dimension(60, 32));
+//            this.setPreferredSize(new Dimension(60, 32));
+//            this.setMaximumSize(new Dimension(60, 32));
+            this.setPreferredSize(new Dimension(54, 26));
+            this.setMaximumSize(new Dimension(54, 26));
             this.setFocusable(false);
             this.setFocusPainted(false);
             this.setMargin(new Insets(0, 0, 0, 0));
@@ -222,7 +240,7 @@ public class ToolPanel extends JToolBar {
          * @param graphics The Graphics to use to drawn the ColourButton component.
          */
         public void paintComponent(Graphics graphics) {
-        	super.paintComponent(graphics);
+        	  super.paintComponent(graphics);
             int colourCode = -1;
             switch (colourType) {
                 case VISUAL:
