@@ -44,6 +44,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     private PictureFrame pictureFrame;
 
     /**
+     * Helps to protect against clashes between mouse wheel rotation and clicks.
+     */
+    private int wheelCounter;
+    
+    /**
      * Constructor for MouseHandler.
      * 
      * @param pictureFrame The PictureFrame that this MouseHandler is for.
@@ -226,6 +231,9 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 
                 // Process the chosen visual colour.
                 application.getPicture().processVisualColourChange(dialog.getChosenColour());
+                
+                // This helps to protect against clashes between wheel clicks and rotation.
+                wheelCounter = 0;
             }
         }
 
@@ -243,25 +251,29 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      */
     public void mouseReleased(MouseEvent event) {
     }
-
+    
     /**
      * Invoked when the mouse wheel is moved.
      * 
      * @param event the mouse wheel moved event.
      */
     public void mouseWheelMoved(MouseWheelEvent event) {
-    	if (event.getWheelRotation() < 0) {
+        wheelCounter += event.getWheelRotation();
+        
+        if (wheelCounter < -1) {
     		// Zoom in.
             int zoomFactor = editStatus.getZoomFactor();
             if (zoomFactor < 5) {
                 application.resizeScreen(zoomFactor + 1);
             }
-    	} else {
+            wheelCounter = 0;
+    	} else if (wheelCounter > 1) {
     		// Zoom out.
             int zoomFactor = editStatus.getZoomFactor();
             if (zoomFactor > 2) {
                 application.resizeScreen(zoomFactor - 1);
             }
+            wheelCounter = 0;
     	}
     }
 
