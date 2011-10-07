@@ -40,14 +40,35 @@ public class BrushChooserDialog extends JDialog {
      * 
      * @param button The button component under which the dialog will be drawn.
      * @param airBrush true if this is the air brush variant of the brush; otherwise false.
+     * @param toolPanelLocation Where the toolbar is currently located.
      */
-    public BrushChooserDialog(Component button, final boolean airBrush) {
+    public BrushChooserDialog(Component button, final boolean airBrush, ToolPanelLocation toolPanelLocation) {
         this.setModal(true);
         this.setUndecorated(true);
         this.setSize(new Dimension(140, 140));
         this.setResizable(false);
+        
         Point buttonLocation = button.getLocationOnScreen();
-        this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
+        switch (toolPanelLocation) {
+            case DOCKED_TOP:
+                this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
+                break;
+            case DOCKED_LEFT:
+                this.setLocation(buttonLocation.x, buttonLocation.y + button.getSize().height);
+                break;
+            case DOCKED_RIGHT:
+                this.setLocation(buttonLocation.x + button.getSize().width - 140, buttonLocation.y + button.getSize().height);
+                break;
+            case FLOATING:
+                Point dialogLocation = button.getParent().getParent().getLocationOnScreen();
+                if (airBrush) {
+                    this.setLocation(dialogLocation.x, buttonLocation.y + button.getSize().height);
+                } else {
+                    this.setLocation(dialogLocation.x, buttonLocation.y + button.getSize().height);
+                }
+                break;
+        }
+        
         this.setAlwaysOnTop(true);
         this.add(new BrushChooserButtonPanel(airBrush), BorderLayout.CENTER);
     }
