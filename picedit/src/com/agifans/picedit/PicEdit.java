@@ -68,9 +68,9 @@ public final class PicEdit extends JApplet {
         desktopPane.setFocusable(false);
         desktopPane.setPreferredSize(new Dimension(700, 440));
         desktopPane.addMouseWheelListener(new MouseWheelListener() {
-        	public void mouseWheelMoved(MouseWheelEvent event) {
-        		getPictureFrame().getMouseHandler().mouseWheelMoved(event);
-			}
+          public void mouseWheelMoved(MouseWheelEvent event) {
+        	  getPictureFrame().getMouseHandler().mouseWheelMoved(event);
+        	}
         });
         this.getContentPane().add(desktopPane, BorderLayout.CENTER);
         
