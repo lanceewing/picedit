@@ -42,13 +42,6 @@ import javax.swing.plaf.metal.MetalToolBarUI;
 public class ToolPanel extends JToolBar {
 
 	/**
-	 * Enum representing the four possible placements of the tool panel. 
-	 */
-	private enum ToolPanelLocation {
-		DOCKED_LEFT, DOCKED_TOP, DOCKED_RIGHT, FLOATING;
-	};
-	
-	/**
 	 * Where the tool panel currently is. Starts on the left.
 	 */
 	private ToolPanelLocation toolPanelLocation = ToolPanelLocation.DOCKED_LEFT;
@@ -462,13 +455,13 @@ public class ToolPanel extends JToolBar {
             switch (tool) {
                 case BRUSH:
                     // Pop up brush chooser.
-                    BrushChooserDialog brushDialog = new BrushChooserDialog((Component)event.getSource(), false);
+                    BrushChooserDialog brushDialog = new BrushChooserDialog((Component)event.getSource(), false, toolPanelLocation);
                     brushDialog.setVisible(true);
                     application.getEditStatus().setBrushCode(brushDialog.getChosenBrush().getBrushCode());
                     break;
                 case AIRBRUSH:
                     // Pop up brush chooser.
-                    BrushChooserDialog airBrushDialog = new BrushChooserDialog((Component)event.getSource(), true);
+                    BrushChooserDialog airBrushDialog = new BrushChooserDialog((Component)event.getSource(), true, toolPanelLocation);
                     airBrushDialog.setVisible(true);
                     application.getEditStatus().setBrushCode(airBrushDialog.getChosenBrush().getBrushCode());
                     break;
