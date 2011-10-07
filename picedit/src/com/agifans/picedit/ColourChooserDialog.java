@@ -4,6 +4,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -22,7 +25,7 @@ public class ColourChooserDialog extends JDialog {
     /**
      * Holds the colour that the user clicked on.
      */
-    private int chosenColour;
+    private int chosenColour = -1;
     
     /**
      * Constructor for ColourChooserDialog.
@@ -51,6 +54,14 @@ public class ColourChooserDialog extends JDialog {
         this.add(palettePanel);
         
         palettePanel.addMouseListener(new ColourChooserMouseHandler());
+        
+        this.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    ColourChooserDialog.this.dispose();
+                }
+            }
+        });
     }
     
     /**
@@ -90,8 +101,10 @@ public class ColourChooserDialog extends JDialog {
      */
     class ColourChooserMouseHandler extends MouseAdapter {
         public void mousePressed(MouseEvent event) {
-            Point clickPoint = event.getPoint();
-            chosenColour = (((int)(clickPoint.y / 16)) * 4) + (clickPoint.x / 16);
+            if (event.getButton() == MouseEvent.BUTTON1) {
+                Point clickPoint = event.getPoint();
+                chosenColour = (((int)(clickPoint.y / 16)) * 4) + (clickPoint.x / 16);
+            }
             ColourChooserDialog.this.dispose();
         }
     }
