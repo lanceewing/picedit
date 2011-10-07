@@ -223,7 +223,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             // we process outside of the normal processMouseClick.
             if (event.getButton() == MouseEvent.BUTTON2) {
                 Point eventPoint = event.getLocationOnScreen();
-                Point dialogPoint = new Point(eventPoint.x - 32, eventPoint.y - 32);
+                Point dialogPoint = new Point(eventPoint.x - 34, eventPoint.y - 34);
                 
                 // Pop up colour chooser.
                 ColourChooserDialog dialog = new ColourChooserDialog(dialogPoint);
