@@ -171,15 +171,9 @@ public class ToolPanel extends JToolBar {
         ColourButtonPanel(ColourType colourType, PicEdit application) {
             this.setPreferredSize(new Dimension(64, 32));
             this.setMaximumSize(new Dimension(64, 32));
-            //this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
             this.setLayout(null);
             ColourButton colourButton = new ColourButton(colourType, application);
-            colourButton.setBounds(5, 3, 54, 26);
-            //colourButton.setLocation(3, 3);
-            //JPanel gapPanel = new JPanel();
-            //gapPanel.setPreferredSize(new Dimension(4, 32));
-            //gapPanel.setMaximumSize(new Dimension(4, 32));
-            //this.add(gapPanel);
+            colourButton.setBounds(6, 3, 54, 26);
             this.add(colourButton);
         }
         
@@ -191,7 +185,7 @@ public class ToolPanel extends JToolBar {
         public void paintComponent(Graphics graphics) {
           super.paintComponent(graphics);
           graphics.setColor(Color.GRAY);
-          graphics.drawRect(2, 2, 60, 28);
+          graphics.drawRect(2, 2, 60, 27);
         }
     }
     
@@ -222,8 +216,6 @@ public class ToolPanel extends JToolBar {
             this.colourType = colourType;
             this.application = application;
             
-//            this.setPreferredSize(new Dimension(60, 32));
-//            this.setMaximumSize(new Dimension(60, 32));
             this.setPreferredSize(new Dimension(54, 26));
             this.setMaximumSize(new Dimension(54, 26));
             this.setFocusable(false);
@@ -248,7 +240,7 @@ public class ToolPanel extends JToolBar {
                         colourCode = application.getEditStatus().getVisualColour();
                         colourCode = (colourCode == EditStatus.TRANSPARENT? 15 : colourCode);
                         graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
-                        graphics.fillRect(30, 5, 26, 23);
+                        graphics.fillRect(26, 2, 28, 22);
                     }
                     break;
                 case PRIORITY:
@@ -256,19 +248,18 @@ public class ToolPanel extends JToolBar {
                         colourCode = application.getEditStatus().getPriorityColour();
                         colourCode = (colourCode == EditStatus.TRANSPARENT? 4 : colourCode);
                         graphics.setColor(EgaPalette.COLOR_OBJECTS[colourCode]);
-                        graphics.fillRect(30, 5, 26, 23);
+                        graphics.fillRect(26, 2, 28, 22);
                     }
                     break;
             }
             graphics.setColor(Color.GRAY);
-            //graphics.drawRect(2, 2, 60, 28);
             graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
             if ((colourCode >= 0) && (colourCode <= 8)) {
                 graphics.setColor(Color.WHITE);
             } else if ((colourCode >= 9) && (colourCode <= 15)) {
                 graphics.setColor(Color.BLACK);
             }
-            graphics.drawString("" + colourType.getDisplayName().charAt(0), 38, 23);
+            graphics.drawString("" + colourType.getDisplayName().charAt(0), 36, 20);
         }
         
         /**
