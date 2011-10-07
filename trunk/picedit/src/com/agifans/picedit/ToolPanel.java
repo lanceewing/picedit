@@ -177,7 +177,7 @@ public class ToolPanel extends JToolBar {
             if (OSChecker.isMac()) {
                 colourButton.setBounds(3, 3, 58, 26);
             } else {
-                colourButton.setBounds(6, 3, 54, 26);
+                colourButton.setBounds(7, 3, 54, 26);
             }
             this.add(colourButton);
         }
@@ -253,7 +253,7 @@ public class ToolPanel extends JToolBar {
                         if (OSChecker.isMac()) {
                             graphics.fillRect(26, 2, 31, 22);
                         } else {
-                            graphics.fillRect(26, 2, 28, 22);
+                            graphics.fillRect(22, 2, 31, 22);
                         }
                     }
                     break;
@@ -265,7 +265,7 @@ public class ToolPanel extends JToolBar {
                         if (OSChecker.isMac()) {
                             graphics.fillRect(26, 2, 31, 22);
                         } else {
-                            graphics.fillRect(26, 2, 28, 22);
+                            graphics.fillRect(22, 2, 31, 22);
                         }
                     }
                     break;
@@ -277,7 +277,11 @@ public class ToolPanel extends JToolBar {
             } else if ((colourCode >= 9) && (colourCode <= 15)) {
                 graphics.setColor(Color.BLACK);
             }
-            graphics.drawString("" + colourType.getDisplayName().charAt(0), 36, 20);
+            if (OSChecker.isMac()) {
+            	graphics.drawString("" + colourType.getDisplayName().charAt(0), 36, 20);
+            } else {
+            	graphics.drawString("" + colourType.getDisplayName().charAt(0), 32, 20);
+            }
         }
         
         /**
