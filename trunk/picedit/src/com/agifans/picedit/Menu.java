@@ -161,6 +161,9 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         dualModeMenuItem.setMnemonic(KeyEvent.VK_D);
         dualModeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, acceleratorKey));
         dualModeMenuItem.setSelected(editStatus.isDualModeEnabled());
+        JMenuItem zoomInMenuItem = new JMenuItem(MenuOption.ZOOM_IN.getDisplayValue());
+        JMenuItem zoomOutMenuItem = new JMenuItem(MenuOption.ZOOM_OUT.getDisplayValue());
+        JMenuItem zoomx1MenuItem = new JMenuItem(MenuOption.ZOOM_X1.getDisplayValue());
         JMenuItem zoomx2MenuItem = new JMenuItem(MenuOption.ZOOM_X2.getDisplayValue());
         JMenuItem zoomx3MenuItem = new JMenuItem(MenuOption.ZOOM_X3.getDisplayValue());
         JMenuItem zoomx4MenuItem = new JMenuItem(MenuOption.ZOOM_X4.getDisplayValue());
@@ -170,6 +173,9 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         priorityMenuItem.addActionListener(this);
         bandsMenuItem.addActionListener(this);
         dualModeMenuItem.addActionListener(this);
+        zoomInMenuItem.addActionListener(this);
+        zoomOutMenuItem.addActionListener(this);
+        zoomx1MenuItem.addActionListener(this);
         zoomx2MenuItem.addActionListener(this);
         zoomx3MenuItem.addActionListener(this);
         zoomx4MenuItem.addActionListener(this);
@@ -183,10 +189,14 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         viewMenu.addSeparator();
         JMenu zoomMenu = new JMenu("Zoom");
         zoomMenu.setMnemonic(KeyEvent.VK_Z);
+        zoomMenu.add(zoomx1MenuItem);
         zoomMenu.add(zoomx2MenuItem);
         zoomMenu.add(zoomx3MenuItem);
         zoomMenu.add(zoomx4MenuItem);
         zoomMenu.add(zoomx5MenuItem);
+        zoomMenu.addSeparator();
+        zoomMenu.add(zoomInMenuItem);
+        zoomMenu.add(zoomOutMenuItem);
         zoomMenu.addMenuListener(this);
         viewMenu.add(zoomMenu);
         viewMenu.addMenuListener(this);
