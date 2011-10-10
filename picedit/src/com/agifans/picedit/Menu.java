@@ -161,7 +161,6 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         dualModeMenuItem.setMnemonic(KeyEvent.VK_D);
         dualModeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, acceleratorKey));
         dualModeMenuItem.setSelected(editStatus.isDualModeEnabled());
-        JMenuItem viewDataMenuItem = new JMenuItem(MenuOption.VIEW_DATA.getDisplayValue(), KeyEvent.VK_V);
         JMenuItem zoomx2MenuItem = new JMenuItem(MenuOption.ZOOM_X2.getDisplayValue());
         JMenuItem zoomx3MenuItem = new JMenuItem(MenuOption.ZOOM_X3.getDisplayValue());
         JMenuItem zoomx4MenuItem = new JMenuItem(MenuOption.ZOOM_X4.getDisplayValue());
@@ -171,7 +170,6 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         priorityMenuItem.addActionListener(this);
         bandsMenuItem.addActionListener(this);
         dualModeMenuItem.addActionListener(this);
-        viewDataMenuItem.addActionListener(this);
         zoomx2MenuItem.addActionListener(this);
         zoomx3MenuItem.addActionListener(this);
         zoomx4MenuItem.addActionListener(this);
@@ -191,8 +189,6 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         zoomMenu.add(zoomx5MenuItem);
         zoomMenu.addMenuListener(this);
         viewMenu.add(zoomMenu);
-        viewMenu.addSeparator();
-        viewMenu.add(viewDataMenuItem);
         viewMenu.addMenuListener(this);
         menuBar.add(viewMenu);
 
