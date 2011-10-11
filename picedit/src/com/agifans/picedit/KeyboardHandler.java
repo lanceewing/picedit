@@ -79,7 +79,7 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
             }
             if ((key == KeyEvent.VK_MINUS) || (keyChar == '-')) {
                 int zoomFactor = editStatus.getZoomFactor();
-                if (zoomFactor > 2) {
+                if (zoomFactor > 1) {
                     application.resizeScreen(zoomFactor - 1);
                 }
             }

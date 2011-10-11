@@ -196,7 +196,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     
     public void calculateResizeDimensions() {
         this.maximumSizeMap = new HashMap<Integer, Dimension>();
-        for (int i=2; i<=5; i++) {
+        for (int i=1; i<=5; i++) {
             JInternalFrame frame = new JInternalFrame();
             JPanel panel = new JPanel();
             Dimension appDimension = new Dimension(320 * i, editStatus.getPictureType().getHeight() * i);
