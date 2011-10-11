@@ -406,6 +406,18 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
             case VIEW_DATA:
                 showHexData();
                 break;
+            
+            case ZOOM_IN:
+                if (application.getEditStatus().getZoomFactor() < 5) {
+                    application.resizeScreen(application.getEditStatus().getZoomFactor() + 1);
+                }
+                break;
+                
+            case ZOOM_OUT:
+                if (application.getEditStatus().getZoomFactor() > 1) {
+                    application.resizeScreen(application.getEditStatus().getZoomFactor() - 1);
+                }
+                break;
                 
             case ZOOM_X1:
                 application.resizeScreen(1);
