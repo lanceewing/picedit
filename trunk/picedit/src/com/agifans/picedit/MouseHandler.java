@@ -270,7 +270,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     	} else if (wheelCounter > 1) {
     		// Zoom out.
             int zoomFactor = editStatus.getZoomFactor();
-            if (zoomFactor > 2) {
+            if (zoomFactor > 1) {
                 application.resizeScreen(zoomFactor - 1);
             }
             wheelCounter = 0;
