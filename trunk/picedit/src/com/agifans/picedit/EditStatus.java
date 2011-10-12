@@ -140,6 +140,11 @@ public class EditStatus {
     private String lastUsedDirectory;
     
     /**
+     * Where the tool panel currently is. Starts on the left.
+     */
+    private ToolPanelLocation toolPanelLocation;
+    
+    /**
      * Constructor for EditStatus.
      */
     public EditStatus() {
@@ -162,6 +167,8 @@ public class EditStatus {
         this.recentPictures.add(1,prefs.get("RECENT_PICTURE_2", ""));
         this.recentPictures.add(2,prefs.get("RECENT_PICTURE_3", ""));
         this.recentPictures.add(3,prefs.get("RECENT_PICTURE_4", ""));
+        
+        this.toolPanelLocation = ToolPanelLocation.valueOf(prefs.get("TOOL_PANEL_LOCATION", "DOCKED_LEFT"));
     }
     
     /**
@@ -175,6 +182,7 @@ public class EditStatus {
         prefs.put("RECENT_PICTURE_2", this.recentPictures.get(1));
         prefs.put("RECENT_PICTURE_3", this.recentPictures.get(2));
         prefs.put("RECENT_PICTURE_4", this.recentPictures.get(3));
+        prefs.put("TOOL_PANEL_LOCATION", this.toolPanelLocation.name());
     }
     
     /**
@@ -733,6 +741,24 @@ public class EditStatus {
         this.lastUsedDirectory = lastUsedDirectory;
     }
     
+    /**
+     * Gets the current tool panel location.
+     * 
+     * @return The current tool panel location.
+     */
+    public ToolPanelLocation getToolPanelLocation() {
+      return toolPanelLocation;
+    }
+
+    /**
+     * Sets the current tool panel location.
+     * 
+     * @param toolPanelLocation The current tool panel location.
+     */
+    public void setToolPanelLocation(ToolPanelLocation toolPanelLocation) {
+      this.toolPanelLocation = toolPanelLocation;
+    }
+
     /**
      * Returns true if a line is currently being drawn.
      * 
