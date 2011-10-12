@@ -43,17 +43,12 @@ import com.agifans.picedit.utils.OSChecker;
 @SuppressWarnings("serial")
 public class ToolPanel extends JToolBar {
 
-	/**
-	 * Where the tool panel currently is. Starts on the left.
-	 */
-	private ToolPanelLocation toolPanelLocation = ToolPanelLocation.DOCKED_LEFT;
-	
     /**
      * Constructor for ToolPanel.
      * 
      * @param application The PicEdit application.
      */
-    public ToolPanel(PicEdit application) {
+    public ToolPanel(final PicEdit application) {
         super(JToolBar.VERTICAL);
         
         ToolPanelActionListener actionListener = new ToolPanelActionListener(application);
@@ -124,7 +119,7 @@ public class ToolPanel extends JToolBar {
                             colourPanel.setPreferredSize(new Dimension(128, 32));
                             colourPanel.setMaximumSize(new Dimension(128, 32));
                             ToolPanel.this.setOrientation(JToolBar.VERTICAL);
-                            toolPanelLocation = ToolPanelLocation.FLOATING;
+                            application.getEditStatus().setToolPanelLocation(ToolPanelLocation.FLOATING);
                         } else {
                             // Docking.
                             if (ToolPanel.this.getOrientation() == JToolBar.VERTICAL) {
@@ -136,9 +131,9 @@ public class ToolPanel extends JToolBar {
                                     public void run() {
                                         String borderConstraints = (String)((BorderLayout)((JComponent)evt.getNewValue()).getLayout()).getConstraints(ToolPanel.this);
                                             if (BorderLayout.EAST.equals(borderConstraints)) {
-                                                toolPanelLocation = ToolPanelLocation.DOCKED_RIGHT;
+                                                application.getEditStatus().setToolPanelLocation(ToolPanelLocation.DOCKED_RIGHT);
                                             } else {
-                                                toolPanelLocation = ToolPanelLocation.DOCKED_LEFT;
+                                                application.getEditStatus().setToolPanelLocation(ToolPanelLocation.DOCKED_LEFT);
                                             }
                                         }
                                     }
@@ -148,7 +143,7 @@ public class ToolPanel extends JToolBar {
                                 buttonContainer.setMaximumSize(new Dimension(384, 32));
                                 colourPanel.setPreferredSize(new Dimension(128, 32));
                                 colourPanel.setMaximumSize(new Dimension(128, 32));
-                                toolPanelLocation = ToolPanelLocation.DOCKED_TOP;
+                                application.getEditStatus().setToolPanelLocation(ToolPanelLocation.DOCKED_TOP);
                             }
                         }
                     }
@@ -511,6 +506,7 @@ public class ToolPanel extends JToolBar {
          * @param event The ActionEvent triggered when the tool bar button was pressed.
          */
         public void actionPerformed(ActionEvent event) {
+            ToolPanelLocation toolPanelLocation = application.getEditStatus().getToolPanelLocation();
             ToolType tool = ToolType.valueOf(event.getActionCommand());
             switch (tool) {
                 case BRUSH:
