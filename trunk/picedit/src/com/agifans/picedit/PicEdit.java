@@ -75,8 +75,22 @@ public final class PicEdit extends JApplet {
         this.getContentPane().add(desktopPane, BorderLayout.CENTER);
         
         // Tool panel.
+        ToolPanelLocation toolPanelLocation = getEditStatus().getToolPanelLocation();
         ToolPanel toolPanel = new ToolPanel(this);
-        this.getContentPane().add(toolPanel, BorderLayout.WEST);
+        switch (toolPanelLocation) {
+            case DOCKED_LEFT:
+                this.getContentPane().add(toolPanel, BorderLayout.WEST);
+                break;
+            case DOCKED_RIGHT:
+              this.getContentPane().add(toolPanel, BorderLayout.EAST);
+              break;
+            case DOCKED_TOP:
+              this.getContentPane().add(toolPanel, BorderLayout.NORTH);
+              break;
+            case FLOATING:
+              // TODO: Not sure if this one is possible, so might need to default to WEST.
+              break;
+        }
     }
 
     /**
