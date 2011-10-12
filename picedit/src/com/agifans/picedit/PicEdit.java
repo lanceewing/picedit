@@ -91,6 +91,7 @@ public final class PicEdit extends JApplet {
             case FLOATING:
             	// TODO: Not sure if this one is possible, so might need to default to WEST.
             	this.getContentPane().add(toolPanel, BorderLayout.WEST);
+            	//((BasicToolbarUI)toolPanel.getUI()).setFloating(true, new Point(x,y));
                 break;
         }
     }
