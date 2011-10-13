@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<project name="PICEDIT" default="dist" basedir=".">
+	<description>PICEDIT AGI Picture Editor</description>
+    
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+	
+  <target name="compile" description="compile the source " >
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  	
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac classpath="${classpath}" srcdir="${src}" destdir="${build}" optimize="true" debug="true" />
+    
+  	<mkdir dir="${build}/METAINF" />
+  	
+    <!-- Add in the resource files (e.g. machine ROMS) -->
+    <mkdir dir="${build}/emu/jvic/roms" />
+    <copy todir="${build}/emu/jvic/roms">
+      <fileset dir=".">
+        <include name="char.rom" />
+        <include name="basic.rom" />
+        <include name="kernel.*" />
+      </fileset>
+    </copy>
+
+	<!-- Add in the packaged games -->
+	<mkdir dir="${build}/carts/8k" />
+	<copy todir="${build}/carts/8k">
+	  <fileset dir="games/carts/8k">
+	    <include name="dragon.crt" />
+		<include name="demonata.crt" />
+		<include name="amok.crt" />
+		<include name="goldfeve.crt" />
+		<include name="terragua.crt" />
+		<include name="gridrunn.crt" />
+		<include name="maze.crt" />
+		<include name="monsterm.crt" />
+		<include name="mutanthe.crt" />
+		<include name="omegarac.crt" />
+		<include name="pipes.crt" />
+		<include name="predator.crt" />
+	  </fileset>
+	</copy>
+
+	<mkdir dir="${build}/carts/16k" />
+	<copy todir="${build}/carts/16k">
+	  <fileset dir="games/carts/16k">
+        <include name="pharoahc.crt" />
+		<include name="defender.crt" />
+        <include name="moonpatr.crt" />
+        <include name="spiderso.crt" />
+        <include name="buck_rog.crt" />
+        <include name="masterty.crt" />
+        <include name="outworld.crt" />
+        <include name="loderunn.crt" />
+        <include name="applepan.crt" />
+	  </fileset>
+	</copy>
+  </target>
+  
+  <target name="dist" depends="compile" description="generate the distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}"/>
+
+    <!-- Put everything in ${build} into the picedit.jar file -->
+    <jar jarfile="${dist}/picedit.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
