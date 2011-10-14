@@ -354,7 +354,6 @@ public class Picture {
         while ((pictureCode != null) && (pictureCode.isDataCode())) {
             pictureCode = deleteAtPicturePosition();
         }
-        editStatus.setLastRenderedPicturePosition(EditStatus.LAST_VALUE_NONE);
         pictureCache.clear(picturePosition);
         drawPicture();
         updateScreen();

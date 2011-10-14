@@ -49,12 +49,9 @@ public abstract class CommonHandler {
     /**
      * Constructor for CommonHandler.
      * 
-     * @param editStatus the EditStatus holding current picture editor state.
-     * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
-     * @param picture the AGI PICTURE currently being edited.
      * @param application the PICEDIT application component.
      */
-    public CommonHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
+    public CommonHandler(PicEdit application) {
         this.application = application;
     }
 
@@ -104,11 +101,9 @@ public abstract class CommonHandler {
      * Toggles the display of the priority screen.
      */
     public void processTogglePriorityScreen() {
-        EditStatus editStatus = application.getEditStatus();
-        Picture picture = application.getPicture();
-        editStatus.toggleScreen();
-        editStatus.setTool(ToolType.NONE);
-        picture.updateScreen();
+        application.getEditStatus().toggleScreen();
+        application.getEditStatus().setTool(ToolType.NONE);
+        application.getPicture().updateScreen();
     }
 
     /**
