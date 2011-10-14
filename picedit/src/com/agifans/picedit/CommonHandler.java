@@ -101,8 +101,9 @@ public abstract class CommonHandler {
      * Toggles the display of the priority screen.
      */
     public void processTogglePriorityScreen() {
-        application.getEditStatus().toggleScreen();
-        application.getEditStatus().setTool(ToolType.NONE);
+        EditStatus editStatus = application.getEditStatus();
+        editStatus.toggleScreen();
+        editStatus.setTool(ToolType.NONE);
         application.getPicture().updateScreen();
     }
 

@@ -88,6 +88,8 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      * Creates and configures the menu items used by PICEDIT.
      */
     private void createMenuItems() {
+        EditStatus editStatus = application.getEditStatus();
+        
         this.menuBar = new JMenuBar();
         
         // Get the shortcut key for this platform (e.g. "cmd" key on the Mac).
@@ -290,6 +292,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      * Invoked when one of the menus is selected.
      */
     public void menuSelected(MenuEvent e) {
+        EditStatus editStatus = application.getEditStatus();
         editStatus.setMenuActive(true);
         if (openRecentMenu.equals(e.getSource())) {
             openRecentMenu.removeAll();
@@ -325,6 +328,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 ((JCheckBoxMenuItem)event.getSource()).setState(false);
             }
         }
+        EditStatus editStatus = application.getEditStatus();
         editStatus.setMenuActive(false);
     }
 
@@ -337,6 +341,9 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      */
     private boolean processMenuSelection(MenuOption menuOption) {
         boolean success = true;
+        EditStatus editStatus = application.getEditStatus();
+        Picture picture = application.getPicture();
+        PicGraphics picGraphics = application.getPicGraphics();
         
         switch (menuOption) {
             case NEW:
@@ -529,6 +536,8 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      * Recreates the menu items for selecting the picture screen (visual/priority).
      */
     private void recreateScreenMenuItems() {
+        EditStatus editStatus = application.getEditStatus();
+        
         // Remove the previously created menu items.
         viewMenu.remove(0);
         viewMenu.remove(0);

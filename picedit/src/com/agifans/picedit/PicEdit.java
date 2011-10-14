@@ -51,7 +51,7 @@ public final class PicEdit extends JApplet {
         this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         
         // Create the menu and register the menu event listeners.
-        this.menu = new Menu(pictureFrame.getEditStatus(), pictureFrame.getPicGraphics(), pictureFrame.getPicture(), this);
+        this.menu = new Menu(this);
         
         this.getContentPane().setLayout(new BorderLayout());
         
@@ -93,6 +93,9 @@ public final class PicEdit extends JApplet {
                 this.getContentPane().add(toolPanel, BorderLayout.WEST);
                 break;
         }
+        
+        // Starts timer that injects mouse motion events.
+        this.pictureFrame.getMouseHandler().startMouseMotionTimer();
     }
 
     /**

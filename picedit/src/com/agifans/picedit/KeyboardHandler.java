@@ -13,13 +13,10 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
     /**
      * Constructor for KeyboardHandler.
      * 
-     * @param editStatus the EditStatus holding current picture editor state.
-     * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
-     * @param picture the AGI PICTURE currently being edited.
      * @param application the PICEDIT application component.
      */
-    public KeyboardHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
-        super(editStatus, picGraphics, picture, application);
+    public KeyboardHandler(PicEdit application) {
+        super(application);
     }
 
     /**
@@ -29,6 +26,9 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
      */
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
+        EditStatus editStatus = application.getEditStatus();
+        Picture picture = application.getPicture();
+        PicGraphics picGraphics = application.getPicGraphics();
         
         if (editStatus.isPaused()) {
             // Ignore key events if the application is paused.
