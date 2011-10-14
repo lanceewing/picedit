@@ -53,18 +53,15 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
     /**
      * Constructor for Menu.
      * 
-     * @param editStatus the EditStatus object holding the current picture editor state.
-     * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
-     * @param picture the AGI PICTURE currently being edited.
      * @param application the PICEDIT application component (used for opening dialogs)
      */
-    public Menu(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
-        super(editStatus, picGraphics, picture, application);
+    public Menu(PicEdit application) {
+        super(application);
         
         // Set up a single JFileChooser for use with all open and save dialogs. This
         // allows the directory to be remembered between uses. Default to the current
         // directory.
-        this.fileChooser = new JFileChooser(editStatus.getLastUsedDirectory());
+        this.fileChooser = new JFileChooser(application.getEditStatus().getLastUsedDirectory());
         
         createMenuItems();
     }

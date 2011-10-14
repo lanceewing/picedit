@@ -70,46 +70,6 @@ public class EditStatus {
     private PictureType pictureType;
 
     /**
-     * Last rendered picture position.
-     */
-    private int lastRenderedPicturePosition;
-
-    /**
-     * Last brush code rendered to the PICEDIT brush panel.
-     */
-    private int lastRenderedBrushCode;
-
-    /**
-     * Last tool value rendered to the PICEDIT status line.
-     */
-    private ToolType lastRenderedTool;
-
-    /**
-     * Last visual colour rendered to the PICEDIT status line.
-     */
-    private int lastRenderedVisualColour;
-
-    /**
-     * Last priority colour rendered to the PICEDIT status line.
-     */
-    private int lastRenderedPriorityColour;
-
-    /**
-     * Last control colour rendered to the PICEDIT status line.
-     */
-    private int lastRenderedControlColour;
-
-    /**
-     * Last mouse X position rendered to the PICEDIT status line.
-     */
-    private int lastRenderedMouseX;
-
-    /**
-     * Last mouse Y position rendered to the PICEDIT status line.
-     */
-    private int lastRenderedMouseY;
-
-    /**
      * The factor by which to multiply the screen size by.
      */
     private int zoomFactor;
@@ -221,23 +181,7 @@ public class EditStatus {
             bandsOn = false;
             pictureFile = null;
         }
-        clearLastRenderedState();
         resetTool();
-    }
-
-    /**
-     * Clears the variables that hold what the last rendered values
-     * were for various details, such as colours, mouse position, etc.
-     */
-    public void clearLastRenderedState() {
-        lastRenderedBrushCode = LAST_VALUE_NONE;
-        lastRenderedPicturePosition = LAST_VALUE_NONE;
-        lastRenderedVisualColour = LAST_VALUE_NONE;
-        lastRenderedPriorityColour = LAST_VALUE_NONE;
-        lastRenderedControlColour = LAST_VALUE_NONE;
-        lastRenderedMouseX = LAST_VALUE_NONE;
-        lastRenderedMouseY = LAST_VALUE_NONE;
-        lastRenderedTool = null;
     }
 
     /**
@@ -604,70 +548,6 @@ public class EditStatus {
 
     public void setTextMode(boolean textMode) {
         this.textMode = textMode;
-    }
-
-    public int getLastRenderedPicturePosition() {
-        return lastRenderedPicturePosition;
-    }
-
-    public void setLastRenderedPicturePosition(int lastPicturePosition) {
-        this.lastRenderedPicturePosition = lastPicturePosition;
-    }
-
-    public int getLastRenderedBrushCode() {
-        return lastRenderedBrushCode;
-    }
-
-    public void setLastRenderedBrushCode(int lastBrushCode) {
-        this.lastRenderedBrushCode = lastBrushCode;
-    }
-
-    public ToolType getLastRenderedTool() {
-        return lastRenderedTool;
-    }
-
-    public void setLastRenderedTool(ToolType lastRenderedTool) {
-        this.lastRenderedTool = lastRenderedTool;
-    }
-
-    public int getLastRenderedVisualColour() {
-        return lastRenderedVisualColour;
-    }
-
-    public void setLastRenderedVisualColour(int lastRenderedVisualColour) {
-        this.lastRenderedVisualColour = lastRenderedVisualColour;
-    }
-
-    public int getLastRenderedPriorityColour() {
-        return lastRenderedPriorityColour;
-    }
-
-    public void setLastRenderedPriorityColour(int lastRenderedPriorityColour) {
-        this.lastRenderedPriorityColour = lastRenderedPriorityColour;
-    }
-
-    public int getLastRenderedControlColour() {
-        return lastRenderedControlColour;
-    }
-
-    public void setLastRenderedControlColour(int lastRenderedControlColour) {
-        this.lastRenderedControlColour = lastRenderedControlColour;
-    }
-
-    public int getLastRenderedMouseX() {
-        return lastRenderedMouseX;
-    }
-
-    public void setLastRenderedMouseX(int lastRenderedMousePointX) {
-        this.lastRenderedMouseX = lastRenderedMousePointX;
-    }
-
-    public int getLastRenderedMouseY() {
-        return lastRenderedMouseY;
-    }
-
-    public void setLastRenderedMouseY(int lastRenderedMouseY) {
-        this.lastRenderedMouseY = lastRenderedMouseY;
     }
 
     public int getZoomFactor() {
