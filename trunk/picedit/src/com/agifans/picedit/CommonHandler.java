@@ -37,21 +37,6 @@ import javax.swing.JScrollPane;
 public abstract class CommonHandler {
 
     /**
-     * Holds the current "editing" state of everything within PICEDIT.
-     */
-    protected EditStatus editStatus;
-
-    /**
-     * The graphics routines with which the application draws the screen.
-     */
-    protected PicGraphics picGraphics;
-
-    /**
-     * The AGI picture being edited.
-     */
-    protected Picture picture;
-
-    /**
      * The PICEDIT application component.
      */
     protected PicEdit application;
@@ -70,9 +55,6 @@ public abstract class CommonHandler {
      * @param application the PICEDIT application component.
      */
     public CommonHandler(EditStatus editStatus, PicGraphics picGraphics, Picture picture, PicEdit application) {
-        this.editStatus = editStatus;
-        this.picGraphics = picGraphics;
-        this.picture = picture;
         this.application = application;
     }
 
@@ -82,8 +64,8 @@ public abstract class CommonHandler {
      * @param tool the tool to process the selection of.
      */
     protected void processToolSelect(ToolType tool) {
-        editStatus.setTool(tool);
-        picture.updateScreen();
+        application.getEditStatus().setTool(tool);
+        application.getPicture().updateScreen();
     }
 
     /**
@@ -96,6 +78,8 @@ public abstract class CommonHandler {
         String positionStr = JOptionPane.showInputDialog(application, "Enter a picture position:", "Goto", JOptionPane.QUESTION_MESSAGE);
         if ((positionStr != null) && (!positionStr.trim().equals(""))) {
             try {
+                Picture picture = application.getPicture();
+                
                 // If the entered value is valid, apply the new position.
                 LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
                 int newPosition = Integer.parseInt(positionStr.toString());
@@ -120,6 +104,8 @@ public abstract class CommonHandler {
      * Toggles the display of the priority screen.
      */
     public void processTogglePriorityScreen() {
+        EditStatus editStatus = application.getEditStatus();
+        Picture picture = application.getPicture();
         editStatus.toggleScreen();
         editStatus.setTool(ToolType.NONE);
         picture.updateScreen();
@@ -129,6 +115,7 @@ public abstract class CommonHandler {
      * Processes toggling of the display of the background tracking image.
      */
     protected void processToggleBackground() {
+        EditStatus editStatus = application.getEditStatus();
         editStatus.setBackgroundEnabled(!editStatus.isBackgroundEnabled());
         application.getMenu().getBackgroundMenuItem().setSelected(editStatus.isBackgroundEnabled());
     }
@@ -139,6 +126,9 @@ public abstract class CommonHandler {
      * @param callback a task to perform once the key stroke or mouse click has happened.
      */
     protected void waitForKeyStrokeOrMouseClick(final Runnable callback) {
+        final EditStatus editStatus = application.getEditStatus();
+        final Picture picture = application.getPicture();
+        
         editStatus.setPaused(true);
 
         // Wrap each listener in an array to get around the inner class restrictions.
@@ -233,6 +223,9 @@ public abstract class CommonHandler {
      * @param position the position in the picture code buffer to start rendering from.
      */
     private void showPageOfHexData(int position) {
+        Picture picture = application.getPicture();
+        PicGraphics picGraphics = application.getPicGraphics();
+        
         LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
 
         Font font = new Font("DialogInput", Font.BOLD, 14);
@@ -285,6 +278,9 @@ public abstract class CommonHandler {
      * Displays the raw hexidecimal data of the AGI picture.
      */
     protected void showHexData() {
+        final EditStatus editStatus = application.getEditStatus();
+        final Picture picture = application.getPicture();
+        
         editStatus.setPaused(true);
 
         // Render first page of data.
@@ -375,6 +371,9 @@ public abstract class CommonHandler {
      * @param imageFile the image File to load for the background image.
      */
     protected void loadBackgroundImage(File imageFile) {
+        EditStatus editStatus = application.getEditStatus();
+        PicGraphics picGraphics = application.getPicGraphics();
+        
         try {
             Image image = ImageIO.read(imageFile);
             if (image != null) {
@@ -401,7 +400,9 @@ public abstract class CommonHandler {
      */
     protected void loadPicture(File pictureFile) {
         BufferedInputStream in = null;
-
+        EditStatus editStatus = application.getEditStatus();
+        Picture picture = application.getPicture();
+        
         try {
             // Make sure we start with a clean picture.
             editStatus.clear();
@@ -452,6 +453,8 @@ public abstract class CommonHandler {
      */
     protected void savePicture(File pictureFile) {
         BufferedOutputStream out = null;
+        EditStatus editStatus = application.getEditStatus();
+        Picture picture = application.getPicture();
 
         try {
             // Store file name for display on title bar.
