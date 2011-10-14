@@ -497,7 +497,7 @@ public class ToolPanel extends JToolBar {
          * @param application The PicEdit application.
          */
         public ToolPanelActionListener(PicEdit application) {
-            super(application.getEditStatus(), application.getPicGraphics(), application.getPicture(), application);
+            super(application);
         }
 
         /**

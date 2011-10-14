@@ -101,7 +101,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.calculateResizeDimensions();
         this.setLayout(new BorderLayout());
         
-        KeyboardHandler keyboardHandler = new KeyboardHandler(editStatus, picGraphics, picture, application);
+        KeyboardHandler keyboardHandler = new KeyboardHandler(application);
         this.getContentPane().addKeyListener(keyboardHandler);
         
         // Add the panel that holds the picture that is being edited.

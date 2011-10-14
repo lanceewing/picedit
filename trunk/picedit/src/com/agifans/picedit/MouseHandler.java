@@ -14,8 +14,6 @@ import java.awt.event.MouseWheelListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.agifans.picedit.ToolPanel.ColourButton;
-
 /**
  * Handles processing of PICEDIT mouse click and mouse move events.
  * 
@@ -54,14 +52,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param pictureFrame The PictureFrame that this MouseHandler is for.
      * @param application The PICEDIT application component.
      */
-    public MouseHandler(final PictureFrame pictureFrame, PicEdit application) {
-        super(pictureFrame.getEditStatus(), pictureFrame.getPicGraphics(), pictureFrame.getPicture(), application);
+    public MouseHandler(final PictureFrame pictureFrame, final PicEdit application) {
+        super(application);
 
         this.pictureFrame = pictureFrame;
         
-        // Starts timer that injects mouse motion events.
-        startMouseMotionTimer();
-
         // Create a Robot for auto adjusting mouse position when tool restricts movement.
         try {
             robot = new Robot();
@@ -77,7 +72,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 // TODO: Might need to change how this is done when introducing multiple picture frames.
                 
                 // If a line is being drawn and the mouse event is outside the picture...
-                if (editStatus.isLineBeingDrawn() && 
+                if (application.getEditStatus().isLineBeingDrawn() && 
                     !mouseEvent.getSource().equals(pictureFrame.getPicturePanel())) {
                     
                     // If it is a mouse pressed event then we process the click as if 
@@ -102,13 +97,15 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * has the added benefit of tracking the mouse when it is outside of 
      * the PICEDIT window.
      */
-    private void startMouseMotionTimer() {
+    public void startMouseMotionTimer() {
         Timer timer = new Timer();
         TimerTask trackingTask = new TimerTask() {
-            private Point lastPoint = getPoint();
+            private Point lastPoint;
 
             public void run() {
                 Point mousePoint = getPoint();
+                EditStatus editStatus = application.getEditStatus();
+                PicGraphics picGraphics = application.getPicGraphics();
 
                 // Check if mouse point has changed.
                 if (!mousePoint.equals(lastPoint)) {
@@ -146,6 +143,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      */
     public Point getPoint() {
         Point absolutePosition = MouseInfo.getPointerInfo().getLocation();
+        EditStatus editStatus = application.getEditStatus();
 
         int x = ((int) absolutePosition.getX() - diffX) / editStatus.getZoomFactor();
         int y = ((int) absolutePosition.getY() - diffY) / editStatus.getZoomFactor();
@@ -209,6 +207,8 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      */
     public void mousePressed(MouseEvent event) {
         Point mousePoint = getPoint();
+        EditStatus editStatus = application.getEditStatus();
+        PicGraphics picGraphics = application.getPicGraphics();
 
         if (editStatus.isPaused()) {
             // If paused then ignore mouse clicks.
@@ -258,6 +258,8 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param event the mouse wheel moved event.
      */
     public void mouseWheelMoved(MouseWheelEvent event) {
+        EditStatus editStatus = application.getEditStatus();
+        
         wheelCounter += event.getWheelRotation();
         
         if (wheelCounter < -1) {
@@ -283,6 +285,9 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param mousePoint the current mouse position.
      */
     private void updateMouseCursor(Point mousePoint) {
+        EditStatus editStatus = application.getEditStatus();
+        PicGraphics picGraphics = application.getPicGraphics();
+        
         if (!editStatus.isMenuActive()) {
             if ((editStatus.getNumOfClicks() == 0) || editStatus.isFillActive() || editStatus.isBrushActive()) {
                 // If the tool is Fill or Brush then show the standard cross hair cursor.
@@ -304,6 +309,9 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param mousePoint the Point where the mouse currently is.
      */
     public void processMouseMove(Point mousePoint) {
+        EditStatus editStatus = application.getEditStatus();
+        PicGraphics picGraphics = application.getPicGraphics();
+        
         // Update the status line on every mouse movement.
         editStatus.updateMousePoint(mousePoint);
 
@@ -376,6 +384,9 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     public void processMouseClick(Point mousePoint, int mouseButton) {
         int x = (int) mousePoint.getX();
         int y = (int) mousePoint.getY();
+        
+        EditStatus editStatus = application.getEditStatus();
+        Picture picture = application.getPicture();
 
         if (mouseButton != MouseEvent.BUTTON2) {
             // Mouse click clears the stored temporary line making it permanent.
@@ -589,6 +600,8 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * picture or the bounds of the drawing tool (e.g. Pen or Step).
      */
     private void moveMouseToPictureCoordinates() {
+        EditStatus editStatus = application.getEditStatus();
+        
         // Get current picture coordinates.
         int x = editStatus.getMouseX();
         int y = editStatus.getMouseY();
