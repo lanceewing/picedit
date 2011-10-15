@@ -119,7 +119,7 @@ public class ToolPanel extends JToolBar {
                             colourPanel.setPreferredSize(new Dimension(128, 32));
                             colourPanel.setMaximumSize(new Dimension(128, 32));
                             ToolPanel.this.setOrientation(JToolBar.VERTICAL);
-                            application.getEditStatus().setToolPanelLocation(ToolPanelLocation.FLOATING);
+                            application.setToolPanelLocation(ToolPanelLocation.FLOATING);
                         } else {
                             // Docking.
                             if (ToolPanel.this.getOrientation() == JToolBar.VERTICAL) {
@@ -131,9 +131,9 @@ public class ToolPanel extends JToolBar {
                                     public void run() {
                                         String borderConstraints = (String)((BorderLayout)((JComponent)evt.getNewValue()).getLayout()).getConstraints(ToolPanel.this);
                                             if (BorderLayout.EAST.equals(borderConstraints)) {
-                                                application.getEditStatus().setToolPanelLocation(ToolPanelLocation.DOCKED_RIGHT);
+                                                application.setToolPanelLocation(ToolPanelLocation.DOCKED_RIGHT);
                                             } else {
-                                                application.getEditStatus().setToolPanelLocation(ToolPanelLocation.DOCKED_LEFT);
+                                                application.setToolPanelLocation(ToolPanelLocation.DOCKED_LEFT);
                                             }
                                         }
                                     }
@@ -143,7 +143,7 @@ public class ToolPanel extends JToolBar {
                                 buttonContainer.setMaximumSize(new Dimension(384, 32));
                                 colourPanel.setPreferredSize(new Dimension(128, 32));
                                 colourPanel.setMaximumSize(new Dimension(128, 32));
-                                application.getEditStatus().setToolPanelLocation(ToolPanelLocation.DOCKED_TOP);
+                                application.setToolPanelLocation(ToolPanelLocation.DOCKED_TOP);
                             }
                         }
                     }
@@ -506,7 +506,7 @@ public class ToolPanel extends JToolBar {
          * @param event The ActionEvent triggered when the tool bar button was pressed.
          */
         public void actionPerformed(ActionEvent event) {
-            ToolPanelLocation toolPanelLocation = application.getEditStatus().getToolPanelLocation();
+            ToolPanelLocation toolPanelLocation = application.getToolPanelLocation();
             ToolType tool = ToolType.valueOf(event.getActionCommand());
             switch (tool) {
                 case BRUSH:

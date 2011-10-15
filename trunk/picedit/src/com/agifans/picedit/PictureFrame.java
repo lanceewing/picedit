@@ -85,10 +85,12 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
      * Constructor for PictureFrame.
      * 
      * @param application The PicEdit application.
+     * @param initialZoomFactor The initial zoome factor for this picture frame.
      */
-    public PictureFrame(final PicEdit application) {
+    public PictureFrame(final PicEdit application, int initialZoomFactor) {
         this.application = application;
         this.editStatus = new EditStatus();
+        this.editStatus.setZoomFactor(initialZoomFactor);
         this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), application, 25);
         this.picture = new Picture(editStatus, picGraphics);
         this.picturePanel = new PicturePanel(editStatus, picGraphics, picture);

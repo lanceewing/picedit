@@ -7,7 +7,10 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.*;
+import java.util.prefs.Preferences;
+
 import javax.swing.*;
 
 /**
@@ -39,13 +42,36 @@ public final class PicEdit extends JApplet {
     private Menu menu;
     
     /**
+     * PicEdit application preferences.
+     */
+    private Preferences prefs;
+    
+    /**
+     * The most recently opened or saved pictures.
+     */
+    private LinkedList<String> recentPictures;
+    
+    /**
+     * The name of the most recently used directory.
+     */
+    private String lastUsedDirectory;
+    
+    /**
+     * Where the tool panel currently is. Starts on the left.
+     */
+    private ToolPanelLocation toolPanelLocation;
+    
+    /**
      * Constructor for PicEdit.
      */
     @SuppressWarnings("unchecked")
     public PicEdit() {
-        this.pictureFrame = new PictureFrame(this);
+        // Load the preferences saved the last time the application was closed down.
+        loadPreferences();
+        
+        this.pictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3));
         this.pictureFrame.setLocation(20, 20);
-
+        
         // This allows us to use TAB in the application (default within Java is that it traverses between fields).
         this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
@@ -75,7 +101,7 @@ public final class PicEdit extends JApplet {
         this.getContentPane().add(desktopPane, BorderLayout.CENTER);
         
         // Tool panel.
-        ToolPanelLocation toolPanelLocation = getEditStatus().getToolPanelLocation();
+        ToolPanelLocation toolPanelLocation = getToolPanelLocation();
         ToolPanel toolPanel = new ToolPanel(this);
         switch (toolPanelLocation) {
             case DOCKED_LEFT:
@@ -98,6 +124,90 @@ public final class PicEdit extends JApplet {
         this.pictureFrame.getMouseHandler().startMouseMotionTimer();
     }
 
+    /**
+     * Loads and applies the user preferences related to the Edit Status.
+     */
+    public void loadPreferences() {
+        prefs = Preferences.userNodeForPackage(this.getClass());
+        
+        this.lastUsedDirectory = prefs.get("LAST_USED_DIRECTORY", new File(".").getAbsolutePath());
+        
+        this.recentPictures = new LinkedList<String>();
+        this.recentPictures.add(0, prefs.get("RECENT_PICTURE_1", ""));
+        this.recentPictures.add(1,prefs.get("RECENT_PICTURE_2", ""));
+        this.recentPictures.add(2,prefs.get("RECENT_PICTURE_3", ""));
+        this.recentPictures.add(3,prefs.get("RECENT_PICTURE_4", ""));
+        
+        this.toolPanelLocation = ToolPanelLocation.valueOf(prefs.get("TOOL_PANEL_LOCATION", "DOCKED_LEFT"));
+    }
+    
+    /**
+     * Saves the user preferences related to the Edit Status.
+     */
+    public void savePreferences() {
+        prefs.put("LAST_USED_DIRECTORY", this.lastUsedDirectory);
+        prefs.putInt("ZOOM_FACTOR", getEditStatus().getZoomFactor());
+        prefs.put("RECENT_PICTURE_1", this.recentPictures.get(0));
+        prefs.put("RECENT_PICTURE_2", this.recentPictures.get(1));
+        prefs.put("RECENT_PICTURE_3", this.recentPictures.get(2));
+        prefs.put("RECENT_PICTURE_4", this.recentPictures.get(3));
+        prefs.put("TOOL_PANEL_LOCATION", this.toolPanelLocation.name());
+    }
+    
+    /**
+     * Gets the list of recently opened pictures.
+     * 
+     * @return The list of recently opened pictures.
+     */
+    public LinkedList<String> getRecentPictures() {
+        return recentPictures;
+    }
+    
+    /**
+     * Updates the list of recently loaded or saved pictures.
+     * 
+     * @param pictureFile The File to add to the list of recent pictures.
+     */
+    public void updateRecentPictures(File pictureFile) {
+        // Rotate the recent picture name list.
+        if (recentPictures.contains(pictureFile.getAbsolutePath())) {
+          // If the list already contains this file, then remove it.
+          recentPictures.remove(pictureFile.getAbsolutePath());
+        } else {
+          // Otherwise remove the last item.
+          recentPictures.removeLast();
+        }
+        
+        // The most recent is always added as the first item.
+        recentPictures.add(0, pictureFile.getAbsolutePath());
+    }
+    
+    public String getLastUsedDirectory() {
+        return this.lastUsedDirectory;
+    }
+    
+    public void setLastUsedDirectory(String lastUsedDirectory) {
+        this.lastUsedDirectory = lastUsedDirectory;
+    }
+    
+    /**
+     * Gets the current tool panel location.
+     * 
+     * @return The current tool panel location.
+     */
+    public ToolPanelLocation getToolPanelLocation() {
+      return toolPanelLocation;
+    }
+
+    /**
+     * Sets the current tool panel location.
+     * 
+     * @param toolPanelLocation The current tool panel location.
+     */
+    public void setToolPanelLocation(ToolPanelLocation toolPanelLocation) {
+      this.toolPanelLocation = toolPanelLocation;
+    }
+    
     /**
      * Gets the desktop pane that the picture frames live within.
      * 
@@ -192,7 +302,7 @@ public final class PicEdit extends JApplet {
         frame.setTitle(PICEDIT_NAME);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
-                app.getEditStatus().savePreferences();
+                app.savePreferences();
             }
         });
         

@@ -61,7 +61,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         // Set up a single JFileChooser for use with all open and save dialogs. This
         // allows the directory to be remembered between uses. Default to the current
         // directory.
-        this.fileChooser = new JFileChooser(application.getEditStatus().getLastUsedDirectory());
+        this.fileChooser = new JFileChooser(application.getLastUsedDirectory());
         
         createMenuItems();
     }
@@ -296,7 +296,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         editStatus.setMenuActive(true);
         if (openRecentMenu.equals(e.getSource())) {
             openRecentMenu.removeAll();
-            for (String pictureName : editStatus.getRecentPictures()) {
+            for (String pictureName : application.getRecentPictures()) {
                 if (!pictureName.equals("")) {
                     final File pictureFile = new File(pictureName);
                     JMenuItem pictureMenuItem = new JMenuItem(pictureFile.getName());
@@ -396,7 +396,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 Object[] quitOptions = { "Quit", "Cancel" };
                 int quitAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to Quit?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, quitOptions, quitOptions[0]);
                 if (quitAnswer == JOptionPane.YES_OPTION) {
-                    editStatus.savePreferences();
+                    application.savePreferences();
                     System.exit(0);
                 }
                 break;
@@ -414,14 +414,14 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 break;
             
             case ZOOM_IN:
-                if (application.getEditStatus().getZoomFactor() < 5) {
-                    application.resizeScreen(application.getEditStatus().getZoomFactor() + 1);
+                if (editStatus.getZoomFactor() < 5) {
+                    application.resizeScreen(editStatus.getZoomFactor() + 1);
                 }
                 break;
                 
             case ZOOM_OUT:
-                if (application.getEditStatus().getZoomFactor() > 1) {
-                    application.resizeScreen(application.getEditStatus().getZoomFactor() - 1);
+                if (editStatus.getZoomFactor() > 1) {
+                    application.resizeScreen(editStatus.getZoomFactor() - 1);
                 }
                 break;
                 
@@ -527,7 +527,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         }
         
         // Store the current directory in the edit status so it is saved in preferences.
-        editStatus.setLastUsedDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
+        application.setLastUsedDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
         
         return success;
     }
