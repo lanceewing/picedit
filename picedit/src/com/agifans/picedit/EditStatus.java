@@ -20,10 +20,6 @@ public class EditStatus {
 
     public static final int CONTROL_OFF = -1;
 
-    public static final int LAST_VALUE_NONE = Integer.MIN_VALUE;
-
-    private Preferences prefs;
-    
     private ToolType tool;
 
     private int visualColour;
@@ -68,12 +64,12 @@ public class EditStatus {
      * The type of Sierra picture being edited.
      */
     private PictureType pictureType;
-
+    
     /**
-     * The factor by which to multiply the screen size by.
+     * The picture File currently being edited.
      */
-    private int zoomFactor;
-
+    private File pictureFile;
+    
     /**
      * Whether the priority bands are currently on or not.
      */
@@ -85,64 +81,15 @@ public class EditStatus {
     private boolean dualModeEnabled;
     
     /**
-     * The picture File currently being edited.
+     * The factor by which to multiply the screen size by.
      */
-    private File pictureFile;
-    
-    /**
-     * The most recently opened or saved pictures.
-     */
-    private LinkedList<String> recentPictures;
-    
-    /**
-     * The name of the most recently used directory.
-     */
-    private String lastUsedDirectory;
-    
-    /**
-     * Where the tool panel currently is. Starts on the left.
-     */
-    private ToolPanelLocation toolPanelLocation;
+    private int zoomFactor;
     
     /**
      * Constructor for EditStatus.
      */
     public EditStatus() {
         clear();
-        loadPreferences();
-    }
-
-    /**
-     * Loads and applies the user preferences related to the Edit Status.
-     */
-    public void loadPreferences() {
-        prefs = Preferences.userNodeForPackage(this.getClass());
-        
-        this.lastUsedDirectory = prefs.get("LAST_USED_DIRECTORY", new File(".").getAbsolutePath());
-        this.zoomFactor = prefs.getInt("ZOOM_FACTOR", 3);
-        this.bandsOn = prefs.getBoolean("BANDS_ON", false);
-        
-        this.recentPictures = new LinkedList<String>();
-        this.recentPictures.add(0, prefs.get("RECENT_PICTURE_1", ""));
-        this.recentPictures.add(1,prefs.get("RECENT_PICTURE_2", ""));
-        this.recentPictures.add(2,prefs.get("RECENT_PICTURE_3", ""));
-        this.recentPictures.add(3,prefs.get("RECENT_PICTURE_4", ""));
-        
-        this.toolPanelLocation = ToolPanelLocation.valueOf(prefs.get("TOOL_PANEL_LOCATION", "DOCKED_LEFT"));
-    }
-    
-    /**
-     * Saves the user preferences related to the Edit Status.
-     */
-    public void savePreferences() {
-        prefs.put("LAST_USED_DIRECTORY", this.lastUsedDirectory);
-        prefs.putInt("ZOOM_FACTOR", this.zoomFactor);
-        prefs.putBoolean("BANDS_ON", this.bandsOn);
-        prefs.put("RECENT_PICTURE_1", this.recentPictures.get(0));
-        prefs.put("RECENT_PICTURE_2", this.recentPictures.get(1));
-        prefs.put("RECENT_PICTURE_3", this.recentPictures.get(2));
-        prefs.put("RECENT_PICTURE_4", this.recentPictures.get(3));
-        prefs.put("TOOL_PANEL_LOCATION", this.toolPanelLocation.name());
     }
     
     /**
@@ -177,8 +124,8 @@ public class EditStatus {
             priorityShowing = false;
             pictureType = PictureType.AGI;
             backgroundEnabled = false;
-            dualModeEnabled = false;
-            bandsOn = false;
+            //dualModeEnabled = false;
+            //bandsOn = false;
             pictureFile = null;
         }
         resetTool();
@@ -550,20 +497,22 @@ public class EditStatus {
         this.textMode = textMode;
     }
 
-    public int getZoomFactor() {
-        return zoomFactor;
-    }
-
-    public void setZoomFactor(int zoomFactor) {
-        this.zoomFactor = zoomFactor;
-    }
-
     public PictureType getPictureType() {
         return pictureType;
     }
 
     public void setPictureType(PictureType pictureType) {
         this.pictureType = pictureType;
+    }
+
+    public File getPictureFile() {
+        return this.pictureFile;
+    }
+    
+    public void setPictureFile(File pictureFile) {
+        if (!pictureFile.equals(this.pictureFile)) {
+            this.pictureFile = pictureFile;
+        }
     }
 
     public boolean isBandsOn() {
@@ -581,64 +530,15 @@ public class EditStatus {
     public void setDualModeEnabled(boolean dualModeEnabled) {
         this.dualModeEnabled = dualModeEnabled;
     }
-
-    public File getPictureFile() {
-        return this.pictureFile;
-    }
     
-    public void setPictureFile(File pictureFile) {
-        if (!pictureFile.equals(this.pictureFile)) {
-            this.pictureFile = pictureFile;
-            
-            // Rotate the recent picture name list.
-            if (recentPictures.contains(pictureFile.getAbsolutePath())) {
-              // If the list already contains this file, then remove it.
-              recentPictures.remove(pictureFile.getAbsolutePath());
-            } else {
-              // Otherwise remove the last item.
-              recentPictures.removeLast();
-            }
-            
-            // The most recent is always added as the first item.
-            recentPictures.add(0, pictureFile.getAbsolutePath());
-        }
-    }
-    
-    /**
-     * Gets the list of recently opened pictures.
-     * 
-     * @return The list of recently opened pictures.
-     */
-    public LinkedList<String> getRecentPictures() {
-        return recentPictures;
-    }
-    
-    public String getLastUsedDirectory() {
-        return this.lastUsedDirectory;
-    }
-    
-    public void setLastUsedDirectory(String lastUsedDirectory) {
-        this.lastUsedDirectory = lastUsedDirectory;
-    }
-    
-    /**
-     * Gets the current tool panel location.
-     * 
-     * @return The current tool panel location.
-     */
-    public ToolPanelLocation getToolPanelLocation() {
-      return toolPanelLocation;
+    public int getZoomFactor() {
+        return zoomFactor;
     }
 
-    /**
-     * Sets the current tool panel location.
-     * 
-     * @param toolPanelLocation The current tool panel location.
-     */
-    public void setToolPanelLocation(ToolPanelLocation toolPanelLocation) {
-      this.toolPanelLocation = toolPanelLocation;
+    public void setZoomFactor(int zoomFactor) {
+        this.zoomFactor = zoomFactor;
     }
-
+    
     /**
      * Returns true if a line is currently being drawn.
      * 

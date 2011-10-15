@@ -406,6 +406,7 @@ public abstract class CommonHandler {
 
             // Store file name for display on title bar.
             editStatus.setPictureFile(pictureFile);
+            application.updateRecentPictures(pictureFile);
             
             // Open the file for reading.
             in = new BufferedInputStream(new FileInputStream(pictureFile));
@@ -455,6 +456,7 @@ public abstract class CommonHandler {
         try {
             // Store file name for display on title bar.
             editStatus.setPictureFile(pictureFile);
+            application.updateRecentPictures(pictureFile);
             
             // Open the file for reading.
             out = new BufferedOutputStream(new FileOutputStream(pictureFile));
