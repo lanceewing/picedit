@@ -29,7 +29,7 @@ public final class PicEdit extends JApplet {
     /**
      * The most recently active picture window.
      */
-    private PictureFrame pictureFrame;
+    private PictureFrame activePictureFrame;
     
     /**
      * The desktop pane that the picture frames live in.
@@ -69,15 +69,12 @@ public final class PicEdit extends JApplet {
         // Load the preferences saved the last time the application was closed down.
         loadPreferences();
         
-        this.pictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3));
-        this.pictureFrame.setLocation(20, 20);
+        this.activePictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3));
+        this.activePictureFrame.setLocation(20, 20);
         
         // This allows us to use TAB in the application (default within Java is that it traverses between fields).
         this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
-        
-        // Create the menu and register the menu event listeners.
-        this.menu = new Menu(this);
         
         this.getContentPane().setLayout(new BorderLayout());
         
@@ -90,7 +87,7 @@ public final class PicEdit extends JApplet {
         desktopPane = new JDesktopPane();
         desktopPane.setBackground(new Color(0x4169AA));
         desktopPane.setDesktopManager(new PicEditDesktopManager(desktopPane.getDesktopManager()));
-        desktopPane.add(pictureFrame);
+        desktopPane.add(activePictureFrame);
         desktopPane.setFocusable(false);
         desktopPane.setPreferredSize(new Dimension(700, 440));
         desktopPane.addMouseWheelListener(new MouseWheelListener() {
@@ -121,7 +118,10 @@ public final class PicEdit extends JApplet {
         }
         
         // Starts timer that injects mouse motion events.
-        this.pictureFrame.getMouseHandler().startMouseMotionTimer();
+        this.activePictureFrame.getMouseHandler().startMouseMotionTimer();
+        
+        // Create the menu and register the menu event listeners.
+        this.menu = new Menu(this);
     }
 
     /**
@@ -263,9 +263,18 @@ public final class PicEdit extends JApplet {
         return getPictureFrame().getPicturePanel();
     }
     
+    /**
+     * Gets the currently active PictureFrame.
+     * 
+     * @return The currently active PictureFrame.
+     */
     public PictureFrame getPictureFrame() {
-        // TODO: Change this to get the active frame from the desktop and fall back on previous value if it returns null.
-        return pictureFrame;
+        PictureFrame selectedFrame = (PictureFrame)this.desktopPane.getSelectedFrame();
+        if (selectedFrame != null) {
+            activePictureFrame = selectedFrame;
+        }
+        
+        return activePictureFrame;
     }
     
     /**
