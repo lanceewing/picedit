@@ -350,11 +350,16 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 Object[] newOptions = { "New", "Cancel" };
                 int newAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to create a new picture?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, newOptions, newOptions[0]);
                 if (newAnswer == JOptionPane.YES_OPTION) {
-                    editStatus.clear();
-                    picture.clearPicture();
-                    picture.drawPicture();
-                    picture.updateScreen();
-                    picGraphics.setBackgroundImage(null);
+                    PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor());
+                    newPictureFrame.setLocation(20, 20);
+                    application.getDesktopPane().add(newPictureFrame);
+                    newPictureFrame.getMouseHandler().startMouseMotionTimer();
+                    
+//                    editStatus.clear();
+//                    picture.clearPicture();
+//                    picture.drawPicture();
+//                    picture.updateScreen();
+//                    picGraphics.setBackgroundImage(null);
                 }
                 break;
 

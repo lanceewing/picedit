@@ -281,15 +281,16 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
      * no active frame then it asks to be selected again.
      */
     public void internalFrameDeactivated(InternalFrameEvent event) {
-        final JDesktopPane desktopPane = application.getDesktopPane();
-        if (desktopPane != null) {
-            if (desktopPane.getSelectedFrame() == null) {
-                try {
-                    this.setSelected(true);
-                } catch (PropertyVetoException e) {
-                }
-            }
-        }
+        // TODO: This  with multiple pictures. Can't remember why we need this. 
+//        final JDesktopPane desktopPane = application.getDesktopPane();
+//        if (desktopPane != null) {
+//            if (desktopPane.getSelectedFrame() == null) {
+//                try {
+//                    this.setSelected(true);
+//                } catch (PropertyVetoException e) {
+//                }
+//            }
+//        }
     }
 
     public void internalFrameDeiconified(InternalFrameEvent event) {
