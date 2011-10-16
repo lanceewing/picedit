@@ -282,16 +282,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
      */
     public void internalFrameDeactivated(InternalFrameEvent event) {
         this.editStatus.setTool(ToolType.NONE);
-        // TODO: This  with multiple pictures. Can't remember why we need this. 
-//        final JDesktopPane desktopPane = application.getDesktopPane();
-//        if (desktopPane != null) {
-//            if (desktopPane.getSelectedFrame() == null) {
-//                try {
-//                    this.setSelected(true);
-//                } catch (PropertyVetoException e) {
-//                }
-//            }
-//        }
     }
 
     public void internalFrameDeiconified(InternalFrameEvent event) {
