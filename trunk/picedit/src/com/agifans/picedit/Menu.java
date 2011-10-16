@@ -1,9 +1,11 @@
 package com.agifans.picedit;
 
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyVetoException;
 import java.io.File;
 
 import javax.swing.ButtonGroup;
@@ -347,19 +349,15 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         
         switch (menuOption) {
             case NEW:
-                Object[] newOptions = { "New", "Cancel" };
-                int newAnswer = JOptionPane.showOptionDialog(application, "Are you sure you want to create a new picture?", "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, newOptions, newOptions[0]);
-                if (newAnswer == JOptionPane.YES_OPTION) {
-                    PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor());
-                    newPictureFrame.setLocation(20, 20);
-                    application.getDesktopPane().add(newPictureFrame);
-                    newPictureFrame.getMouseHandler().startMouseMotionTimer();
-                    
-//                    editStatus.clear();
-//                    picture.clearPicture();
-//                    picture.drawPicture();
-//                    picture.updateScreen();
-//                    picGraphics.setBackgroundImage(null);
+                // Creates a completely new picture frame.
+                PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor());
+                Point activeFrameLocation = application.getPictureFrame().getLocation();
+                newPictureFrame.setLocation(activeFrameLocation.x + 25, activeFrameLocation.y + 25);
+                application.getDesktopPane().add(newPictureFrame);
+                newPictureFrame.getMouseHandler().startMouseMotionTimer();
+                try {
+                    newPictureFrame.setSelected(true);
+                } catch (PropertyVetoException e) {
                 }
                 break;
 
