@@ -72,6 +72,10 @@ public final class PicEdit extends JApplet {
         
         this.activePictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3));
         this.activePictureFrame.setLocation(20, 20);
+        try {
+            this.activePictureFrame.setSelected(true);
+        } catch (PropertyVetoException e) {
+        }
         
         // This allows us to use TAB in the application (default within Java is that it traverses between fields).
         this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);

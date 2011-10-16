@@ -67,24 +67,26 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         // picture panel while in line drawing mode. 
         Toolkit.getDefaultToolkit().addAWTEventListener( new AWTEventListener() {
             public void eventDispatched(AWTEvent e) {
-                MouseEvent mouseEvent = (MouseEvent)e;
-                
-                // TODO: Might need to change how this is done when introducing multiple picture frames.
-                
-                // If a line is being drawn and the mouse event is outside the picture...
-                if (application.getEditStatus().isLineBeingDrawn() && 
-                    !mouseEvent.getSource().equals(pictureFrame.getPicturePanel())) {
+                if (pictureFrame.isSelected()) {
+                    MouseEvent mouseEvent = (MouseEvent)e;
                     
-                    // If it is a mouse pressed event then we process the click as if 
-                    // it was on the picture.
-                    if (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED) {
-                        mousePressed(mouseEvent);
-                    }
+                    // TODO: Might need to change how this is done when introducing multiple picture frames.
                     
-                    // If it is a mouse motion event then we use the robot to move it 
-                    // back inside the panel.
-                    if (mouseEvent.getID() == MouseEvent.MOUSE_MOVED) {
-                        moveMouseToPictureCoordinates();
+                    // If a line is being drawn and the mouse event is outside the picture...
+                    if (application.getEditStatus().isLineBeingDrawn() && 
+                        !mouseEvent.getSource().equals(pictureFrame.getPicturePanel())) {
+                        
+                        // If it is a mouse pressed event then we process the click as if 
+                        // it was on the picture.
+                        if (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED) {
+                            mousePressed(mouseEvent);
+                        }
+                        
+                        // If it is a mouse motion event then we use the robot to move it 
+                        // back inside the panel.
+                        if (mouseEvent.getID() == MouseEvent.MOUSE_MOVED) {
+                            moveMouseToPictureCoordinates();
+                        }
                     }
                 }
             }
@@ -103,33 +105,35 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             private Point lastPoint;
 
             public void run() {
-                Point mousePoint = getPoint();
-                EditStatus editStatus = application.getEditStatus();
-                PicGraphics picGraphics = application.getPicGraphics();
-
-                // Check if mouse point has changed.
-                if (!mousePoint.equals(lastPoint)) {
-                    if (editStatus.isPaused() || editStatus.isMenuActive()) {
-                        // If paused or menu system is active then ignore mouse motion.
-                    } else {
-                        // Otherwise process the mouse event as per normal.
-                        processMouseMove(mousePoint);
-
-                        // Vary the colour of the end point of the temporary line so that it is obvious where it is.
-                        if (editStatus.isLineBeingDrawn()) {
-                            int index = (editStatus.getMouseY() << 8) + (editStatus.getMouseY() << 6) + (editStatus.getMouseX() << 1);
-                            int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
-                            int rgbCode = (new java.awt.Color(brightness, brightness, brightness)).getRGB();
-                            picGraphics.getScreen()[index] = rgbCode;
-                            picGraphics.getScreen()[index + 1] = rgbCode;
+                if (pictureFrame.isSelected()) {
+                    Point mousePoint = getPoint();
+                    EditStatus editStatus = application.getEditStatus();
+                    PicGraphics picGraphics = application.getPicGraphics();
+    
+                    // Check if mouse point has changed.
+                    if (!mousePoint.equals(lastPoint)) {
+                        if (editStatus.isPaused() || editStatus.isMenuActive()) {
+                            // If paused or menu system is active then ignore mouse motion.
+                        } else {
+                            // Otherwise process the mouse event as per normal.
+                            processMouseMove(mousePoint);
+    
+                            // Vary the colour of the end point of the temporary line so that it is obvious where it is.
+                            if (editStatus.isLineBeingDrawn()) {
+                                int index = (editStatus.getMouseY() << 8) + (editStatus.getMouseY() << 6) + (editStatus.getMouseX() << 1);
+                                int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
+                                int rgbCode = (new java.awt.Color(brightness, brightness, brightness)).getRGB();
+                                picGraphics.getScreen()[index] = rgbCode;
+                                picGraphics.getScreen()[index + 1] = rgbCode;
+                            }
                         }
+    
+                        // Change mouse cursor depending on position.
+                        updateMouseCursor(mousePoint);
+    
+                        // And check if we need to update the screen.
+                        picGraphics.checkDrawFrame();
                     }
-
-                    // Change mouse cursor depending on position.
-                    updateMouseCursor(mousePoint);
-
-                    // And check if we need to update the screen.
-                    picGraphics.checkDrawFrame();
                 }
             }
         };
