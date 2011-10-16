@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,6 +15,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyVetoException;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -389,6 +391,21 @@ public abstract class CommonHandler {
         application.getPicturePanel().resizeOffscreenImage();
     }
 
+    /**
+     * Creates a new picture frame on the desktop.
+     */
+    protected void newPicture() {
+        PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor());
+        Point activeFrameLocation = application.getPictureFrame().getLocation();
+        newPictureFrame.setLocation(activeFrameLocation.x + 25, activeFrameLocation.y + 25);
+        application.getDesktopPane().add(newPictureFrame);
+        newPictureFrame.getMouseHandler().startMouseMotionTimer();
+        try {
+            newPictureFrame.setSelected(true);
+        } catch (PropertyVetoException e) {
+        }
+    }
+    
     /**
      * Loads an AGI picture from the given File.
      * 
