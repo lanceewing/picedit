@@ -345,26 +345,17 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         boolean success = true;
         EditStatus editStatus = application.getEditStatus();
         Picture picture = application.getPicture();
-        PicGraphics picGraphics = application.getPicGraphics();
         
         switch (menuOption) {
             case NEW:
-                // Creates a completely new picture frame.
-                PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor());
-                Point activeFrameLocation = application.getPictureFrame().getLocation();
-                newPictureFrame.setLocation(activeFrameLocation.x + 25, activeFrameLocation.y + 25);
-                application.getDesktopPane().add(newPictureFrame);
-                newPictureFrame.getMouseHandler().startMouseMotionTimer();
-                try {
-                    newPictureFrame.setSelected(true);
-                } catch (PropertyVetoException e) {
-                }
+                newPicture();
                 break;
 
             case OPEN:
                 if (fileChooser.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     if (selectedFile != null) {
+                        newPicture();
                         loadPicture(selectedFile);
                     }
                 }
