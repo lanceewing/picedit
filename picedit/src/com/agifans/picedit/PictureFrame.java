@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -126,6 +127,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         
         this.setIconifiable(true);
         this.setResizable(true);
+        this.setClosable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
         this.setMaximumSize(this.maximumSizeMap.get(editStatus.getZoomFactor()));
@@ -274,6 +276,28 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     }
 
     public void internalFrameClosing(InternalFrameEvent event) {
+        Object[] saveOptions = { "Save", "Don't Save", "Cancel" };
+        StringBuilder message = new StringBuilder();
+        message.append("<html><b>Do you want to save the changes you made<br/>in the document \"");
+        if (editStatus.getPictureFile() == null) {
+            message.append("Untitled");
+        } else {
+            message.append(editStatus.getPictureFile().getName());
+        }
+        message.append("\"?</b><br/><br/><p>Your changes will be lost if you don’t save them.</p><br/></html>");
+        int answer = JOptionPane.showOptionDialog(application, message.toString(), "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, saveOptions, saveOptions[0]);
+        switch (answer) {
+            case JOptionPane.YES_OPTION:
+                // TODO: Save before closing.
+                dispose();
+                break;
+            case JOptionPane.NO_OPTION:
+                dispose();
+                break;
+            case JOptionPane.CANCEL_OPTION:
+                // Do nothing. Ignore close.
+                break;
+        }
     }
 
     /**
