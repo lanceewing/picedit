@@ -189,6 +189,7 @@ public class Picture {
         pictureCache.clear(picturePosition);
         pictureCodes.add(picturePosition, new PictureCode(code));
         picturePosition = picturePosition + 1;
+        editStatus.setUnsavedChanges(true);
     }
 
     /**
@@ -292,6 +293,7 @@ public class Picture {
             if (picturePosition < (pictureCodes.size() - 1)) {
                 pictureCode = pictureCodes.get(picturePosition);
             }
+            editStatus.setUnsavedChanges(true);
         }
         return pictureCode;
     }
