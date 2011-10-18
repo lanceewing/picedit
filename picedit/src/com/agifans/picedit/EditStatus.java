@@ -2,8 +2,6 @@ package com.agifans.picedit;
 
 import java.awt.Point;
 import java.io.File;
-import java.util.LinkedList;
-import java.util.prefs.Preferences;
 
 /**
  * This class holds everything about the current picture editing status.
@@ -129,9 +127,8 @@ public class EditStatus {
             priorityShowing = false;
             pictureType = PictureType.AGI;
             backgroundEnabled = false;
-            //dualModeEnabled = false;
-            //bandsOn = false;
             pictureFile = null;
+            unsavedChanges = false;
         }
         resetTool();
     }

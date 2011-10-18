@@ -423,6 +423,7 @@ public abstract class CommonHandler {
 
             // Store file name for display on title bar.
             editStatus.setPictureFile(pictureFile);
+            editStatus.setUnsavedChanges(false);
             application.updateRecentPictures(pictureFile);
             
             // Open the file for reading.
@@ -473,6 +474,7 @@ public abstract class CommonHandler {
         try {
             // Store file name for display on title bar.
             editStatus.setPictureFile(pictureFile);
+            editStatus.setUnsavedChanges(false);
             application.updateRecentPictures(pictureFile);
             
             // Open the file for reading.
