@@ -86,6 +86,11 @@ public class EditStatus {
     private int zoomFactor;
     
     /**
+     * Whether the picture has unsaved changes or not.
+     */
+    private boolean unsavedChanges;
+    
+    /**
      * Constructor for EditStatus.
      */
     public EditStatus() {
@@ -537,6 +542,24 @@ public class EditStatus {
 
     public void setZoomFactor(int zoomFactor) {
         this.zoomFactor = zoomFactor;
+    }
+    
+    /**
+     * Returns true if the picture has unsaved changes.
+     * 
+     * @return true if the picture has unsaved changes; otherwise false.
+     */
+    public boolean hasUnsavedChanges() {
+        return unsavedChanges;
+    }
+    
+    /**
+     * Sets whether the picture has unsaved changes or not.
+     * 
+     * @param unsavedChanges true if the picture has unsaved changes; otherwise false.
+     */
+    public void setUnsavedChanges(boolean unsavedChanges) {
+        this.unsavedChanges = unsavedChanges;
     }
     
     /**
