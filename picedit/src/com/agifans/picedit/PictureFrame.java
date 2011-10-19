@@ -257,12 +257,17 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         // Make sure the slider is up to date with the picture position.
         positionSlider.getModel().setValue(picture.getPicturePosition());
         
-        // If we are in a window then update the title to show the current picture name.
-        if (editStatus.getPictureFile() == null) {
-            this.setTitle("Untitled");
-        } else {
-            this.setTitle(editStatus.getPictureFile().getName());
+        // Update the title to show the current picture name.
+        StringBuilder title = new StringBuilder();
+        if (editStatus.hasUnsavedChanges()) {
+          title.append("*");
         }
+        if (editStatus.getPictureFile() == null) {
+            title.append("Untitled");
+        } else {
+            title.append(editStatus.getPictureFile().getName());
+        }
+        this.setTitle(title.toString());
     }
 
     public void internalFrameActivated(InternalFrameEvent event) {
@@ -276,27 +281,29 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     }
 
     public void internalFrameClosing(InternalFrameEvent event) {
-        Object[] saveOptions = { "Save", "Don't Save", "Cancel" };
-        StringBuilder message = new StringBuilder();
-        message.append("<html><b>Do you want to save the changes you made<br/>in the document \"");
-        if (editStatus.getPictureFile() == null) {
-            message.append("Untitled");
-        } else {
-            message.append(editStatus.getPictureFile().getName());
-        }
-        message.append("\"?</b><br/><br/><p>Your changes will be lost if you don’t save them.</p><br/></html>");
-        int answer = JOptionPane.showOptionDialog(application, message.toString(), "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, saveOptions, saveOptions[0]);
-        switch (answer) {
-            case JOptionPane.YES_OPTION:
-                // TODO: Save before closing.
-                dispose();
-                break;
-            case JOptionPane.NO_OPTION:
-                dispose();
-                break;
-            case JOptionPane.CANCEL_OPTION:
-                // Do nothing. Ignore close.
-                break;
+        if (editStatus.hasUnsavedChanges()) {
+            Object[] saveOptions = { "Save", "Don't Save", "Cancel" };
+            StringBuilder message = new StringBuilder();
+            message.append("<html><b>Do you want to save the changes you made<br/>in the document \"");
+            if (editStatus.getPictureFile() == null) {
+                message.append("Untitled");
+            } else {
+                message.append(editStatus.getPictureFile().getName());
+            }
+            message.append("\"?</b><br/><br/><p>Your changes will be lost if you don’t save them.</p><br/></html>");
+            int answer = JOptionPane.showOptionDialog(application, message.toString(), "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, saveOptions, saveOptions[0]);
+            switch (answer) {
+                case JOptionPane.YES_OPTION:
+                    // TODO: Save before closing.
+                    dispose();
+                    break;
+                case JOptionPane.NO_OPTION:
+                    dispose();
+                    break;
+                case JOptionPane.CANCEL_OPTION:
+                    // Do nothing. Ignore close.
+                    break;
+            }
         }
     }
 

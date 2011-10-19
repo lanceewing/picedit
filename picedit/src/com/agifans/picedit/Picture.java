@@ -6,9 +6,18 @@ import java.awt.image.ColorModel;
 import java.awt.image.DataBufferInt;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import com.agifans.picedit.PictureCache.PictureCacheEntry;
 
@@ -65,12 +74,12 @@ public class Picture {
     private Image controlImage;
 
     /**
-     * Holds the editing status of the PICEDIT application.
+     * Holds the editing status for this Picture.
      */
     private EditStatus editStatus;
 
     /**
-     * Holds the main graphics routines for drawing to the PICEDIT screen. 
+     * Holds the graphics routines for drawing to the PICEDIT screen. 
      */
     private PicGraphics picGraphics;
 
@@ -397,6 +406,99 @@ public class Picture {
         return controlImage;
     }
 
+    /**
+     * Loads an AGI picture from the given File.
+     * 
+     * @param pictureFile the File to load the AGI picture from.
+     */
+    public void loadPicture(File pictureFile) {
+        BufferedInputStream in = null;
+        
+        try {
+            // Make sure we start with a clean picture.
+            editStatus.clear();
+            this.clearPicture();
+
+            // Store file name for display on title bar.
+            editStatus.setPictureFile(pictureFile);
+            editStatus.setUnsavedChanges(false);
+            application.updateRecentPictures(pictureFile);
+            
+            // Open the file for reading.
+            in = new BufferedInputStream(new FileInputStream(pictureFile));
+
+            // Read each of the bytes and store it in the pictureCodes LinkedList.
+            int pictureCode;
+            while ((pictureCode = in.read()) != -1) {
+                if (pictureCode != 0xFF) {
+                    this.addPictureCode(pictureCode);
+                } else {
+                    // 0xFF is the end of an AGI picture.
+                    break;
+                }
+            }
+
+            this.drawPicture();
+            editStatus.setTool(ToolType.NONE);
+            this.updateScreen();
+
+        } catch (FileNotFoundException fnfe) {
+            // This can happen for files in the history.
+            JOptionPane.showMessageDialog(this, "That file no longer exists.", "File not found", JOptionPane.WARNING_MESSAGE);
+        } catch (IOException ioe) {
+            System.out.printf("Error loading picture : %s.\n", pictureFile.getPath());
+            System.exit(1);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (Exception e) {
+                    // Not worried about file close errors.
+                }
+            }
+        }
+    }
+
+    /**
+     * Saves the AGI picture to the given File.
+     * 
+     * @param pictureFile the File to write the AGI picture out to.
+     */
+    public void savePicture(File pictureFile) {
+        BufferedOutputStream out = null;
+        EditStatus editStatus = application.getEditStatus();
+        Picture picture = application.getPicture();
+
+        try {
+            // Store file name for display on title bar.
+            editStatus.setPictureFile(pictureFile);
+            editStatus.setUnsavedChanges(false);
+            application.updateRecentPictures(pictureFile);
+            
+            // Open the file for reading.
+            out = new BufferedOutputStream(new FileOutputStream(pictureFile));
+
+            // Write each of the picture codes out to the file.
+            for (PictureCode pictureCode : picture.getPictureCodes()) {
+                out.write(pictureCode.getCode());
+            }
+        } catch (FileNotFoundException fnfe) {
+            System.out.printf("Unable to create picture file : %s. %s\n", pictureFile.getPath(), fnfe.getMessage());
+            System.exit(1);
+        } catch (IOException ioe) {
+            System.out.printf("Error saving picture : %s. %s\n", pictureFile.getPath(), ioe.getMessage());
+            System.exit(1);
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                    // Not worried about file close errors.
+                }
+            }
+        }
+    }
+    
     /**
      * Draws the picture from the beginning up to the current picture position.
      */
