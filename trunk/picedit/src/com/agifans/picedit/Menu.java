@@ -304,7 +304,9 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                     JMenuItem pictureMenuItem = new JMenuItem(pictureFile.getName());
                     pictureMenuItem.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            loadPicture(pictureFile);
+                            newPicture();
+                            application.getPicture().loadPicture(pictureFile);
+                            application.updateRecentPictures(pictureFile);
                         }
                     });
                     openRecentMenu.add(pictureMenuItem);
@@ -356,7 +358,8 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                     File selectedFile = fileChooser.getSelectedFile();
                     if (selectedFile != null) {
                         newPicture();
-                        loadPicture(selectedFile);
+                        application.getPicture().loadPicture(selectedFile);
+                        application.updateRecentPictures(selectedFile);
                     }
                 }
                 break;
@@ -367,11 +370,13 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                     if (fileChooser.showSaveDialog(this.application) == JFileChooser.APPROVE_OPTION) {
                         File selectedFile = fileChooser.getSelectedFile();
                         if (selectedFile != null) {
-                            savePicture(selectedFile);
+                            application.getPicture().savePicture(selectedFile);
+                            application.updateRecentPictures(selectedFile);
                         }
                     }
                 } else {
-                    savePicture(editStatus.getPictureFile());
+                    application.getPicture().savePicture(editStatus.getPictureFile());
+                    application.updateRecentPictures(editStatus.getPictureFile());
                 }
                 break;
 

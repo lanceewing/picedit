@@ -421,8 +421,6 @@ public class Picture {
 
             // Store file name for display on title bar.
             editStatus.setPictureFile(pictureFile);
-            editStatus.setUnsavedChanges(false);
-            application.updateRecentPictures(pictureFile);
             
             // Open the file for reading.
             in = new BufferedInputStream(new FileInputStream(pictureFile));
@@ -440,11 +438,12 @@ public class Picture {
 
             this.drawPicture();
             editStatus.setTool(ToolType.NONE);
+            editStatus.setUnsavedChanges(false);
             this.updateScreen();
 
         } catch (FileNotFoundException fnfe) {
             // This can happen for files in the history.
-            JOptionPane.showMessageDialog(this, "That file no longer exists.", "File not found", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "That file no longer exists.", "File not found", JOptionPane.WARNING_MESSAGE);
         } catch (IOException ioe) {
             System.out.printf("Error loading picture : %s.\n", pictureFile.getPath());
             System.exit(1);
@@ -466,22 +465,21 @@ public class Picture {
      */
     public void savePicture(File pictureFile) {
         BufferedOutputStream out = null;
-        EditStatus editStatus = application.getEditStatus();
-        Picture picture = application.getPicture();
 
         try {
             // Store file name for display on title bar.
             editStatus.setPictureFile(pictureFile);
-            editStatus.setUnsavedChanges(false);
-            application.updateRecentPictures(pictureFile);
             
             // Open the file for reading.
             out = new BufferedOutputStream(new FileOutputStream(pictureFile));
 
             // Write each of the picture codes out to the file.
-            for (PictureCode pictureCode : picture.getPictureCodes()) {
+            for (PictureCode pictureCode : this.getPictureCodes()) {
                 out.write(pictureCode.getCode());
             }
+            
+            editStatus.setUnsavedChanges(false);
+            
         } catch (FileNotFoundException fnfe) {
             System.out.printf("Unable to create picture file : %s. %s\n", pictureFile.getPath(), fnfe.getMessage());
             System.exit(1);

@@ -128,7 +128,7 @@ public class EditStatus {
             pictureType = PictureType.AGI;
             backgroundEnabled = false;
             pictureFile = null;
-            unsavedChanges = false;
+            unsavedChanges = true;
         }
         resetTool();
     }
