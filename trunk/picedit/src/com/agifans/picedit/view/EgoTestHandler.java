@@ -73,7 +73,7 @@ public class EgoTestHandler {
                 }
             }
         };
-        timer.scheduleAtFixedRate(walkingTask, 500, 500);
+        timer.scheduleAtFixedRate(walkingTask, 100, 100);
     }
     
     public Image getCurrentCellImage() {
@@ -96,7 +96,7 @@ public class EgoTestHandler {
      */
     public void drawEgo(Graphics graphics, int zoomFactor) {
         Image egoImage = this.getCurrentCellImage();
-        graphics.drawImage(egoImage, x, y, getCurrentCellWidth() * 2 * zoomFactor, getCurrentCellHeight() * zoomFactor, null);
+        graphics.drawImage(egoImage, x * 2 * zoomFactor, y * zoomFactor, getCurrentCellWidth() * 2 * zoomFactor, getCurrentCellHeight() * zoomFactor, null);
     }
     
     /**
@@ -115,15 +115,31 @@ public class EgoTestHandler {
             // Move in the appropriate direction.
             switch (direction) {
                 case NORTH:
+                    y = y - 1;
+                    if (y > 0) {
+                        y = 167 - this.getCurrentCellHeight();
+                    }
                     break;
             
                 case SOUTH:
+                    y = y + 1;
+                    if (y > (167 - this.getCurrentCellHeight())) {
+                        y = 0;
+                    }
                     break;
             
                 case EAST:
+                    x = x + 1;
+                    if (x > (159 - this.getCurrentCellWidth())) {
+                        x = 0;
+                    }
                     break;
             
                 case WEST:
+                    x = x - 1;
+                    if (x < 0) {
+                        x = 159 - this.getCurrentCellWidth();
+                    }
                     break;
             }
         }
