@@ -6,43 +6,53 @@ import java.awt.image.*;
 import com.agifans.picedit.EgaPalette;
 
 /**
+ * A single Cell within a Loop of an AGI View resource.
  * 
+ * @author Lance Ewing
  */
 public class Cell {
     
-    /** Cell's Width */
+    /** 
+     * The width of the Cell. 
+     */
     protected int width;
 
-    /** Cell's Height */
+    /**
+     * The height of the Cell.
+     */
     protected int height;
 
-    /** Cell's Data */
-    protected int[] data;
+    /** 
+     * The RGB pixel data for the Cell.
+     */
+    protected int[] rgbPixelData;
 
-    /** Cell's Transparent Color */
-    protected int transparent;
+    /** 
+     * The RGB colour that is the transparent colour for this Cell.
+     */
+    protected int transparentColour;
 
     /**
      * Constructor for Cell.
      * 
-     * @param viewData
-     * @param start
-     * @param loopNumber
+     * @param viewData The byte array containing the full data for the VIEW resource that this Loop belongs to.
+     * @param start The offset of where this Cell starts within the VIEW.
+     * @param loopNumber The number of the Loop that this Cell belongs to.
      */
     public Cell(byte[] viewData, int start, int loopNumber) {
-        int trans;
-        short mirrorInfo;
-        byte transColor;
-
-        width = (viewData[start] & 0xFF);
-        height = (viewData[start+1] & 0xFF);
-        trans = (viewData[start+2] & 0xFF);
+        // Get the width and height of this Cell.
+        this.width = (viewData[start] & 0xFF);
+        this.height = (viewData[start+1] & 0xFF);
         
-        transColor = (byte) (trans & 0x0F);
-        mirrorInfo = (short) ((trans & 0xF0) >> 4);
+        // Get the transparent colour and mirror info.
+        int transMirror = (viewData[start+2] & 0xFF);
+        int transColorIndex = (transMirror & 0x0F);
+        int mirrorInfo = ((transMirror & 0xF0) >> 4);
 
-        loadData(viewData, start + 3, transColor);
+        // Load the RGB pixel data for this Cell.
+        loadRGBPixelData(viewData, start + 3, transColorIndex);
 
+        // If the pixel data is to be mirrored then do this here.
         if ((mirrorInfo & 0x8) != 0) {
             if ((mirrorInfo & 0x7) != loopNumber) {
                 mirror();
@@ -50,30 +60,49 @@ public class Cell {
         }
     }
 
-    protected void loadData(byte b[], int off, byte transColor) {
-        int i, j, x, y, color, count;
-        data = new int[width * height];
+    /**
+     * Loads the RGB pixel data from the given raw VIEW resource byte array.
+     * 
+     * @param viewData The byte array containing the full data for the VIEW resource that this Loop belongs to.
+     * @param offset The offset into the viewData array where the RGB pixel data begins.
+     * @param transColorIndex The EGA colour index of the transparent colour.
+     */
+    protected void loadRGBPixelData(byte[] viewData, int offset, int transColorIndex) {
+        int i, pixelIndex, x, y;
+        
+        // Create the array to hold the RGB pixel data.
+        this.rgbPixelData = new int[width * height];
+        
+        // Store the RGB value for the transparent colour.
+        this.transparentColour = EgaPalette.colours[transColorIndex];
 
-        for (j = 0, y = 0; y < height; y++) {
-            for (x = 0; b[off] != 0; off++) {
-                color = (b[off] & 0xF0) >> 4;
-                count = (b[off] & 0x0F);
+        // Decode the cell data and convert to an RGB pixel array.
+        for (pixelIndex = 0, y = 0; y < height; y++) {
+            // Process the data for this line of the Cell. A count value of 0 ends the line.
+            for (x = 0; viewData[offset] != 0; offset++) {
+                // Work out the colour index and pixel count.
+                int color = (viewData[offset] & 0xF0) >> 4;
+                int count = (viewData[offset] & 0x0F);
 
-                for (i = 0; i < count; i++, j++, x++) {
-                    data[j] = EgaPalette.colours[color];
+                // Add pixels of the specified colour for the specified count.
+                for (i = 0; i < count; i++, pixelIndex++, x++) {
+                    rgbPixelData[pixelIndex] = EgaPalette.colours[color];
                 }
             }
 
-            for (; x < width; j++, x++) {
-                data[j] = EgaPalette.colours[transColor];
+            // Pad the rest of the line with the transparent colour.
+            for (; x < width; pixelIndex++, x++) {
+                rgbPixelData[pixelIndex] = this.transparentColour;
             }
 
-            off++;
+            offset++;
         }
-
-        transparent = EgaPalette.colours[transColor];
     }
 
+    /**
+     * Performs a mirror of the RGB pixel data. What this actually does is a flip
+     * of the pixel data horizontally across the vertical axis. 
+     */
     protected void mirror() {
         int i1, i2, x1, x2, y;
         int b;
@@ -83,42 +112,60 @@ public class Cell {
                 i1 = (y * width) + x1;
                 i2 = (y * width) + x2;
 
-                b = data[i1];
-                data[i1] = data[i2];
-                data[i2] = b;
+                b = rgbPixelData[i1];
+                rgbPixelData[i1] = rgbPixelData[i2];
+                rgbPixelData[i2] = b;
             }
         }
     }
 
+    /**
+     * Gets the width of this Cell.
+     * 
+     * @return The width of this Cell.
+     */
     public int getWidth() {
         return width;
     }
-
+    
+    /**
+     * Gets the height of this Cell.
+     * 
+     * @return The height of this Cell.
+     */
     public int getHeight() {
         return height;
     }
 
-    public int[] getPixelData() {
-        return data;
-    }
-
-    public int getTransparentPixel() {
-        return transparent;
+    /**
+     * Gets the RGB pixel data for this Cell.
+     * 
+     * @return The RGB pixel data for his Cell.
+     */
+    public int[] getRGBPixelData() {
+        return rgbPixelData;
     }
 
     /**
-     * Obtain an standard Image object that is a graphical representation of the
-     * cell.
-     *
-     * @param context Game context used to generate the image.
+     * Gets the transparent colour for this Cell (RGB).
+     * 
+     * @return The transparent colour for this Cell (RGB).
      */
-    public Image getImage() {
-        int[] data = (int[]) this.data.clone();
-        DirectColorModel colorModel = (DirectColorModel) ColorModel.getRGBdefault();
-        int i;
+    public int getTransparentColour() {
+        return transparentColour;
+    }
 
-        for (i = 0; i < (width * height); i++) {
-            if (data[i] != transparent) {
+    /**
+     * Converts the RGB pixel data in to an Image.
+     * 
+     * @return The created Image.
+     */
+    public Image convertToImage() {
+        int[] data = (int[]) this.rgbPixelData.clone();
+        DirectColorModel colorModel = (DirectColorModel) ColorModel.getRGBdefault();
+
+        for (int i = 0; i < (width * height); i++) {
+            if (data[i] != transparentColour) {
                 data[i] = EgaPalette.colours[data[i]];
             } else {
                 data[i] = 0x00ffffff;
