@@ -81,11 +81,6 @@ public final class PicGraphics {
      * Cursor to show when hiding the mouse cursor (i.e. a blank cursor).
      */
     private Cursor blankCursor;
-
-    /**
-     * The handler for managing the Ego Test mode.
-     */
-    private EgoTestHandler egoTestHandler;
     
     /**
      * Constructor for PicGraphics.
@@ -108,8 +103,6 @@ public final class PicGraphics {
         blankCursor = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 
         createPriorityBandsImage(PictureType.AGI);
-        
-        this.egoTestHandler = new EgoTestHandler();
     }
 
     /**

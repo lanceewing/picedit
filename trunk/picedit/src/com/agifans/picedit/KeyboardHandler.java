@@ -3,6 +3,8 @@ package com.agifans.picedit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import com.agifans.picedit.view.EgoTestHandler;
+
 /**
  * Handles processing of PICEDIT key pressed events.
  * 
@@ -11,12 +13,20 @@ import java.awt.event.KeyListener;
 public class KeyboardHandler extends CommonHandler implements KeyListener {
 
     /**
+     * The handler for managing the Ego Test mode.
+     */
+    private EgoTestHandler egoTestHandler;
+    
+    /**
      * Constructor for KeyboardHandler.
      * 
      * @param application the PICEDIT application component.
+     * @param egoTestHandler The handler for managing the Ego Test mode.
      */
-    public KeyboardHandler(PicEdit application) {
+    public KeyboardHandler(PicEdit application, EgoTestHandler egoTestHandler) {
         super(application);
+        
+        this.egoTestHandler = egoTestHandler;
     }
 
     /**
@@ -33,18 +43,24 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
         if (editStatus.isPaused()) {
             // Ignore key events if the application is paused.
         } else {
-            // Handle picture buffer navigation keys.
-            if (key == KeyEvent.VK_HOME) {
-                picture.moveToStartOfPictureBuffer();
-            }
-            if (key == KeyEvent.VK_LEFT) {
-                picture.moveBackOnePictureAction();
-            }
-            if (key == KeyEvent.VK_RIGHT) {
-                picture.moveForwardOnePictureAction();
-            }
-            if (key == KeyEvent.VK_END) {
-                picture.moveToEndOfPictureBuffer();
+            if (editStatus.isEgoTestEnabled()) {
+                // If Ego Test mode enabled, delegate to the EgoTestHandler.
+                this.egoTestHandler.handleKeyEvent(e);
+                
+            } else {
+                // Handle picture buffer navigation keys.
+                if (key == KeyEvent.VK_HOME) {
+                    picture.moveToStartOfPictureBuffer();
+                }
+                if (key == KeyEvent.VK_LEFT) {
+                    picture.moveBackOnePictureAction();
+                }
+                if (key == KeyEvent.VK_RIGHT) {
+                    picture.moveForwardOnePictureAction();
+                }
+                if (key == KeyEvent.VK_END) {
+                    picture.moveToEndOfPictureBuffer();
+                }
             }
 
             // Handle tool selection keys.

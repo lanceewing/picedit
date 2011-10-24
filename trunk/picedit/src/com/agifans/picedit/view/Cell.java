@@ -161,17 +161,6 @@ public class Cell {
      * @return The created Image.
      */
     public Image convertToImage() {
-        int[] data = (int[]) this.rgbPixelData.clone();
-        DirectColorModel colorModel = (DirectColorModel) ColorModel.getRGBdefault();
-
-        for (int i = 0; i < (width * height); i++) {
-            if (data[i] != transparentColour) {
-                data[i] = EgaPalette.colours[data[i]];
-            } else {
-                data[i] = 0x00ffffff;
-            }
-        }
-
-        return Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(width, height, colorModel, data, 0, width));
+        return Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(width, height, ColorModel.getRGBdefault(), this.rgbPixelData, 0, width));
     }
 }

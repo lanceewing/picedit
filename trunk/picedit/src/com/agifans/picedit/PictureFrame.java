@@ -27,6 +27,8 @@ import javax.swing.JSlider;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
+import com.agifans.picedit.view.EgoTestHandler;
+
 /**
  * An internal picture frame to display in the desktop pane. There is one 
  * such frame for each picture that is loaded. It is in these frames that
@@ -68,6 +70,11 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     private PicGraphics picGraphics;
     
     /**
+     * The handler for managing the Ego Test mode.
+     */
+    private EgoTestHandler egoTestHandler;
+    
+    /**
      * Holds the maximum frame size for each zoom factor.
      */
     private Map<Integer, Dimension> maximumSizeMap;
@@ -92,9 +99,10 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.application = application;
         this.editStatus = new EditStatus();
         this.editStatus.setZoomFactor(initialZoomFactor);
+        this.egoTestHandler = new EgoTestHandler(editStatus);
         this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), application, 25);
         this.picture = new Picture(editStatus, picGraphics);
-        this.picturePanel = new PicturePanel(editStatus, picGraphics, picture);
+        this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, egoTestHandler);
         
         mouseHandler = new MouseHandler(this, application);
         picturePanel.addMouseListener(mouseHandler);
@@ -104,7 +112,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.calculateResizeDimensions();
         this.setLayout(new BorderLayout());
         
-        KeyboardHandler keyboardHandler = new KeyboardHandler(application);
+        KeyboardHandler keyboardHandler = new KeyboardHandler(application, egoTestHandler);
         this.getContentPane().addKeyListener(keyboardHandler);
         
         // Add the panel that holds the picture that is being edited.
