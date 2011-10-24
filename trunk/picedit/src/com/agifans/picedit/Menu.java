@@ -162,6 +162,9 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         dualModeMenuItem.setMnemonic(KeyEvent.VK_D);
         dualModeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, acceleratorKey));
         dualModeMenuItem.setSelected(editStatus.isDualModeEnabled());
+        JMenuItem egoTestMenuItem = new JCheckBoxMenuItem(MenuOption.EGO_TEST.getDisplayValue());
+        egoTestMenuItem.setMnemonic(KeyEvent.VK_E);
+        egoTestMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, acceleratorKey));
         JMenuItem zoomInMenuItem = new JMenuItem(MenuOption.ZOOM_IN.getDisplayValue());
         zoomInMenuItem.setAccelerator(KeyStroke.getKeyStroke('+'));
         JMenuItem zoomOutMenuItem = new JMenuItem(MenuOption.ZOOM_OUT.getDisplayValue());
@@ -176,6 +179,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         priorityMenuItem.addActionListener(this);
         bandsMenuItem.addActionListener(this);
         dualModeMenuItem.addActionListener(this);
+        egoTestMenuItem.addActionListener(this);
         zoomInMenuItem.addActionListener(this);
         zoomOutMenuItem.addActionListener(this);
         zoomx1MenuItem.addActionListener(this);
@@ -189,6 +193,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         viewMenu.add(backgroundMenuItem);
         viewMenu.add(bandsMenuItem);
         viewMenu.add(dualModeMenuItem);
+        viewMenu.add(egoTestMenuItem);
         viewMenu.addSeparator();
         JMenu zoomMenu = new JMenu("Zoom");
         zoomMenu.setMnemonic(KeyEvent.VK_Z);
@@ -407,10 +412,6 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
             case HELP:
                 showHelp();
                 break;
-
-            case VIEW_DATA:
-                showHexData();
-                break;
             
             case ZOOM_IN:
                 if (editStatus.getZoomFactor() < 5) {
@@ -454,6 +455,10 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
 
             case DUAL_MODE:
                 editStatus.setDualModeEnabled(!editStatus.isDualModeEnabled());
+                break;
+                
+            case EGO_TEST:
+                editStatus.setEgoTestEnabled(!editStatus.isEgoTestEnabled());
                 break;
                 
             case LINE:

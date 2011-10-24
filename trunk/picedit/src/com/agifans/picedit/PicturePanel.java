@@ -85,61 +85,60 @@ public class PicturePanel extends JPanel {
             offScreenGC = (Graphics2D) offScreenImage.getGraphics();
         }
 
-        // If we're in text mode ("Help" and "View Data"), then just display the image.
-        if (editStatus.isTextMode()) {
-            offScreenGC.drawImage(picGraphics.getTextImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+        // Draw the background image (if there is one) to the offscreen image.
+        if ((picGraphics.getBackgroundImage() != null) && (editStatus.isBackgroundEnabled())) {
+            offScreenGC.drawImage(picGraphics.getBackgroundImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
         } else {
-            // Draw the background image (if there is one) to the offscreen image.
-            if ((picGraphics.getBackgroundImage() != null) && (editStatus.isBackgroundEnabled())) {
-                offScreenGC.drawImage(picGraphics.getBackgroundImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-            } else {
-                // Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
-                if (editStatus.isDualModeEnabled()) {
-                    offScreenGC.setColor(EgaPalette.RED);
-                } else if (!editStatus.isPriorityShowing()) {
-                    offScreenGC.setColor(EgaPalette.WHITE);
-                } else if (editStatus.isBandsOn()) {
-                    offScreenGC.setColor(EgaPalette.DARKGREY);
-                } else {
-                    offScreenGC.setColor(EgaPalette.RED);
-                }
-                offScreenGC.fillRect(0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
-            }
-
+            // Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
             if (editStatus.isDualModeEnabled()) {
-                // Dual mode is when the priority and visual screens mix.
-                offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-
-                // To create the effect demonstrated by Joakim in APE, we need a solid white.
-                BufferedImage tmpVisualImage = new BufferedImage(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), BufferedImage.TYPE_INT_ARGB);
-                Graphics tmpVisualGraphics = tmpVisualImage.getGraphics();
-                tmpVisualGraphics.setColor(EgaPalette.WHITE);
-                tmpVisualGraphics.fillRect(0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
-                tmpVisualGraphics.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-
-                // Build a RescapeOp to perform the 50% transparency.
-                float[] scales = { 1f, 1f, 1f, 0.5f };
-                float[] offsets = new float[4];
-                RescaleOp rop = new RescaleOp(scales, offsets, null);
-
-                // Draw the visual screen on top of the priority screen with 50% transparency.
-                offScreenGC.drawImage(tmpVisualImage, rop, 0, 0);
-
+                offScreenGC.setColor(EgaPalette.RED);
+            } else if (!editStatus.isPriorityShowing()) {
+                offScreenGC.setColor(EgaPalette.WHITE);
+            } else if (editStatus.isBandsOn()) {
+                offScreenGC.setColor(EgaPalette.DARKGREY);
             } else {
-                if (editStatus.isPriorityShowing()) {
-                    offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-                } else {
-                    offScreenGC.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-                }
+                offScreenGC.setColor(EgaPalette.RED);
             }
-
-            if (editStatus.isBandsOn()) {
-                offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-            }
-            
-            // Draw the  PICEDIT screen to the offscreen image (transparent pixels will show the background).
-            offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+            offScreenGC.fillRect(0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
         }
+
+        if (editStatus.isDualModeEnabled()) {
+            // Dual mode is when the priority and visual screens mix.
+            offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+
+            // To create the effect demonstrated by Joakim in APE, we need a solid white.
+            BufferedImage tmpVisualImage = new BufferedImage(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), BufferedImage.TYPE_INT_ARGB);
+            Graphics tmpVisualGraphics = tmpVisualImage.getGraphics();
+            tmpVisualGraphics.setColor(EgaPalette.WHITE);
+            tmpVisualGraphics.fillRect(0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
+            tmpVisualGraphics.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+
+            // Build a RescapeOp to perform the 50% transparency.
+            float[] scales = { 1f, 1f, 1f, 0.5f };
+            float[] offsets = new float[4];
+            RescaleOp rop = new RescaleOp(scales, offsets, null);
+
+            // Draw the visual screen on top of the priority screen with 50% transparency.
+            offScreenGC.drawImage(tmpVisualImage, rop, 0, 0);
+
+        } else {
+            if (editStatus.isPriorityShowing()) {
+                offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+            } else {
+                offScreenGC.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+            }
+        }
+
+        if (editStatus.isBandsOn()) {
+            offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+        }
+        
+        if (editStatus.isEgoTestEnabled()) {
+            // TODO: Draw ego.
+        }
+        
+        // Draw the PicGraphics screen on top of everything else. This is mainly for the temporary lines.
+        offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 
         // Now display the screen to the user.
         g.drawImage(offScreenImage, 0, 0, this);

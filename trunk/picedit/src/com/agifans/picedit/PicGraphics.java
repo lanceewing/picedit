@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.agifans.picedit.view.EgoTestHandler;
+
 /**
  * The graphics routines with which the application draws the screen. There
  * are four different images held in this object. The first is the main 
@@ -23,11 +25,6 @@ public final class PicGraphics {
      * The Image for the background image.
      */
     private Image backgroundImage;
-
-    /**
-     * The Image for the text screen.
-     */
-    private Image textImage;
 
     /**
      * The Image for the PICEDIT screen.
@@ -86,6 +83,11 @@ public final class PicGraphics {
     private Cursor blankCursor;
 
     /**
+     * The handler for managing the Ego Test mode.
+     */
+    private EgoTestHandler egoTestHandler;
+    
+    /**
      * Constructor for PicGraphics.
      * 
      * @param width The width of the underlying image.
@@ -105,8 +107,9 @@ public final class PicGraphics {
         defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
         blankCursor = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 
-        textImage = component.createImage(640, 480);
         createPriorityBandsImage(PictureType.AGI);
+        
+        this.egoTestHandler = new EgoTestHandler();
     }
 
     /**
@@ -624,24 +627,6 @@ public final class PicGraphics {
      */
     public Image getScreenImage() {
         return screenImage;
-    }
-
-    /**
-     * Gets the text image to display.
-     * 
-     * @return the text image.
-     */
-    public Image getTextImage() {
-        return textImage;
-    }
-
-    /**
-     * Sets the text image.
-     * 
-     * @param textImage the text image to display.
-     */
-    public void setTextImage(Image textImage) {
-        this.textImage = textImage;
     }
 
     /**

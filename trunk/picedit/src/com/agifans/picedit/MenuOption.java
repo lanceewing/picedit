@@ -33,6 +33,7 @@ public enum MenuOption {
     BACKGROUND("Background"), 
     BANDS("Bands"), 
     DUAL_MODE("Dual Mode"),
+    EGO_TEST("Ego Test"),
     LINE("Line"),
     PEN("Pen"),
     STEP("Step"),

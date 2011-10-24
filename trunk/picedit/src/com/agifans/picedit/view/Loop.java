@@ -37,7 +37,7 @@ public class Loop {
         // Create each of the Cells.
         int offset = start + 1;
         for (int cellNumber = 0; cellNumber < cellCount; cellNumber++) {
-            int cellOffset = start + ((viewData[offset+1] & 0xFF) << 8) | (viewData[offset] & 0xFF);
+            int cellOffset = start + (((viewData[offset+1] & 0xFF) << 8) | (viewData[offset] & 0xFF));
             cells[cellNumber] = new Cell(viewData, cellOffset, loopNumber);
             offset += 2;
         }

@@ -79,6 +79,11 @@ public class EditStatus {
     private boolean dualModeEnabled;
     
     /**
+     * Whether the EGO Test mode is enabled or not.
+     */
+    private boolean egoTestEnabled;
+    
+    /**
      * The factor by which to multiply the screen size by.
      */
     private int zoomFactor;
@@ -533,6 +538,14 @@ public class EditStatus {
         this.dualModeEnabled = dualModeEnabled;
     }
     
+    public boolean isEgoTestEnabled() {
+        return egoTestEnabled;
+    }
+
+    public void setEgoTestEnabled(boolean egoTestEnabled) {
+        this.egoTestEnabled = egoTestEnabled;
+    }
+
     public int getZoomFactor() {
         return zoomFactor;
     }
