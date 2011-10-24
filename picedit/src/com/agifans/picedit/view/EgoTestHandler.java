@@ -48,7 +48,7 @@ public class EgoTestHandler {
     /**
      * The Direction that Ego is moving.
      */
-    protected Direction direction;
+    protected Direction direction = Direction.NONE;
     
     /**
      * Constructor for EgoTestHandler.
@@ -103,7 +103,30 @@ public class EgoTestHandler {
      * Cycles Ego to the next Cell and moves in the current direction.
      */
     public void cycleAndMoveEgo() {
-        
+        if (direction != Direction.NONE) {
+            Loop loop = this.egoView.getLoop(currentLoop);
+            
+            // Cycle to the next cell in this loop.
+            this.currentCell++;
+            if (this.currentCell >= loop.getNumberOfCells()) {
+                this.currentCell = 0;
+            }
+            
+            // Move in the appropriate direction.
+            switch (direction) {
+                case NORTH:
+                    break;
+            
+                case SOUTH:
+                    break;
+            
+                case EAST:
+                    break;
+            
+                case WEST:
+                    break;
+            }
+        }
     }
     
     /**
@@ -120,6 +143,8 @@ public class EgoTestHandler {
                     this.direction = Direction.NONE;
                 } else {
                     this.direction = Direction.NORTH;
+                    this.currentLoop = 3;
+                    this.currentCell = 0;
                 }
                 break;
                 
@@ -128,6 +153,8 @@ public class EgoTestHandler {
                     this.direction = Direction.NONE;
                 } else {
                     this.direction = Direction.SOUTH;
+                    this.currentLoop = 2;
+                    this.currentCell = 0;
                 }
                 break;
                 
@@ -136,6 +163,8 @@ public class EgoTestHandler {
                     this.direction = Direction.NONE;
                 } else {
                     this.direction = Direction.WEST;
+                    this.currentLoop = 1;
+                    this.currentCell = 0;
                 }
                 break;
                 
@@ -144,6 +173,8 @@ public class EgoTestHandler {
                     this.direction = Direction.NONE;
                 } else {
                     this.direction = Direction.EAST;
+                    this.currentLoop = 0;
+                    this.currentCell = 0;
                 }
                 break;
         }
