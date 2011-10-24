@@ -1,6 +1,12 @@
 package com.agifans.picedit.view;
 
-import java.io.IOException;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.agifans.picedit.EditStatus;
 
 /**
  * Handles the Ego Test mode when it is activated.
@@ -9,7 +15,7 @@ import java.io.IOException;
  */
 public class EgoTestHandler {
 
-    // The possibly directions that Ego can be moving in.
+    // The possible directions that Ego can be moving in.
     enum Direction { 
         NONE, NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST
     };
@@ -46,16 +52,100 @@ public class EgoTestHandler {
     
     /**
      * Constructor for EgoTestHandler.
+     * 
+     * @param editStatus 
      */
-    public EgoTestHandler() {
+    public EgoTestHandler(final EditStatus editStatus) {
+        // Load the VIEW resource for Ego.
         try {
             this.egoView = new View(ClassLoader.getSystemResourceAsStream("com/agifans/picedit/view/view.000"));
-            System.out.println("egoView: " + egoView);
         } catch (Exception e) {
             //Should never happen since we know that this VIEW is present in the JAR.
             e.printStackTrace();
         }
+        
+        // Timer that makes Ego walk when Ego Test mode is activated.
+        Timer timer = new Timer();
+        TimerTask walkingTask = new TimerTask() {
+            public void run() {
+                if (editStatus.isEgoTestEnabled()) {
+                    cycleAndMoveEgo();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(walkingTask, 500, 500);
     }
     
+    public Image getCurrentCellImage() {
+        return this.egoView.getLoop(currentLoop).getCell(currentCell).convertToImage();
+    }
     
+    public int getCurrentCellWidth() {
+        return this.egoView.getLoop(currentLoop).getCell(currentCell).getWidth();
+    }
+    
+    public int getCurrentCellHeight() {
+        return this.egoView.getLoop(currentLoop).getCell(currentCell).getHeight();
+    }
+    
+    /**
+     * Draws Ego on to the given Graphics2D
+     * 
+     * @param graphics
+     * @param zoomFactor 
+     */
+    public void drawEgo(Graphics graphics, int zoomFactor) {
+        Image egoImage = this.getCurrentCellImage();
+        graphics.drawImage(egoImage, x, y, getCurrentCellWidth() * 2 * zoomFactor, getCurrentCellHeight() * zoomFactor, null);
+    }
+    
+    /**
+     * Cycles Ego to the next Cell and moves in the current direction.
+     */
+    public void cycleAndMoveEgo() {
+        
+    }
+    
+    /**
+     * Handles given KeyEvent if applicable.
+     * 
+     * @param keyEvent The KeyEvent to handle (if applicable).
+     */
+    public void handleKeyEvent(KeyEvent keyEvent) {
+        int key = keyEvent.getKeyCode();
+        
+        switch (key) {
+            case KeyEvent.VK_UP:
+                if (this.direction == Direction.NORTH) {
+                    this.direction = Direction.NONE;
+                } else {
+                    this.direction = Direction.NORTH;
+                }
+                break;
+                
+            case KeyEvent.VK_DOWN:
+                if (this.direction == Direction.SOUTH) {
+                    this.direction = Direction.NONE;
+                } else {
+                    this.direction = Direction.SOUTH;
+                }
+                break;
+                
+            case KeyEvent.VK_LEFT:
+                if (this.direction == Direction.WEST) {
+                    this.direction = Direction.NONE;
+                } else {
+                    this.direction = Direction.WEST;
+                }
+                break;
+                
+            case KeyEvent.VK_RIGHT:
+                if (this.direction == Direction.EAST) {
+                    this.direction = Direction.NONE;
+                } else {
+                    this.direction = Direction.EAST;
+                }
+                break;
+        }
+    }
 }

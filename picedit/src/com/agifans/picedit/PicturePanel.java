@@ -9,6 +9,8 @@ import java.awt.image.RescaleOp;
 
 import javax.swing.JPanel;
 
+import com.agifans.picedit.view.EgoTestHandler;
+
 /**
  * This panel renders the main picture editor image, which includes the 
  * picture being edited, the status line, and tool bar. This code was
@@ -48,16 +50,23 @@ public class PicturePanel extends JPanel {
     private Graphics2D offScreenGC;
     
     /**
+     * The handler for managing the Ego Test mode.
+     */
+    private EgoTestHandler egoTestHandler;
+    
+    /**
      * Constructor for PicturePanel.
      * 
      * @param editStatus the EditStatus holding current picture editor state.
      * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
      * @param picture the AGI PICTURE currently being edited.
+     * @param egoTestHandler The handler for managing the Ego Test mode.
      */
-    public PicturePanel(EditStatus editStatus, PicGraphics picGraphics, Picture picture) {
+    public PicturePanel(EditStatus editStatus, PicGraphics picGraphics, Picture picture, EgoTestHandler egoTestHandler) {
         this.editStatus = editStatus;
         this.picGraphics = picGraphics;
         this.picture = picture;
+        this.egoTestHandler = egoTestHandler;
         
         Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
         this.setPreferredSize(appDimension);
@@ -134,7 +143,7 @@ public class PicturePanel extends JPanel {
         }
         
         if (editStatus.isEgoTestEnabled()) {
-            // TODO: Draw ego.
+            egoTestHandler.drawEgo(offScreenGC, editStatus.getZoomFactor());
         }
         
         // Draw the PicGraphics screen on top of everything else. This is mainly for the temporary lines.
