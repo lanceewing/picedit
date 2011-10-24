@@ -186,7 +186,7 @@ public class EgoTestHandler {
             switch (direction) {
                 case NORTH:
                     y = y - 1;
-                    if (y > 0) {
+                    if (y < 0) {
                         y = 167 - this.getCurrentCellHeight();
                     }
                     break;
