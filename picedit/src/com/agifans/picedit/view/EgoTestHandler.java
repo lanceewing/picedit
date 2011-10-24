@@ -2,11 +2,17 @@ package com.agifans.picedit.view;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.image.ColorModel;
+import java.awt.image.MemoryImageSource;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.agifans.picedit.EditStatus;
+import com.agifans.picedit.EgaPalette;
+import com.agifans.picedit.Picture;
+import com.agifans.picedit.PictureType;
 
 /**
  * Handles the Ego Test mode when it is activated.
@@ -51,18 +57,34 @@ public class EgoTestHandler {
     protected Direction direction = Direction.NONE;
     
     /**
+     * The Picture that this EgoTestHandler is testing.
+     */
+    private Picture picture;
+    
+    /**
+     * Holds the current edit status of the picture.
+     */
+    private EditStatus editStatus;
+    
+    /**
      * Constructor for EgoTestHandler.
      * 
-     * @param editStatus 
+     * @param editStatus Holds the current edit status of the picture.
+     * @param picture The Picture being tested, i.e. that Ego will be drawn on.
      */
-    public EgoTestHandler(final EditStatus editStatus) {
+    public EgoTestHandler(final EditStatus editStatus, Picture picture) {
+        this.picture = picture;
+        this.editStatus = editStatus;
+        
         // Load the VIEW resource for Ego.
         try {
             this.egoView = new View(ClassLoader.getSystemResourceAsStream("com/agifans/picedit/view/view.000"));
         } catch (Exception e) {
             //Should never happen since we know that this VIEW is present in the JAR.
-            e.printStackTrace();
         }
+        
+        this.x = 80 - (this.getCurrentCellWidth() / 2);
+        this.y = 150 - this.getCurrentCellHeight();
         
         // Timer that makes Ego walk when Ego Test mode is activated.
         Timer timer = new Timer();
@@ -77,7 +99,55 @@ public class EgoTestHandler {
     }
     
     public Image getCurrentCellImage() {
-        return this.egoView.getLoop(currentLoop).getCell(currentCell).convertToImage();
+        // TODO: Use picture.getPriorityScreen to work out where to add transparent pixels.
+        // TODO: Add transparent pixels for cell transparent colour as well.
+        
+        Cell cell = this.egoView.getLoop(currentLoop).getCell(currentCell);
+        int[] rgbPixelData = cell.getRGBPixelData().clone();
+        int transparentColour = cell.getTransparentColour();
+        int priorityBand = getPriorityBand();
+        int width = cell.getWidth();
+        int height = cell.getHeight();
+        
+        // TODO: This has to be done using x, y and priority screen data.
+        for (int i = 0; i < (width * height); i++) {
+            if (rgbPixelData[i] == transparentColour) {
+                rgbPixelData[i] = EgaPalette.transparent;
+            }
+        }
+        
+        //return this.egoView.getLoop(currentLoop).getCell(currentCell).convertToImage();
+        return Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(width, height, ColorModel.getRGBdefault(), rgbPixelData, 0, width));
+    }
+    
+    /**
+     * Gets the priority band associated with where Ego currently is.
+     * 
+     * @return The priority band associated with where Ego currently is.
+     */
+    public int getPriorityBand() {
+        int priorityBand = 0;
+        
+        // Priority is calculated based on where the bottom of the cell is.
+        int egoBottom = this.y + this.getCurrentCellHeight();
+        
+        if (editStatus.getPictureType().equals(PictureType.SCI0)) {
+            // For SCI0, the top 42 lines are for priority 0. The other 14 bands
+            // get an even share of the 148 remaining lines (which, btw, doesn't
+            // divide evenly, so the bands are not even as then are in AGI).
+            priorityBand = ((int) ((egoBottom - 42) / ((190 - 42) / 14))) + 1;
+        } else if (editStatus.getPictureType().equals(PictureType.AGI)) {
+            // For AGI it is evenly split, 168 lines split 14 ways.
+            priorityBand = (egoBottom / 12) + 1;
+
+            // Make sure priority band is 4 or above for AGI since the bottom
+            // four priority colours are reserved as control lines.
+            if (priorityBand < 4) {
+                priorityBand = 4;
+            }
+        }
+        
+        return priorityBand;
     }
     
     public int getCurrentCellWidth() {

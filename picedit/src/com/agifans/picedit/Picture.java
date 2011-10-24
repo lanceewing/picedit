@@ -396,7 +396,16 @@ public class Picture {
     public Image getPriorityImage() {
         return priorityImage;
     }
-
+    
+    /**
+     * Gets the raw RGB byte array for the priority screen.
+     * 
+     * @return The raw RGB byte array for the priority screen.
+     */
+    public int[] getPriorityScreen() {
+        return priorityScreen;
+    }
+    
     /**
      * Returns the control image to be drawn on the screen.
      * 
