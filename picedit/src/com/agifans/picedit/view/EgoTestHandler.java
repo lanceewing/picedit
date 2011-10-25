@@ -99,9 +99,6 @@ public class EgoTestHandler {
     }
     
     public Image getCurrentCellImage() {
-        // TODO: Use picture.getPriorityScreen to work out where to add transparent pixels.
-        // TODO: Add transparent pixels for cell transparent colour as well.
-        
         Cell cell = this.egoView.getLoop(currentLoop).getCell(currentCell);
         int[] rgbPixelData = cell.getRGBPixelData().clone();
         int transparentColour = cell.getTransparentColour();
@@ -109,7 +106,6 @@ public class EgoTestHandler {
         int width = cell.getWidth();
         int height = cell.getHeight();
         
-        // TODO: This has to be done using x, y and priority screen data.
         int egoDataOffset = 0;
         for (int egoY=0; egoY < height; egoY++) {
             for (int egoX=0; egoX < width; egoX++) {
@@ -119,11 +115,19 @@ public class EgoTestHandler {
                     int pictureX = this.x + egoX;
                     int pictureY = this.y + egoY;
                     int pictureOffset = (pictureY * 160) + pictureX;
-                    int picPriority = picture.getPriorityScreen()[pictureOffset];
+                    int picPriority = EgaPalette.reverseColours.get(picture.getPriorityScreen()[pictureOffset]);
+                    
+                    // Convert transparent priority value back to red.
+                    if (picPriority == 16) {
+                      picPriority = 4;
+                    }
+                    
+                    // If the picture priority is greater than ego priority then
+                    // make the pixel transparent. This will make Ego appear to go
+                    // behind that part of the screen.
                     if (picPriority > priorityBand) {
                         rgbPixelData[egoDataOffset] = EgaPalette.transparent;
                     }
-                    //System.out.println("pictureX: " + pictureX + ", pictureY: " + pictureY + ", pictureOffset: " + pictureOffset + ", picPriority: " + picPriority + ", priorityBand: " + priorityBand);
                 }
                 egoDataOffset++;
             }

@@ -49,16 +49,21 @@ public class EgaPalette {
     public final static int white = WHITE.getRGB();
     public final static int transparent = TRANSPARENT.getRGB();
 
-    public final static Map<Integer, Integer> reverse_colours = new HashMap<Integer, Integer>();
-    static {
-        
-    }
-    
     /**
      * Holds the RGB values for the 16 EGA colours.
      */
     public final static int[] colours = { black, blue, green, cyan, red, magenta, brown, grey, darkgrey, lightblue, lightgreen, lightcyan, pink, lightmagenta, yellow, white, transparent };
 
+    /**
+     * Holds a reverse mapping from RGB value to EGI colour index.
+     */
+    public final static Map<Integer, Integer> reverseColours = new HashMap<Integer, Integer>();
+    static {
+        for (int i=0; i<colours.length; i++) {
+          reverseColours.put(colours[i], i);
+        }
+    }
+    
     /**
      * Holds the Color objects for the 16 EGA colours.
      */
