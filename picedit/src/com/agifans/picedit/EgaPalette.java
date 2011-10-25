@@ -1,6 +1,8 @@
 package com.agifans.picedit;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class holds the 16 colours that make up the EGA palette.
@@ -47,6 +49,11 @@ public class EgaPalette {
     public final static int white = WHITE.getRGB();
     public final static int transparent = TRANSPARENT.getRGB();
 
+    public final static Map<Integer, Integer> reverse_colours = new HashMap<Integer, Integer>();
+    static {
+        
+    }
+    
     /**
      * Holds the RGB values for the 16 EGA colours.
      */
