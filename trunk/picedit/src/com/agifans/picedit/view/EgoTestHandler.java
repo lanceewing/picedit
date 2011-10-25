@@ -110,9 +110,22 @@ public class EgoTestHandler {
         int height = cell.getHeight();
         
         // TODO: This has to be done using x, y and priority screen data.
-        for (int i = 0; i < (width * height); i++) {
-            if (rgbPixelData[i] == transparentColour) {
-                rgbPixelData[i] = EgaPalette.transparent;
+        int egoDataOffset = 0;
+        for (int egoY=0; egoY < height; egoY++) {
+            for (int egoX=0; egoX < width; egoX++) {
+                if (rgbPixelData[egoDataOffset] == transparentColour) {
+                    rgbPixelData[egoDataOffset] = EgaPalette.transparent;
+                } else {
+                    int pictureX = this.x + egoX;
+                    int pictureY = this.y + egoY;
+                    int pictureOffset = (pictureY * 160) + pictureX;
+                    int picPriority = picture.getPriorityScreen()[pictureOffset];
+                    if (picPriority > priorityBand) {
+                        rgbPixelData[egoDataOffset] = EgaPalette.transparent;
+                    }
+                    //System.out.println("pictureX: " + pictureX + ", pictureY: " + pictureY + ", pictureOffset: " + pictureOffset + ", picPriority: " + picPriority + ", priorityBand: " + priorityBand);
+                }
+                egoDataOffset++;
             }
         }
         

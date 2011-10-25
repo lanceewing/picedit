@@ -99,9 +99,9 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.application = application;
         this.editStatus = new EditStatus();
         this.editStatus.setZoomFactor(initialZoomFactor);
-        this.egoTestHandler = new EgoTestHandler(editStatus, picture);
         this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), application, 25);
         this.picture = new Picture(editStatus, picGraphics);
+        this.egoTestHandler = new EgoTestHandler(editStatus, picture);
         this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, egoTestHandler);
         
         mouseHandler = new MouseHandler(this, application);
