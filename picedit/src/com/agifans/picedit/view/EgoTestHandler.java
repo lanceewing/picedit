@@ -120,12 +120,19 @@ public class EgoTestHandler {
                 } else {
                     int pictureX = this.x + egoX;
                     int pictureY = this.y + egoY;
-                    int pictureOffset = (pictureY * 160) + pictureX;
-                    int picPriority = EgaPalette.reverseColours.get(picture.getPriorityScreen()[pictureOffset]);
+                    int picPriority = 0;
                     
-                    // Convert transparent priority value back to red.
-                    if (picPriority == 16) {
-                      picPriority = 4;
+                    // Determine priority at this pixel location.
+                    for (int pictureOffset = (pictureY * 160) + pictureX; pictureOffset < 26880; pictureOffset = pictureOffset + 160) {
+                        picPriority = EgaPalette.reverseColours.get(picture.getPriorityScreen()[pictureOffset]);
+                        if (picPriority >= 3) {
+                            break;
+                        }
+                    }
+                    
+                    // Convert transparent priority value back to red. Also handles KQ1 fix (i.e. 3 value)
+                    if ((picPriority == 3) || (picPriority == 16)) {
+                        picPriority = 4;
                     }
                     
                     // If the picture priority is greater than ego priority then

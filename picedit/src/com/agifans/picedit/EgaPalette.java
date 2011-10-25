@@ -60,7 +60,7 @@ public class EgaPalette {
     public final static Map<Integer, Integer> reverseColours = new HashMap<Integer, Integer>();
     static {
         for (int i=0; i<colours.length; i++) {
-          reverseColours.put(colours[i], i);
+            reverseColours.put(colours[i], i);
         }
     }
     
