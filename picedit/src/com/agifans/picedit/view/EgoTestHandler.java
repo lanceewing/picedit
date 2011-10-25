@@ -98,6 +98,12 @@ public class EgoTestHandler {
         timer.scheduleAtFixedRate(walkingTask, 100, 100);
     }
     
+    /**
+     * Gets the current cell in Image form, adjusted according to the priority
+     * screen rules for the Ego's current position.
+     * 
+     * @return The created Image to be displayed on the picture.
+     */
     public Image getCurrentCellImage() {
         Cell cell = this.egoView.getLoop(currentLoop).getCell(currentCell);
         int[] rgbPixelData = cell.getRGBPixelData().clone();
@@ -133,7 +139,6 @@ public class EgoTestHandler {
             }
         }
         
-        //return this.egoView.getLoop(currentLoop).getCell(currentCell).convertToImage();
         return Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(width, height, ColorModel.getRGBdefault(), rgbPixelData, 0, width));
     }
     
@@ -167,19 +172,30 @@ public class EgoTestHandler {
         return priorityBand;
     }
     
+    /**
+     * Gets the width of Ego's current cell.
+     * 
+     * @return The width of Ego's current cell.
+     */
     public int getCurrentCellWidth() {
         return this.egoView.getLoop(currentLoop).getCell(currentCell).getWidth();
     }
     
+    /**
+     * Gets the height of Ego's current cell.
+     * 
+     * @return The height of Ego's current cell.
+     */
     public int getCurrentCellHeight() {
         return this.egoView.getLoop(currentLoop).getCell(currentCell).getHeight();
     }
     
     /**
-     * Draws Ego on to the given Graphics2D
+     * Draws Ego on to the given Graphics2D. The zoom factor determines where
+     * exactly Ego gets drawn on the screen and how much to stretch it.
      * 
-     * @param graphics
-     * @param zoomFactor 
+     * @param graphics The graphics to draw the Ego cell image on to.
+     * @param zoomFactor The current zoom factor. 
      */
     public void drawEgo(Graphics graphics, int zoomFactor) {
         Image egoImage = this.getCurrentCellImage();
