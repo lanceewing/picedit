@@ -109,6 +109,7 @@ public class EgoTestHandler {
         int[] rgbPixelData = cell.getRGBPixelData().clone();
         int transparentColour = cell.getTransparentColour();
         int priorityBand = getPriorityBand();
+        int priorityBandColour = EgaPalette.colours[priorityBand];
         int width = cell.getWidth();
         int height = cell.getHeight();
         
@@ -140,6 +141,11 @@ public class EgoTestHandler {
                     // behind that part of the screen.
                     if (picPriority > priorityBand) {
                         rgbPixelData[egoDataOffset] = EgaPalette.transparent;
+                    } else {
+                        // Render Ego in its priority band if priority screen is showing.
+                        if (this.editStatus.isPriorityShowing()) {
+                            rgbPixelData[egoDataOffset] = priorityBandColour;
+                        }
                     }
                 }
                 egoDataOffset++;
@@ -250,25 +256,25 @@ public class EgoTestHandler {
                     break;
             }
             
-            // TODO: Check that the new position isn't blocked by obstacle line.
-            
-            
-//            // Code from MEKA
-//            startX = tempX;
-//            endX = startX + viewtab[entryNum].xsize;
-//            for (testX=startX; testX<endX; testX++) {
-//               switch (control->line[tempY][testX]) {
-//                  case 0: return;   /* Unconditional obstacle */
-//               }
-//            }
+            // Check to see if Ego is allowed to move to the new position (i.e. no obstacle line)
+            int startOffset = ((newY + this.getCurrentCellHeight()) * 160) + newX;
+            int endOffset = startOffset + this.getCurrentCellWidth();
+            for (int pictureOffset=startOffset; pictureOffset < endOffset; pictureOffset++) {
+                // If this point has a black unconditional obstacle pixel then exit without applying movement.
+                if (EgaPalette.reverseColours.get(picture.getPriorityScreen()[pictureOffset]) == 0) {
+                    return;
+                }
+            }
 
-            // TODO: Only cycle if Ego has moved.
+            // It is okay to move to the new position, so apply the motion.
+            this.x = newX;
+            this.y = newY;
+            
             // Cycle to the next cell in this loop.
             this.currentCell++;
             if (this.currentCell >= loop.getNumberOfCells()) {
                 this.currentCell = 0;
             }
-            
         }
     }
     
