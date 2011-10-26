@@ -216,42 +216,59 @@ public class EgoTestHandler {
         if (direction != Direction.NONE) {
             Loop loop = this.egoView.getLoop(currentLoop);
             
+            int newX = x;
+            int newY = y;
+            
+            // Move in the appropriate direction.
+            switch (direction) {
+                case NORTH:
+                    newY = newY - 1;
+                    if (newY < 0) {
+                        newY = 167 - this.getCurrentCellHeight();
+                    }
+                    break;
+            
+                case SOUTH:
+                    newY = newY + 1;
+                    if (newY > (167 - this.getCurrentCellHeight())) {
+                        newY = 0;
+                    }
+                    break;
+            
+                case EAST:
+                    newX = newX + 1;
+                    if (newX > (159 - this.getCurrentCellWidth())) {
+                        newX = 0;
+                    }
+                    break;
+            
+                case WEST:
+                    newX = newX - 1;
+                    if (newX < 0) {
+                        newX = 159 - this.getCurrentCellWidth();
+                    }
+                    break;
+            }
+            
+            // TODO: Check that the new position isn't blocked by obstacle line.
+            
+            
+//            // Code from MEKA
+//            startX = tempX;
+//            endX = startX + viewtab[entryNum].xsize;
+//            for (testX=startX; testX<endX; testX++) {
+//               switch (control->line[tempY][testX]) {
+//                  case 0: return;   /* Unconditional obstacle */
+//               }
+//            }
+
+            // TODO: Only cycle if Ego has moved.
             // Cycle to the next cell in this loop.
             this.currentCell++;
             if (this.currentCell >= loop.getNumberOfCells()) {
                 this.currentCell = 0;
             }
             
-            // Move in the appropriate direction.
-            switch (direction) {
-                case NORTH:
-                    y = y - 1;
-                    if (y < 0) {
-                        y = 167 - this.getCurrentCellHeight();
-                    }
-                    break;
-            
-                case SOUTH:
-                    y = y + 1;
-                    if (y > (167 - this.getCurrentCellHeight())) {
-                        y = 0;
-                    }
-                    break;
-            
-                case EAST:
-                    x = x + 1;
-                    if (x > (159 - this.getCurrentCellWidth())) {
-                        x = 0;
-                    }
-                    break;
-            
-                case WEST:
-                    x = x - 1;
-                    if (x < 0) {
-                        x = 159 - this.getCurrentCellWidth();
-                    }
-                    break;
-            }
         }
     }
     
