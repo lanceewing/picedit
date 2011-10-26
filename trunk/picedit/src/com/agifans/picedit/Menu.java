@@ -309,7 +309,14 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                     JMenuItem pictureMenuItem = new JMenuItem(pictureFile.getName());
                     pictureMenuItem.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            newPicture();
+                            if (application.getPicture().getPictureCodes().size() > 1) {
+                                // If the picture is not empty then launch a new picture frame.
+                                newPicture();
+                            } else {
+                                // Otherwise reuse the old frame. We need to clear off the background image
+                                // since the EditStatus clear call doesn't handle this.
+                                application.getPicGraphics().setBackgroundImage(null);
+                            }
                             application.getPicture().loadPicture(pictureFile);
                             application.updateRecentPictures(pictureFile);
                         }
@@ -362,7 +369,14 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                 if (fileChooser.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     if (selectedFile != null) {
-                        newPicture();
+                        if (application.getPicture().getPictureCodes().size() > 1) {
+                            // If the picture is not empty then launch a new picture frame.
+                            newPicture();
+                        } else {
+                            // Otherwise reuse the old frame. We need to clear off the background image
+                            // since the EditStatus clear call doesn't handle this.
+                            application.getPicGraphics().setBackgroundImage(null);
+                        }
                         application.getPicture().loadPicture(selectedFile);
                         application.updateRecentPictures(selectedFile);
                     }
