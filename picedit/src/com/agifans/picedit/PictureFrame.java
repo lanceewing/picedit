@@ -289,7 +289,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     }
 
     public void internalFrameClosing(InternalFrameEvent event) {
-        if (editStatus.hasUnsavedChanges()) {
+        if (editStatus.hasUnsavedChanges() && (picture.getPictureCodes().size() > 1)) {
             Object[] saveOptions = { "Save", "Don't Save", "Cancel" };
             StringBuilder message = new StringBuilder();
             message.append("<html><b>Do you want to save the changes you made<br/>to the picture \"");
