@@ -283,6 +283,9 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         int newWidth = Math.min(desktopSize.width, this.getWidth());
         int newHeight = Math.min(desktopSize.height, this.getHeight());
         this.setSize(new Dimension(newWidth, newHeight));
+        
+        // Updates the View menu items to reflect the new frames picture edit status.
+        application.getMenu().updateViewMenuItems();
     }
 
     public void internalFrameClosed(InternalFrameEvent event) {

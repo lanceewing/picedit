@@ -43,6 +43,21 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
     private JCheckBoxMenuItem backgroundMenuItem;
     
     /**
+     * The menu item used for toggling dual mode.
+     */
+    private JCheckBoxMenuItem dualModeMenuItem;
+    
+    /**
+     * The menu item used for toggling priority bands display.
+     */
+    private JCheckBoxMenuItem bandsMenuItem;
+    
+    /**
+     * The menu item used for toggling ego test mode.
+     */
+    private JCheckBoxMenuItem egoTestMenuItem;
+    
+    /**
      * The Open Recent sub-menu item.
      */
     private JMenu openRecentMenu;
@@ -154,15 +169,15 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         backgroundMenuItem.setMnemonic(KeyEvent.VK_G);
         backgroundMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0));
         backgroundMenuItem.setSelected(editStatus.isBackgroundEnabled());
-        JMenuItem bandsMenuItem = new JCheckBoxMenuItem(MenuOption.BANDS.getDisplayValue());
+        bandsMenuItem = new JCheckBoxMenuItem(MenuOption.BANDS.getDisplayValue());
         bandsMenuItem.setMnemonic(KeyEvent.VK_B);
         bandsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, acceleratorKey));
         bandsMenuItem.setSelected(editStatus.isBandsOn());
-        JMenuItem dualModeMenuItem = new JCheckBoxMenuItem(MenuOption.DUAL_MODE.getDisplayValue());
+        dualModeMenuItem = new JCheckBoxMenuItem(MenuOption.DUAL_MODE.getDisplayValue());
         dualModeMenuItem.setMnemonic(KeyEvent.VK_D);
         dualModeMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, acceleratorKey));
         dualModeMenuItem.setSelected(editStatus.isDualModeEnabled());
-        JMenuItem egoTestMenuItem = new JCheckBoxMenuItem(MenuOption.EGO_TEST.getDisplayValue());
+        egoTestMenuItem = new JCheckBoxMenuItem(MenuOption.EGO_TEST.getDisplayValue());
         egoTestMenuItem.setMnemonic(KeyEvent.VK_E);
         egoTestMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, acceleratorKey));
         JMenuItem zoomInMenuItem = new JMenuItem(MenuOption.ZOOM_IN.getDisplayValue());
@@ -548,6 +563,26 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         application.setLastUsedDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
         
         return success;
+    }
+    
+    /**
+     * Updates the menu items in the View menu to reflect the active picture's edit 
+     * status. This would usually be called when a new picture frame is selected so 
+     * that the state of the menu reflects the active pictures status.
+     */
+    public void updateViewMenuItems() {
+        // Start with the visual/priority screen selection. Reuse the method we're using for toggle.
+        recreateScreenMenuItems();
+        
+        // Now update the various mode check boxes to reflect the appropriate state.
+        backgroundMenuItem.setSelected(application.getEditStatus().isBackgroundEnabled());
+        dualModeMenuItem.setSelected(application.getEditStatus().isDualModeEnabled());
+        bandsMenuItem.setSelected(application.getEditStatus().isBandsOn());
+        egoTestMenuItem.setSelected(application.getEditStatus().isEgoTestEnabled());
+        
+        // Make sure that the menu is redrawn, just in case.
+        viewMenu.revalidate();
+        viewMenu.repaint();
     }
     
     /**
