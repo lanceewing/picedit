@@ -250,12 +250,8 @@ public abstract class CommonHandler {
     protected void newPicture() {
         JDesktopPane desktop = application.getDesktopPane();
         PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor());
-        Point activeFrameLocation = application.getPictureFrame().getLocation();
-        if (desktop.getAllFrames().length > 0) {
-            newPictureFrame.setLocation(activeFrameLocation.x + 25, activeFrameLocation.y + 25);
-        } else {
-            newPictureFrame.setLocation(20, 20);
-        }
+        int initialFrameIndent = 20 + (desktop.getAllFrames().length * 25);
+        newPictureFrame.setLocation(initialFrameIndent, initialFrameIndent);
         desktop.add(newPictureFrame);
         newPictureFrame.getMouseHandler().startMouseMotionTimer();
         try {
