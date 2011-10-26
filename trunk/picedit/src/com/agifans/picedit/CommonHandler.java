@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+import javax.swing.JDesktopPane;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -247,10 +248,15 @@ public abstract class CommonHandler {
      * Creates a new picture frame on the desktop.
      */
     protected void newPicture() {
+        JDesktopPane desktop = application.getDesktopPane();
         PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor());
         Point activeFrameLocation = application.getPictureFrame().getLocation();
-        newPictureFrame.setLocation(activeFrameLocation.x + 25, activeFrameLocation.y + 25);
-        application.getDesktopPane().add(newPictureFrame);
+        if (desktop.getAllFrames().length > 0) {
+            newPictureFrame.setLocation(activeFrameLocation.x + 25, activeFrameLocation.y + 25);
+        } else {
+            newPictureFrame.setLocation(20, 20);
+        }
+        desktop.add(newPictureFrame);
         newPictureFrame.getMouseHandler().startMouseMotionTimer();
         try {
             newPictureFrame.setSelected(true);
