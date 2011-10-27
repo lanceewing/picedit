@@ -19,11 +19,11 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
-import com.agifans.picedit.status.BrushShape;
-import com.agifans.picedit.status.BrushTexture;
-import com.agifans.picedit.status.EditStatus;
-import com.agifans.picedit.status.ToolType;
+import com.agifans.picedit.types.BrushShape;
+import com.agifans.picedit.types.BrushTexture;
+import com.agifans.picedit.types.ToolType;
 
 /**
  * This class manages the menu system.

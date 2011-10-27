@@ -15,13 +15,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;
-import com.agifans.picedit.status.BrushTexture;
-import com.agifans.picedit.status.EditStatus;
-import com.agifans.picedit.status.PictureType;
-import com.agifans.picedit.status.StepType;
-import com.agifans.picedit.status.ToolType;
+import com.agifans.picedit.types.BrushTexture;
+import com.agifans.picedit.types.PictureType;
+import com.agifans.picedit.types.StepType;
+import com.agifans.picedit.types.ToolType;
 
 /**
  * Handles processing of PICEDIT mouse click and mouse move events.

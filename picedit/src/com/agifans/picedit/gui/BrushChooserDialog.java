@@ -27,8 +27,8 @@ import javax.swing.JToggleButton;
 import javax.swing.border.BevelBorder;
 
 import com.agifans.picedit.picture.Picture;
-import com.agifans.picedit.status.BrushShape;
-import com.agifans.picedit.status.BrushTexture;
+import com.agifans.picedit.types.BrushShape;
+import com.agifans.picedit.types.BrushTexture;
 import com.agifans.picedit.types.BrushType;
 
 /**

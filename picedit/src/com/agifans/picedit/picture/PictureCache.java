@@ -3,11 +3,10 @@ package com.agifans.picedit.picture;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.agifans.picedit.status.BrushShape;
-import com.agifans.picedit.status.BrushTexture;
-import com.agifans.picedit.status.EditStatus;
-import com.agifans.picedit.status.PictureType;
-import com.agifans.picedit.status.ToolType;
+import com.agifans.picedit.types.BrushShape;
+import com.agifans.picedit.types.BrushTexture;
+import com.agifans.picedit.types.PictureType;
+import com.agifans.picedit.types.ToolType;
 
 /**
  * This class is a cache of data related to the Picture drawn up to 

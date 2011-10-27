@@ -1,7 +1,13 @@
-package com.agifans.picedit.status;
+package com.agifans.picedit.picture;
 
 import java.awt.Point;
 import java.io.File;
+
+import com.agifans.picedit.types.BrushShape;
+import com.agifans.picedit.types.BrushTexture;
+import com.agifans.picedit.types.PictureType;
+import com.agifans.picedit.types.StepType;
+import com.agifans.picedit.types.ToolType;
 
 
 /**

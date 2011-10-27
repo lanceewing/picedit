@@ -10,10 +10,10 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
-import com.agifans.picedit.status.EditStatus;
-import com.agifans.picedit.status.ToolType;
 import com.agifans.picedit.types.BrushType;
+import com.agifans.picedit.types.ToolType;
 import com.agifans.picedit.utils.EgaPalette;
 
 /**
