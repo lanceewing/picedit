@@ -90,13 +90,20 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     private MouseHandler mouseHandler;
     
     /**
+     * The initial default name for the picture prior to the first save.
+     */
+    private String defaultPictureName;
+    
+    /**
      * Constructor for PictureFrame.
      * 
      * @param application The PicEdit application.
      * @param initialZoomFactor The initial zoome factor for this picture frame.
+     * @param defaultPictureName The initial default name for the picture prior to the first save.
      */
-    public PictureFrame(final PicEdit application, int initialZoomFactor) {
+    public PictureFrame(final PicEdit application, int initialZoomFactor, String defaultPictureName) {
         this.application = application;
+        this.defaultPictureName = defaultPictureName;
         this.editStatus = new EditStatus();
         this.editStatus.setZoomFactor(initialZoomFactor);
         this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), application, 25);
@@ -271,7 +278,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
           title.append("*");
         }
         if (editStatus.getPictureFile() == null) {
-            title.append("Untitled");
+            title.append(defaultPictureName);
         } else {
             title.append(editStatus.getPictureFile().getName());
         }
