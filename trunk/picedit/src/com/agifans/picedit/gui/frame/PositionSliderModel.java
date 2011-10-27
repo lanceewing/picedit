@@ -250,7 +250,6 @@ public class PositionSliderModel implements BoundedRangeModel {
             if (value != picture.getPicturePosition()) {
                 picture.setPicturePosition(value);
                 picture.drawPicture();
-                picture.updateScreen();
             }
             fireStateChanged();
         }

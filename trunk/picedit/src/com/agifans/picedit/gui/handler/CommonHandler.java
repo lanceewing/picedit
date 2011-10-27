@@ -86,7 +86,6 @@ public abstract class CommonHandler {
                     }
                     picture.setPicturePosition(newPosition);
                     picture.drawPicture();
-                    picture.updateScreen();
                 }
             } catch (NumberFormatException nfe) {
                 // Ignore. The user has entered a non-numeric value.
