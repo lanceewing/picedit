@@ -20,9 +20,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import com.agifans.picedit.picture.PictureCache.PictureCacheEntry;
-import com.agifans.picedit.status.EditStatus;
-import com.agifans.picedit.status.PictureType;
-import com.agifans.picedit.status.ToolType;
+import com.agifans.picedit.types.PictureType;
+import com.agifans.picedit.types.ToolType;
 import com.agifans.picedit.utils.EgaPalette;
 
 /**

@@ -1,4 +1,4 @@
-package com.agifans.picedit.status;
+package com.agifans.picedit.types;
 
 /**
  * Enum representing the different sierra picture types supported.

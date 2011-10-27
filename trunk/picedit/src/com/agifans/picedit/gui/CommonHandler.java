@@ -19,11 +19,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.picture.PictureCode;
-import com.agifans.picedit.status.EditStatus;
-import com.agifans.picedit.status.ToolType;
+import com.agifans.picedit.types.ToolType;
 
 /**
  * Handles processing that is common to both mouse and keyboard events.

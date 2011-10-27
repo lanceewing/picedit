@@ -21,9 +21,9 @@ import com.agifans.picedit.gui.PicturePanel;
 import com.agifans.picedit.gui.StatusBarPanel;
 import com.agifans.picedit.gui.ToolPanel;
 import com.agifans.picedit.gui.ToolPanelLocation;
+import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;
-import com.agifans.picedit.status.EditStatus;
 
 /**
  * The main class for the PICEDIT application.

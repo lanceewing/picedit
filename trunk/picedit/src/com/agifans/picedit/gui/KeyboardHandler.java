@@ -4,10 +4,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;
-import com.agifans.picedit.status.EditStatus;
-import com.agifans.picedit.status.ToolType;
+import com.agifans.picedit.types.ToolType;
 import com.agifans.picedit.view.EgoTestHandler;
 
 /**

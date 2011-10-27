@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.agifans.picedit.status.PictureType;
+import com.agifans.picedit.types.PictureType;
 import com.agifans.picedit.utils.EgaPalette;
 
 /**
