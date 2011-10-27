@@ -304,7 +304,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
             StringBuilder message = new StringBuilder();
             message.append("<html><b>Do you want to save the changes you made<br/>to the picture \"");
             if (editStatus.getPictureFile() == null) {
-                message.append("Untitled");
+                message.append(defaultPictureName);
             } else {
                 message.append(editStatus.getPictureFile().getName());
             }
