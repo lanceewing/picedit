@@ -121,54 +121,6 @@ public abstract class CommonHandler {
     }
 
     /**
-     * Disables editing until the user has pressed a key or clicked a mouse button.
-     * 
-     * @param callback a task to perform once the key stroke or mouse click has happened.
-     */
-    protected void waitForKeyStrokeOrMouseClick(final Runnable callback) {
-        final EditStatus editStatus = application.getEditStatus();
-        final Picture picture = application.getPicture();
-        
-        editStatus.setPaused(true);
-
-        // Wrap each listener in an array to get around the inner class restrictions.
-        final KeyListener[] keyListener = new KeyListener[1];
-        final MouseListener[] mouseListener = new MouseListener[1];
-
-        // Register a temporary key and mouse listener to wait for the key/mouse event. 
-        keyListener[0] = new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                application.removeKeyListener(keyListener[0]);
-                application.getPicturePanel().removeMouseListener(mouseListener[0]);
-                if (callback != null) {
-                    callback.run();
-                } else {
-                    picture.updateScreen();
-                    editStatus.setPaused(false);
-                }
-            }
-        };
-        mouseListener[0] = new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                application.removeKeyListener(keyListener[0]);
-                application.getPicturePanel().removeMouseListener(mouseListener[0]);
-                if (callback != null) {
-                    callback.run();
-                } else {
-                    picture.updateScreen();
-                    editStatus.setPaused(false);
-                }
-            }
-        };
-        application.addKeyListener(keyListener[0]);
-        application.getPicturePanel().addMouseListener(mouseListener[0]);
-
-        // The listeners are registered at this point. The method exits. The listeners
-        // take care of the rest. They will unregister themselves once they've been
-        // triggered.
-    }
-
-    /**
      * Displays the 'About' PICEDIT message box.
      */
     protected void showAboutMessage() {
@@ -249,7 +201,7 @@ public abstract class CommonHandler {
      * Creates a new picture frame on the desktop.
      */
     protected void newPicture() {
-        JDesktopPane desktop = application.getDesktopPane();
+    	JDesktopPane desktop = application.getDesktopPane();
 
         // Work out the next number to use for the default Untitled picture name.
         int maximumUntitledFrameNum = 0;

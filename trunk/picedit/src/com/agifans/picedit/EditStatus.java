@@ -54,10 +54,6 @@ public class EditStatus {
 
     private boolean priorityShowing;
 
-    private boolean paused;
-
-    private boolean textMode;
-
     /**
      * The type of Sierra picture being edited.
      */
@@ -486,22 +482,6 @@ public class EditStatus {
 
     public void setMenuActive(boolean menuActive) {
         this.menuActive = menuActive;
-    }
-
-    public boolean isPaused() {
-        return this.paused;
-    }
-
-    public void setPaused(boolean paused) {
-        this.paused = paused;
-    }
-
-    public boolean isTextMode() {
-        return this.textMode;
-    }
-
-    public void setTextMode(boolean textMode) {
-        this.textMode = textMode;
     }
 
     public PictureType getPictureType() {

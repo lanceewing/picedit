@@ -40,50 +40,46 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
         Picture picture = application.getPicture();
         PicGraphics picGraphics = application.getPicGraphics();
         
-        if (editStatus.isPaused()) {
-            // Ignore key events if the application is paused.
+        if (editStatus.isEgoTestEnabled()) {
+            // If Ego Test mode enabled, delegate to the EgoTestHandler.
+            this.egoTestHandler.handleKeyEvent(e);
+            
         } else {
-            if (editStatus.isEgoTestEnabled()) {
-                // If Ego Test mode enabled, delegate to the EgoTestHandler.
-                this.egoTestHandler.handleKeyEvent(e);
-                
-            } else {
-                // Handle picture buffer navigation keys.
-                if (key == KeyEvent.VK_HOME) {
-                    picture.moveToStartOfPictureBuffer();
-                }
-                if (key == KeyEvent.VK_LEFT) {
-                    picture.moveBackOnePictureAction();
-                }
-                if (key == KeyEvent.VK_RIGHT) {
-                    picture.moveForwardOnePictureAction();
-                }
-                if (key == KeyEvent.VK_END) {
-                    picture.moveToEndOfPictureBuffer();
-                }
+            // Handle picture buffer navigation keys.
+            if (key == KeyEvent.VK_HOME) {
+                picture.moveToStartOfPictureBuffer();
             }
+            if (key == KeyEvent.VK_LEFT) {
+                picture.moveBackOnePictureAction();
+            }
+            if (key == KeyEvent.VK_RIGHT) {
+                picture.moveForwardOnePictureAction();
+            }
+            if (key == KeyEvent.VK_END) {
+                picture.moveToEndOfPictureBuffer();
+            }
+        }
 
-            // Handle tool selection keys.
-            if ((key == KeyEvent.VK_F1) || (key == KeyEvent.VK_L)) {
-                processToolSelect(ToolType.LINE);
-            }
-            if ((key == KeyEvent.VK_F2) || (key == KeyEvent.VK_P)) {
-                processToolSelect(ToolType.SHORTLINE);
-            }
-            if ((key == KeyEvent.VK_F3) || (key == KeyEvent.VK_S)) {
-                processToolSelect(ToolType.STEPLINE);
-            }
-            if ((key == KeyEvent.VK_F4) || (key == KeyEvent.VK_F)) {
-                processToolSelect(ToolType.FILL);
-            }
-            if ((key == KeyEvent.VK_F5) || (key == KeyEvent.VK_B)) {
-                processToolSelect(ToolType.BRUSH);
-            }
+        // Handle tool selection keys.
+        if ((key == KeyEvent.VK_F1) || (key == KeyEvent.VK_L)) {
+            processToolSelect(ToolType.LINE);
+        }
+        if ((key == KeyEvent.VK_F2) || (key == KeyEvent.VK_P)) {
+            processToolSelect(ToolType.SHORTLINE);
+        }
+        if ((key == KeyEvent.VK_F3) || (key == KeyEvent.VK_S)) {
+            processToolSelect(ToolType.STEPLINE);
+        }
+        if ((key == KeyEvent.VK_F4) || (key == KeyEvent.VK_F)) {
+            processToolSelect(ToolType.FILL);
+        }
+        if ((key == KeyEvent.VK_F5) || (key == KeyEvent.VK_B)) {
+            processToolSelect(ToolType.BRUSH);
+        }
 
-            // Handle picture action delete key.
-            if (key == KeyEvent.VK_DELETE) {
-                picture.deleteCurrentPictureAction();
-            }
+        // Handle picture action delete key.
+        if (key == KeyEvent.VK_DELETE) {
+            picture.deleteCurrentPictureAction();
         }
 
         // Check if the screen needs to be updated.
