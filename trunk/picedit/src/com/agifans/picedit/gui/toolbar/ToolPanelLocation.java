@@ -1,4 +1,4 @@
-package com.agifans.picedit.gui;
+package com.agifans.picedit.gui.toolbar;
 
 /**
  * Enum representing the four possible placements of the tool panel.

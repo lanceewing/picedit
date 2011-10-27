@@ -14,13 +14,13 @@ import java.util.prefs.Preferences;
 
 import javax.swing.*;
 
-import com.agifans.picedit.gui.Menu;
 import com.agifans.picedit.gui.PicEditDesktopManager;
-import com.agifans.picedit.gui.PictureFrame;
-import com.agifans.picedit.gui.PicturePanel;
 import com.agifans.picedit.gui.StatusBarPanel;
-import com.agifans.picedit.gui.ToolPanel;
-import com.agifans.picedit.gui.ToolPanelLocation;
+import com.agifans.picedit.gui.frame.PictureFrame;
+import com.agifans.picedit.gui.frame.PicturePanel;
+import com.agifans.picedit.gui.menu.Menu;
+import com.agifans.picedit.gui.toolbar.ToolPanel;
+import com.agifans.picedit.gui.toolbar.ToolPanelLocation;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;

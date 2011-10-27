@@ -1,4 +1,4 @@
-package com.agifans.picedit.gui;
+package com.agifans.picedit.gui.frame;
 
 import java.util.LinkedList;
 

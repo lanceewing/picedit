@@ -1,4 +1,4 @@
-package com.agifans.picedit.gui;
+package com.agifans.picedit.gui.toolbar;
 
 import java.awt.Component;
 import java.awt.Dimension;

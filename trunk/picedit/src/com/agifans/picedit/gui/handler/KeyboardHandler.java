@@ -1,4 +1,4 @@
-package com.agifans.picedit.gui;
+package com.agifans.picedit.gui.handler;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

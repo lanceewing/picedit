@@ -1,4 +1,4 @@
-package com.agifans.picedit.gui;
+package com.agifans.picedit.gui.menu;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -19,6 +19,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.gui.handler.CommonHandler;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.types.BrushShape;

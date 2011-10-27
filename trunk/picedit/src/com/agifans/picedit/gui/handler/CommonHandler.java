@@ -1,4 +1,4 @@
-package com.agifans.picedit.gui;
+package com.agifans.picedit.gui.handler;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.gui.frame.PictureFrame;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;
