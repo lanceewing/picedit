@@ -15,10 +15,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.gui.frame.PicGraphics;
 import com.agifans.picedit.gui.frame.PictureFrame;
 import com.agifans.picedit.gui.toolbar.ColourChooserDialog;
 import com.agifans.picedit.picture.EditStatus;
-import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.types.BrushTexture;
 import com.agifans.picedit.types.PictureType;

@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import com.agifans.picedit.gui.frame.PicGraphics;
 import com.agifans.picedit.picture.PictureCache.PictureCacheEntry;
 import com.agifans.picedit.types.PictureType;
 import com.agifans.picedit.types.ToolType;

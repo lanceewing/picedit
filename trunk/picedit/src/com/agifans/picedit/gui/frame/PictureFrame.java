@@ -29,7 +29,6 @@ import com.agifans.picedit.PicEdit;
 import com.agifans.picedit.gui.handler.KeyboardHandler;
 import com.agifans.picedit.gui.handler.MouseHandler;
 import com.agifans.picedit.picture.EditStatus;
-import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.types.ToolType;
 import com.agifans.picedit.view.EgoTestHandler;

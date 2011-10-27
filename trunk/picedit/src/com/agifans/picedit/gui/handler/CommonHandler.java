@@ -19,9 +19,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.gui.frame.PicGraphics;
 import com.agifans.picedit.gui.frame.PictureFrame;
 import com.agifans.picedit.picture.EditStatus;
-import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.picture.PictureCode;
 import com.agifans.picedit.types.ToolType;
