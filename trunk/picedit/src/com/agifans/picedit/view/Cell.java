@@ -3,7 +3,7 @@ package com.agifans.picedit.view;
 import java.awt.*;
 import java.awt.image.*;
 
-import com.agifans.picedit.EgaPalette;
+import com.agifans.picedit.utils.EgaPalette;
 
 /**
  * A single Cell within a Loop of an AGI View resource.

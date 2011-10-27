@@ -1,10 +1,13 @@
-package com.agifans.picedit;
+package com.agifans.picedit.picture;
 
 import java.awt.*;
 import java.awt.image.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.agifans.picedit.status.PictureType;
+import com.agifans.picedit.utils.EgaPalette;
 
 /**
  * The graphics routines with which the application draws the screen. There

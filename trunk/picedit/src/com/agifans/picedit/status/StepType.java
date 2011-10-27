@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.status;
 
 /**
  * This enum represents the two different variations of the Step tool, 

@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,6 +17,13 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+
+import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.PicGraphics;
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.picture.PictureCode;
+import com.agifans.picedit.status.EditStatus;
+import com.agifans.picedit.status.ToolType;
 
 /**
  * Handles processing that is common to both mouse and keyboard events.

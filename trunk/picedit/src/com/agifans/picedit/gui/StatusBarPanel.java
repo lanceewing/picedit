@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -8,6 +8,13 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
+
+import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.status.EditStatus;
+import com.agifans.picedit.status.ToolType;
+import com.agifans.picedit.types.BrushType;
+import com.agifans.picedit.utils.EgaPalette;
 
 /**
  * The status bar that appears above the picture showing the current mouse position,

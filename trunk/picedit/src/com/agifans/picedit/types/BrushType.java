@@ -1,4 +1,7 @@
-package com.agifans.picedit;
+package com.agifans.picedit.types;
+
+import com.agifans.picedit.status.BrushShape;
+import com.agifans.picedit.status.BrushTexture;
 
 /**
  * An enum representing all the possible types of brush.

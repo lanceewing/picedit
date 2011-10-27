@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -17,6 +17,13 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+
+import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.status.BrushShape;
+import com.agifans.picedit.status.BrushTexture;
+import com.agifans.picedit.status.EditStatus;
+import com.agifans.picedit.status.ToolType;
 
 /**
  * This class manages the menu system.

@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.types;
 
 /**
  * Enum to represent the different types of colour.

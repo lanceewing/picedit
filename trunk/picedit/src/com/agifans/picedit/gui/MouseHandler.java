@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.awt.AWTEvent;
 import java.awt.MouseInfo;
@@ -13,6 +13,15 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.PicGraphics;
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.status.BrushTexture;
+import com.agifans.picedit.status.EditStatus;
+import com.agifans.picedit.status.PictureType;
+import com.agifans.picedit.status.StepType;
+import com.agifans.picedit.status.ToolType;
 
 /**
  * Handles processing of PICEDIT mouse click and mouse move events.

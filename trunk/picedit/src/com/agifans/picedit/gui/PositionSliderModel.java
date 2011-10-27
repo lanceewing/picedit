@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.util.LinkedList;
 
@@ -6,6 +6,9 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
+
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.picture.PictureCode;
 
 /**
  * A BoundedRangeModel implementation whose behaviour and state is determined
