@@ -70,7 +70,7 @@ public final class PicEdit extends JApplet {
         // Load the preferences saved the last time the application was closed down.
         loadPreferences();
         
-        this.activePictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3));
+        this.activePictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3), "Untitled");
         this.activePictureFrame.setLocation(20, 20);
         try {
             this.activePictureFrame.setSelected(true);

@@ -29,6 +29,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JDesktopPane;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
@@ -249,9 +250,30 @@ public abstract class CommonHandler {
      */
     protected void newPicture() {
         JDesktopPane desktop = application.getDesktopPane();
-        PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor());
+
+        // Work out the next number to use for the default Untitled picture name.
+        int maximumUntitledFrameNum = 0;
+        for (JInternalFrame frame : desktop.getAllFrames()) {
+            PictureFrame pictureFrame = (PictureFrame)frame;
+            // Untitled picture frames are those without a picture file associated.
+            if (pictureFrame.getEditStatus().getPictureFile() == null) {
+                String frameTitle = pictureFrame.getTitle();
+                if (frameTitle.contains("Untitled") && (!frameTitle.endsWith("Untitled"))) {
+                    int untitledFrameNum = Integer.parseInt(frameTitle.substring(frameTitle.indexOf("Untitled") + 8));
+                    if (untitledFrameNum > maximumUntitledFrameNum) {
+                        maximumUntitledFrameNum = untitledFrameNum;
+                    }
+                }
+            }
+        }
+        String defaultPictureName = "Untitled" + (maximumUntitledFrameNum + 1);
+        
+        // Now create the new PictureFrame.
+        PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor(), defaultPictureName);
         int initialFrameIndent = 20 + (desktop.getAllFrames().length * 25);
         newPictureFrame.setLocation(initialFrameIndent, initialFrameIndent);
+        
+        // Add to the desktop, start up the mouse motion timer and then autoselect.
         desktop.add(newPictureFrame);
         newPictureFrame.getMouseHandler().startMouseMotionTimer();
         try {
