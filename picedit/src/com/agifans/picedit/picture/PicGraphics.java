@@ -11,12 +11,11 @@ import com.agifans.picedit.utils.EgaPalette;
 
 /**
  * The graphics routines with which the application draws the screen. There
- * are four different images held in this object. The first is the main 
- * PICEDIT screen. The second is the text image shown for the "Help" screen
- * and the "View data" screen. The third image is the background image, which
- * is drawn behind the main PICEDIT screen. The fourth image is the priority
- * bands image that is drawn when bands is enabled. The graphics routines in
- * this class act upon the main PICEDIT screen image.
+ * are three different images held in this object. The first is the main 
+ * PICEDIT screen. The second is the background image, which is drawn behind
+ * the main PICEDIT screen. The fourth image is the priority bands image 
+ * that is drawn when bands is enabled. The graphics routines in this class
+ * act upon the main PICEDIT screen image.
  * 
  * @author Lance Ewing
  */
