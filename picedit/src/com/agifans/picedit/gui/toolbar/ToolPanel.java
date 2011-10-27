@@ -1,4 +1,4 @@
-package com.agifans.picedit.gui;
+package com.agifans.picedit.gui.toolbar;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -34,6 +34,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalToolBarUI;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.gui.handler.CommonHandler;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.types.ColourType;

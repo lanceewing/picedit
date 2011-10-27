@@ -1,4 +1,4 @@
-package com.agifans.picedit.gui;
+package com.agifans.picedit.gui.menu;
 
 import java.util.HashMap;
 import java.util.Map;

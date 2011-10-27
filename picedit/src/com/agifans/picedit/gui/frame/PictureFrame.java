@@ -1,4 +1,4 @@
-package com.agifans.picedit.gui;
+package com.agifans.picedit.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,6 +26,8 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.gui.handler.KeyboardHandler;
+import com.agifans.picedit.gui.handler.MouseHandler;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.PicGraphics;
 import com.agifans.picedit.picture.Picture;
