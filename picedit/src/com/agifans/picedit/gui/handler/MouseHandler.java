@@ -252,9 +252,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
 
         // Change mouse cursor depending on position.
         updateMouseCursor(mousePoint);
-
-        // Check if we need to update the screen.
-        picGraphics.checkDrawFrame();
     }
 
     /**

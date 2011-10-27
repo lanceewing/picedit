@@ -86,9 +86,6 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
         if (key == KeyEvent.VK_DELETE) {
             picture.deleteCurrentPictureAction();
         }
-
-        // Check if the screen needs to be updated.
-        picGraphics.checkDrawFrame();
     }
 
     /**
