@@ -1,4 +1,4 @@
-package com.agifans.picedit.picture;
+package com.agifans.picedit.gui.frame;
 
 import java.awt.*;
 import java.awt.image.*;
