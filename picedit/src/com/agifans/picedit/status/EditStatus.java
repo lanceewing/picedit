@@ -1,7 +1,8 @@
-package com.agifans.picedit;
+package com.agifans.picedit.status;
 
 import java.awt.Point;
 import java.io.File;
+
 
 /**
  * This class holds everything about the current picture editing status.

@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -9,6 +9,10 @@ import java.awt.image.RescaleOp;
 
 import javax.swing.JPanel;
 
+import com.agifans.picedit.picture.PicGraphics;
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.status.EditStatus;
+import com.agifans.picedit.utils.EgaPalette;
 import com.agifans.picedit.view.EgoTestHandler;
 
 /**

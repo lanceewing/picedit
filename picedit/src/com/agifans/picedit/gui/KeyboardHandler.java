@@ -1,8 +1,13 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.PicGraphics;
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.status.EditStatus;
+import com.agifans.picedit.status.ToolType;
 import com.agifans.picedit.view.EgoTestHandler;
 
 /**

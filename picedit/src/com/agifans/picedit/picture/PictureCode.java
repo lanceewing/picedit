@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.picture;
 
 /**
  * This class holds a single picture code, which is a single byte within the 

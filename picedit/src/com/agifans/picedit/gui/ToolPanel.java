@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,6 +33,12 @@ import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.metal.MetalToolBarUI;
 
+import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.status.EditStatus;
+import com.agifans.picedit.status.ToolType;
+import com.agifans.picedit.types.ColourType;
+import com.agifans.picedit.utils.EgaPalette;
 import com.agifans.picedit.utils.OSChecker;
 
 /**

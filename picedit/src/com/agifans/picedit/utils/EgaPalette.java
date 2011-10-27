@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.utils;
 
 import java.awt.Color;
 import java.util.HashMap;

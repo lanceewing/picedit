@@ -9,10 +9,10 @@ import java.awt.image.MemoryImageSource;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.agifans.picedit.EditStatus;
-import com.agifans.picedit.EgaPalette;
-import com.agifans.picedit.Picture;
-import com.agifans.picedit.PictureType;
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.status.EditStatus;
+import com.agifans.picedit.status.PictureType;
+import com.agifans.picedit.utils.EgaPalette;
 
 /**
  * Handles the Ego Test mode when it is activated.

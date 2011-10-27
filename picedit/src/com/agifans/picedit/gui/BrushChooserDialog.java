@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,6 +25,11 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.border.BevelBorder;
+
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.status.BrushShape;
+import com.agifans.picedit.status.BrushTexture;
+import com.agifans.picedit.types.BrushType;
 
 /**
  * Brush chooser dialog used when selecting brush and airbrush shapes and sizes.

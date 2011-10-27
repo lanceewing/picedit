@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.status;
 
 /**
  * Enum for the available tool types.

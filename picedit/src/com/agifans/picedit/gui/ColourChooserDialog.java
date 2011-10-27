@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.gui;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
+
+import com.agifans.picedit.utils.EgaPalette;
 
 /**
  * Colour chooser dialog used when selecting visual, priority and control colours.

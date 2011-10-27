@@ -1,4 +1,4 @@
-package com.agifans.picedit;
+package com.agifans.picedit.picture;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -19,7 +19,11 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.agifans.picedit.PictureCache.PictureCacheEntry;
+import com.agifans.picedit.picture.PictureCache.PictureCacheEntry;
+import com.agifans.picedit.status.EditStatus;
+import com.agifans.picedit.status.PictureType;
+import com.agifans.picedit.status.ToolType;
+import com.agifans.picedit.utils.EgaPalette;
 
 /**
  * This class represents an AGI/SCI Picture.

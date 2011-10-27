@@ -14,6 +14,17 @@ import java.util.prefs.Preferences;
 
 import javax.swing.*;
 
+import com.agifans.picedit.gui.Menu;
+import com.agifans.picedit.gui.PicEditDesktopManager;
+import com.agifans.picedit.gui.PictureFrame;
+import com.agifans.picedit.gui.PicturePanel;
+import com.agifans.picedit.gui.StatusBarPanel;
+import com.agifans.picedit.gui.ToolPanel;
+import com.agifans.picedit.gui.ToolPanelLocation;
+import com.agifans.picedit.picture.PicGraphics;
+import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.status.EditStatus;
+
 /**
  * The main class for the PICEDIT application.
  * 
