@@ -258,18 +258,28 @@ public abstract class CommonHandler {
             // Untitled picture frames are those without a picture file associated.
             if (pictureFrame.getEditStatus().getPictureFile() == null) {
                 String frameTitle = pictureFrame.getTitle();
-                if (frameTitle.contains("Untitled") && (!frameTitle.endsWith("Untitled"))) {
-                    int untitledFrameNum = Integer.parseInt(frameTitle.substring(frameTitle.indexOf("Untitled") + 8));
+                if (frameTitle.contains("Untitled")) {
+                	int untitledFrameNum = 1;
+                	if (!frameTitle.endsWith("Untitled")) {
+	                    untitledFrameNum = Integer.parseInt(frameTitle.substring(frameTitle.indexOf("Untitled") + 9));
+	                    if (untitledFrameNum > maximumUntitledFrameNum) {
+	                        maximumUntitledFrameNum = untitledFrameNum;
+	                    }
+                    }
                     if (untitledFrameNum > maximumUntitledFrameNum) {
                         maximumUntitledFrameNum = untitledFrameNum;
                     }
                 }
             }
         }
-        String defaultPictureName = "Untitled" + (maximumUntitledFrameNum + 1);
+        StringBuilder defaultPictureName = new StringBuilder("Untitled");
+        if (maximumUntitledFrameNum > 0) {
+        	defaultPictureName.append(" ");
+        	defaultPictureName.append(maximumUntitledFrameNum + 1);
+        }
         
         // Now create the new PictureFrame.
-        PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor(), defaultPictureName);
+        PictureFrame newPictureFrame = new PictureFrame(application, application.getEditStatus().getZoomFactor(), defaultPictureName.toString());
         int initialFrameIndent = 20 + (desktop.getAllFrames().length * 25);
         newPictureFrame.setLocation(initialFrameIndent, initialFrameIndent);
         
