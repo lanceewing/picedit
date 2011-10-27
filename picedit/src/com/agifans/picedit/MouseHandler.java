@@ -112,7 +112,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     
                     // Check if mouse point has changed.
                     if (!mousePoint.equals(lastPoint)) {
-                        if (editStatus.isPaused() || editStatus.isMenuActive()) {
+                        if (editStatus.isMenuActive()) {
                             // If paused or menu system is active then ignore mouse motion.
                         } else {
                             // Otherwise process the mouse event as per normal.
@@ -214,9 +214,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         EditStatus editStatus = application.getEditStatus();
         PicGraphics picGraphics = application.getPicGraphics();
 
-        if (editStatus.isPaused()) {
-            // If paused then ignore mouse clicks.
-        } else if (editStatus.isMenuActive()) {
+        if (editStatus.isMenuActive()) {
             // If menu was active and we received a mouse click, then set menu active false again.
             editStatus.setMenuActive(false);
         } else {
