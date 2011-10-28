@@ -27,6 +27,11 @@ public class PicturePanel extends JPanel {
     private static final long serialVersionUID = 1L;
     
     /**
+     * Holds the RGB values for the 16 EGA colours.
+     */
+    private final static int[] colours = EgaPalette.colours;
+    
+    /**
      * The graphics routines with which the application draws the screen.
      */
     private PicGraphics picGraphics;
@@ -148,11 +153,146 @@ public class PicturePanel extends JPanel {
             egoTestHandler.drawEgo(offScreenGC, editStatus.getZoomFactor());
         }
         
+        // TODO: Temporary line screen does not need to be drawn every time; only when a temp line exists.
+        // TODO: Only the Temporary line part of the image needs to be drawn, not the whole temp line screen.
+        
         // Draw the PicGraphics screen on top of everything else. This is mainly for the temporary lines.
         offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 
         // Now display the screen to the user.
         g.drawImage(offScreenImage, 0, 0, this);
+    }
+    
+    /**
+     * Draws a temporary picture line. These are the lines that are drawn while
+     * a line drawing tool is active (line, pen, step). The line follows the
+     * mouse's movements and allows the user to see where the line is going to
+     * fall if they click in that position.
+     * 
+     * @param x1 Start X Coordinate.
+     * @param y1 Start Y Coordinate.
+     * @param x2 End X Coordinate.
+     * @param y2 End Y Coordinate.
+     * @param c the colour of the line.
+     * @param bgLineData an array to store the original pixels behind the temporary line.
+     */
+    public final void drawTemporaryLine(int x1, int y1, int x2, int y2, int c, int[] bgLineData) {
+        int x, y, index, endIndex, rgbCode;
+
+        // Redraw the pixels that were behind the previous temporary line.
+        int bgLineLength = bgLineData[0];
+        for (int i = 1; i < bgLineLength;) {
+            index = bgLineData[i++];
+            //screen[index + 1] = screen[index] = bgLineData[i++];
+        }
+
+        // Start storing at index 1. We'll use 0 for the length.
+        int bgIndex = 1;
+
+        // Vertical Line.
+        if (x1 == x2) {
+            if (y1 > y2) {
+                y = y1;
+                y1 = y2;
+                y2 = y;
+            }
+
+            index = (y1 << 8) + (y1 << 6) + (x1 << 1);
+            endIndex = (y2 << 8) + (y2 << 6) + (x2 << 1);
+            rgbCode = colours[c];
+
+            for (; index <= endIndex; index += 320) {
+                bgLineData[bgIndex++] = index;
+                //bgLineData[bgIndex++] = screen[index];
+                //screen[index] = rgbCode;
+                //screen[index + 1] = rgbCode;
+            }
+        }
+        // Horizontal Line.
+        else if (y1 == y2) {
+            if (x1 > x2) {
+                x = x1;
+                x1 = x2;
+                x2 = x;
+            }
+
+            index = (y1 << 8) + (y1 << 6) + (x1 << 1);
+            endIndex = (y2 << 8) + (y2 << 6) + (x2 << 1);
+            rgbCode = colours[c];
+
+            for (; index <= endIndex; index += 2) {
+                bgLineData[bgIndex++] = index;
+                //bgLineData[bgIndex++] = screen[index];
+                //screen[index] = rgbCode;
+                //screen[index + 1] = rgbCode;
+            }
+
+        } else {
+            int deltaX = x2 - x1;
+            int deltaY = y2 - y1;
+            int stepX = 1;
+            int stepY = 1;
+            int detDelta;
+            int errorX;
+            int errorY;
+            int count;
+
+            if (deltaY < 0) {
+                stepY = -1;
+                deltaY = -deltaY;
+            }
+
+            if (deltaX < 0) {
+                stepX = -1;
+                deltaX = -deltaX;
+            }
+
+            if (deltaY > deltaX) {
+                count = deltaY;
+                detDelta = deltaY;
+                errorX = deltaY / 2;
+                errorY = 0;
+            } else {
+                count = deltaX;
+                detDelta = deltaX;
+                errorX = 0;
+                errorY = deltaX / 2;
+            }
+
+            x = x1;
+            y = y1;
+            index = (y1 << 8) + (y1 << 6) + (x1 << 1);
+            rgbCode = colours[c];
+
+            bgLineData[bgIndex++] = index;
+            //bgLineData[bgIndex++] = screen[index];
+            //screen[index] = rgbCode;
+            //screen[index + 1] = rgbCode;
+
+            do {
+                errorY = (errorY + deltaY);
+                if (errorY >= detDelta) {
+                    errorY -= detDelta;
+                    y += stepY;
+                }
+
+                errorX = (errorX + deltaX);
+                if (errorX >= detDelta) {
+                    errorX -= detDelta;
+                    x += stepX;
+                }
+
+                index = (y << 8) + (y << 6) + (x << 1);
+                bgLineData[bgIndex++] = index;
+                //bgLineData[bgIndex++] = screen[index];
+                //screen[index] = rgbCode;
+                //screen[index + 1] = rgbCode;
+                count--;
+            } while (count > 0);
+        }
+
+        // Store the length of the stored pixel data in first slot.
+        bgLineData[0] = bgIndex;
     }
     
     /**
