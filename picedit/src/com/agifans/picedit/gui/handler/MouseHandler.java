@@ -75,6 +75,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     private Cursor blankCursor;
     
     /**
+     * Whether the mouse is over the picture or not.
+     */
+    private boolean mouseIsOverPicture;
+    
+    /**
      * Constructor for MouseHandler.
      * 
      * @param pictureFrame The PictureFrame that this MouseHandler is for.
@@ -162,7 +167,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                         }
     
                         // Change mouse cursor depending on position.
-                        updateMouseCursor(mousePoint);
+                        updateMouseCursor();
     
                         // And check if we need to update the screen.
                         picGraphics.checkDrawFrame();
@@ -227,6 +232,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param event the mouse entered event.
      */
     public void mouseEntered(MouseEvent event) {
+        this.mouseIsOverPicture = true;
     }
 
     /**
@@ -235,6 +241,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param event the mouse exited event.
      */
     public void mouseExited(MouseEvent event) {
+        this.mouseIsOverPicture = false;
     }
 
     /**
@@ -270,9 +277,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 wheelCounter = 0;
             }
         }
-
-        // Change mouse cursor depending on position.
-        updateMouseCursor(mousePoint);
     }
 
     /**
@@ -311,14 +315,13 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     }
 
     /**
-     * Updates the appearance of the mouse cursor depending on where the mouse is.
-     * 
-     * @param mousePoint the current mouse position.
+     * Updates the appearance of the mouse cursor depending on where the mouse is and 
+     * what tool is being used.
      */
-    private void updateMouseCursor(Point mousePoint) {
+    private void updateMouseCursor() {
         EditStatus editStatus = application.getEditStatus();
         
-        if (!editStatus.isMenuActive()) {
+        if (!editStatus.isMenuActive() && mouseIsOverPicture) {
             if ((editStatus.getNumOfClicks() == 0) || editStatus.isFillActive() || editStatus.isBrushActive()) {
                 // If the tool is Fill or Brush then show the standard cross hair cursor.
                 application.setCursor(crossHairCursor);
