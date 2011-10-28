@@ -15,11 +15,10 @@ import com.agifans.picedit.utils.EgaPalette;
 import com.agifans.picedit.view.EgoTestHandler;
 
 /**
- * This panel renders the main picture editor image, which includes the 
- * picture being edited, the status line, and tool bar. This code was
- * originally in the PicEdit class but has now been split out into a 
- * separate panel to allow other Swing components to appear within the
- * main applet, including things like a proper menu, scroll bars, etc.
+ * This panel is responsible for rendering the picture, temporary lines, the
+ * background image if it is activated, the bands if it is activated, the
+ * dual mode if it is activated and Ego if Ego test mode is activated. 
+ * Essentially everything that is drawn within the picture part of a PictureFrame.
  * 
  * @author Lance Ewing
  */
