@@ -1,6 +1,7 @@
 package com.agifans.picedit.gui.handler;
 
 import java.awt.AWTEvent;
+import java.awt.Cursor;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
@@ -11,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -58,6 +60,21 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     private int wheelCounter;
     
     /**
+     * Cursor to show when moving over the picture.
+     */
+    private Cursor crossHairCursor;
+
+    /**
+     * Cursor to show when moving over status bar, menu and button panel.
+     */
+    private Cursor defaultCursor;
+
+    /**
+     * Cursor to show when hiding the mouse cursor (i.e. a blank cursor).
+     */
+    private Cursor blankCursor;
+    
+    /**
      * Constructor for MouseHandler.
      * 
      * @param pictureFrame The PictureFrame that this MouseHandler is for.
@@ -67,6 +84,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         super(application);
 
         this.pictureFrame = pictureFrame;
+        
+        // Create the different types of cursor used in different parts of the screen.
+        crossHairCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+        defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+        blankCursor = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
         
         // Create a Robot for auto adjusting mouse position when tool restricts movement.
         try {
@@ -223,7 +245,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     public void mousePressed(MouseEvent event) {
         Point mousePoint = getPoint();
         EditStatus editStatus = application.getEditStatus();
-        PicGraphics picGraphics = application.getPicGraphics();
 
         if (editStatus.isMenuActive()) {
             // If menu was active and we received a mouse click, then set menu active false again.
@@ -296,23 +317,22 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      */
     private void updateMouseCursor(Point mousePoint) {
         EditStatus editStatus = application.getEditStatus();
-        PicGraphics picGraphics = application.getPicGraphics();
         
         if (!editStatus.isMenuActive()) {
             if ((editStatus.getNumOfClicks() == 0) || editStatus.isFillActive() || editStatus.isBrushActive()) {
                 // If the tool is Fill or Brush then show the standard cross hair cursor.
-                picGraphics.showCrossHairCursor();
+                application.setCursor(crossHairCursor);
             } else {
                 // If the tool is Line, Pen or Step then show no cursor (end of line with 'glow' instead).
-                picGraphics.showBlankCursor();
+                application.setCursor(blankCursor);
             }
         } else {
             // If the mouse position is over the edit panel, or the status bar, or the menu
             // system is active, then show the default pointer.
-            picGraphics.showDefaultCursor();
+            application.setCursor(defaultCursor);
         }
     }
-
+    
     /**
      * Processes the movement of the mouse.
      * 

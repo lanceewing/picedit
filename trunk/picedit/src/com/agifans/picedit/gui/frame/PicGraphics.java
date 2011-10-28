@@ -60,27 +60,6 @@ public final class PicGraphics {
      * Holds the RGB values for the 16 EGA colours.
      */
     private final static int[] colours = EgaPalette.colours;
-
-    /**
-     * Holds mapping between RBG colour values and their EGA palette index
-     * value.
-     */
-    private Map<Integer, Integer> colourMap;
-
-    /**
-     * Cursor to show when moving over the picture.
-     */
-    private Cursor crossHairCursor;
-
-    /**
-     * Cursor to show when moving over status bar, menu and button panel.
-     */
-    private Cursor defaultCursor;
-
-    /**
-     * Cursor to show when hiding the mouse cursor (i.e. a blank cursor).
-     */
-    private Cursor blankCursor;
     
     /**
      * Constructor for PicGraphics.
@@ -92,15 +71,10 @@ public final class PicGraphics {
      */
     public PicGraphics(int width, int height, Component component, int framesPerSecond) {
         createScreenImage(width, height);
-        buildColourMap();
         
         this.component = component;
         this.frameDuration = (1000 / framesPerSecond);
         this.nextTime = System.currentTimeMillis() + this.frameDuration;
-
-        crossHairCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
-        defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-        blankCursor = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 
         createPriorityBandsImage(PictureType.AGI);
     }
@@ -156,27 +130,6 @@ public final class PicGraphics {
     }
 
     /**
-     * Changes the mouse cursor to be a cross hair cursor.
-     */
-    public void showCrossHairCursor() {
-        component.setCursor(crossHairCursor);
-    }
-
-    /**
-     * Changes the mouse cursor to be the default cursor.
-     */
-    public void showDefaultCursor() {
-        component.setCursor(defaultCursor);
-    }
-
-    /**
-     * Changes the mouse cursor to be a blank cursor (completely transparent).
-     */
-    public void showBlankCursor() {
-        component.setCursor(blankCursor);
-    }
-
-    /**
      * Clears the picture part of the PICEDIT editor screen.
      * 
      * @param pictureType The type of picture currently being edited.
@@ -200,19 +153,6 @@ public final class PicGraphics {
                 0xff000000 }; // alpha mask
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, width, height, width, bandMasks, null);
         this.screenImage = new BufferedImage(colorModel, raster, false, null);
-    }
-
-    /**
-     * Builds the Map that holds the mapping between RGB colours values and
-     * their EGA palette index value, e.g. red is 4, brown is 6. Used for
-     * quickly converting between a pixel on the screen and the associated EGA
-     * colour.
-     */
-    private void buildColourMap() {
-        colourMap = new HashMap<Integer, Integer>();
-        for (int i = 0; i < colours.length; i++) {
-            colourMap.put(colours[i], i);
-        }
     }
 
     /**
