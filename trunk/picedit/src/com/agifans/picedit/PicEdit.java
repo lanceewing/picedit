@@ -153,14 +153,14 @@ public final class PicEdit extends JApplet {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             public void run() {
-                // Repaints the PICEDIT screen 25 times a second.
-                repaint();
-                
                 // Check if selected PictureFrame needs to process mouse motion.
                 PictureFrame selectedPictureFrame = (PictureFrame)getDesktopPane().getSelectedFrame();
                 if (selectedPictureFrame != null) {
                     selectedPictureFrame.getMouseHandler().checkForMouseMotion();
                 }
+                
+                // Repaints the PICEDIT screen 25 times a second.
+                repaint();
             }
         };
         timer.scheduleAtFixedRate(timerTask, 40, 40);
