@@ -229,7 +229,6 @@ public abstract class CommonHandler {
         
         // Add to the desktop, start up the mouse motion timer and then autoselect.
         desktop.add(newPictureFrame);
-        newPictureFrame.getMouseHandler().startMouseMotionTimer();
         try {
             newPictureFrame.setSelected(true);
         } catch (PropertyVetoException e) {

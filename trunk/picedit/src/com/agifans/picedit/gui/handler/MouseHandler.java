@@ -13,8 +13,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.agifans.picedit.PicEdit;
 import com.agifans.picedit.gui.frame.PictureFrame;
@@ -28,7 +26,7 @@ import com.agifans.picedit.types.StepType;
 import com.agifans.picedit.types.ToolType;
 
 /**
- * Handles processing of PICEDIT mouse click and mouse move events.
+ * Handles processing of mouse click and mouse move events for a PictureFrame.
  * 
  * @author Lance Ewing
  */
@@ -80,6 +78,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
     private boolean mouseIsOverPicture;
     
     /**
+     * The last Point that the mouse was at. Used for mouse motion checks.
+     */
+    private Point lastPoint;
+    
+    /**
      * Constructor for MouseHandler.
      * 
      * @param pictureFrame The PictureFrame that this MouseHandler is for.
@@ -108,8 +111,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 if (pictureFrame.isSelected()) {
                     MouseEvent mouseEvent = (MouseEvent)e;
                     
-                    // TODO: Might need to change how this is done when introducing multiple picture frames.
-                    
                     // If a line is being drawn and the mouse event is outside the picture...
                     if (application.getEditStatus().isLineBeingDrawn() && 
                         !mouseEvent.getSource().equals(pictureFrame.getPicturePanel())) {
@@ -130,52 +131,28 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             }
         }, (AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK));
     }
-
+    
     /**
-     * Starts a timer to track the mouse position. This appears to be more
-     * reliable that receiving mouse motion events for some reason, and it
-     * has the added benefit of tracking the mouse when it is outside of 
-     * the PICEDIT window.
+     * Checks if the mouse has moved and if it has then triggers the processing 
+     * of mouse motion and the updating of the appearance of the mouse cursor. This
+     * method is invoked immediately before the application screen repaint.
      */
-    public void startMouseMotionTimer() {
-        Timer timer = new Timer();
-        TimerTask trackingTask = new TimerTask() {
-            private Point lastPoint;
+    public void checkForMouseMotion() {
+        Point mousePoint = getPoint();
+        EditStatus editStatus = application.getEditStatus();
 
-            public void run() {
-                if (pictureFrame.isSelected()) {
-                    Point mousePoint = getPoint();
-                    EditStatus editStatus = application.getEditStatus();
-    
-                    // Check if mouse point has changed.
-                    if (!mousePoint.equals(lastPoint)) {
-                        if (editStatus.isMenuActive()) {
-                            // If paused or menu system is active then ignore mouse motion.
-                        } else {
-                            // Otherwise process the mouse event as per normal.
-                            processMouseMove(mousePoint);
-    
-                            // Vary the colour of the end point of the temporary line so that it is obvious where it is.
-                            // TODO: Move this in to PicturePanel.
-                            if (editStatus.isLineBeingDrawn()) {
-                                int index = (editStatus.getMouseY() << 8) + (editStatus.getMouseY() << 6) + (editStatus.getMouseX() << 1);
-                                int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
-                                int rgbCode = (new java.awt.Color(brightness, brightness, brightness)).getRGB();
-                                application.getPicturePanel().getScreen()[index] = rgbCode;
-                                application.getPicturePanel().getScreen()[index + 1] = rgbCode;
-                            }
-                        }
-    
-                        // Change mouse cursor depending on position.
-                        updateMouseCursor();
-    
-                        // And check if we need to update the screen.
-                        application.getPicturePanel().checkDrawFrame();
-                    }
-                }
+        // Check if mouse point has changed.
+        if (!mousePoint.equals(lastPoint)) {
+            if (editStatus.isMenuActive()) {
+                // If paused or menu system is active then ignore mouse motion.
+            } else {
+                // Otherwise process the mouse event as per normal.
+                processMouseMove(mousePoint);
             }
-        };
-        timer.scheduleAtFixedRate(trackingTask, 40, 40);
+
+            // Change mouse cursor depending on position.
+            updateMouseCursor();
+        }
     }
 
     /**

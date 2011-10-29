@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.*;
+import java.util.Timer;
 import java.util.prefs.Preferences;
 
 import javax.swing.*;
@@ -132,13 +133,39 @@ public final class PicEdit extends JApplet {
                 break;
         }
         
-        // Starts timer that injects mouse motion events.
-        this.activePictureFrame.getMouseHandler().startMouseMotionTimer();
-        
         // Create the menu and register the menu event listeners.
         this.menu = new Menu(this);
+        
+        // Start a timer to preform regular screen repaints.
+        startRepaintTimer();
     }
 
+    /**
+     * Starts a timer to trigger regular screen repaints. In addition to 
+     * this, it also checks if the currently selected PictureFrame needs
+     * to process a mouse motion event. Performing this check at the same
+     * time as the screen repaint appears to be more reliable than receiving 
+     * mouse motion events to a registered listener for some reason, and it
+     * has the added benefit of tracking the mouse when it is outside of the
+     * PICEDIT window.
+     */
+    public void startRepaintTimer() {
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            public void run() {
+                // Repaints the PICEDIT screen 25 times a second.
+                repaint();
+                
+                // Check if selected PictureFrame needs to process mouse motion.
+                PictureFrame selectedPictureFrame = (PictureFrame)getDesktopPane().getSelectedFrame();
+                if (selectedPictureFrame != null) {
+                    selectedPictureFrame.getMouseHandler().checkForMouseMotion();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 40, 40);
+    }
+    
     /**
      * Loads and applies the user preferences related to the Edit Status.
      */
@@ -197,10 +224,20 @@ public final class PicEdit extends JApplet {
         recentPictures.add(0, pictureFile.getAbsolutePath());
     }
     
+    /**
+     * Gets the last used directory.
+     * 
+     * @return The last used directory.
+     */
     public String getLastUsedDirectory() {
         return this.lastUsedDirectory;
     }
     
+    /**
+     * Sets the last used directory.
+     * 
+     * @param lastUsedDirectory The last used directory.
+     */
     public void setLastUsedDirectory(String lastUsedDirectory) {
         this.lastUsedDirectory = lastUsedDirectory;
     }

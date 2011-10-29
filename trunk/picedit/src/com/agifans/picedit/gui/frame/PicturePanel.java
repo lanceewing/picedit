@@ -24,8 +24,8 @@ import com.agifans.picedit.view.EgoTestHandler;
 /**
  * This panel is responsible for rendering the picture, temporary lines, the
  * background image if it is activated, the bands if it is activated, the
- * dual mode if it is activated and Ego if Ego test mode is activated. 
- * Essentially everything that is drawn within the picture part of a PictureFrame.
+ * dual mode if it is activated and Ego if Ego test mode is activated,
+ * essentially everything that is drawn within the picture part of a PictureFrame.
  * 
  * @author Lance Ewing
  */
@@ -44,34 +44,19 @@ public class PicturePanel extends JPanel {
     private Image backgroundImage;
 
     /**
-     * The Image for the PICEDIT screen.
-     */
-    private Image screenImage;
-
-    /**
      * The Image that is drawn for the priority bands when activated.
      */
     private Image bandsImage;
+    
+    /**
+     * The Image for the overlay screen.
+     */
+    private Image overlayScreenImage;
 
     /**
-     * The RGB data array for the PICEDIT screen.
+     * The RGB data array for the overlay screen.
      */
-    private int screen[];
-
-    /**
-     * Duration between frames (eg. 40 * 25 = 1000ms).
-     */
-    private long frameDuration;
-
-    /**
-     * The next time that the frame should be drawn.
-     */
-    public long nextTime = 0;
-
-    /**
-     * The PICEDIT application.
-     */
-    private PicEdit application;
+    private int overlayScreen[];
     
     /**
      * The AGI picture being edited.
@@ -103,20 +88,14 @@ public class PicturePanel extends JPanel {
      * 
      * @param editStatus The EditStatus holding current picture editor state.
      * @param picture The AGI PICTURE currently being edited.
-     * @param application The PICEDIT application.
      * @param egoTestHandler The handler for managing the Ego Test mode.
      */
-    public PicturePanel(EditStatus editStatus, Picture picture, PicEdit application, EgoTestHandler egoTestHandler) {
+    public PicturePanel(EditStatus editStatus, Picture picture, EgoTestHandler egoTestHandler) {
         this.editStatus = editStatus;
         this.picture = picture;
-        this.application = application;
         this.egoTestHandler = egoTestHandler;
         
         createScreenImage(320, editStatus.getPictureType().getHeight());
-        
-        this.frameDuration = (1000 / 25);
-        this.nextTime = System.currentTimeMillis() + this.frameDuration;
-
         createPriorityBandsImage(PictureType.AGI);
         
         Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
@@ -146,8 +125,8 @@ public class PicturePanel extends JPanel {
         }
 
         // Draw the background image (if there is one) to the offscreen image.
-        if ((this.getBackgroundImage() != null) && (editStatus.isBackgroundEnabled())) {
-            offScreenGC.drawImage(this.getBackgroundImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+        if ((this.backgroundImage != null) && (editStatus.isBackgroundEnabled())) {
+            offScreenGC.drawImage(this.backgroundImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
         } else {
             // Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
             if (editStatus.isDualModeEnabled()) {
@@ -190,7 +169,7 @@ public class PicturePanel extends JPanel {
         }
 
         if (editStatus.isBandsOn()) {
-            offScreenGC.drawImage(this.getPriorityBandsImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+            offScreenGC.drawImage(this.bandsImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
         }
         
         if (editStatus.isEgoTestEnabled()) {
@@ -200,8 +179,17 @@ public class PicturePanel extends JPanel {
         // TODO: Temporary line screen does not need to be drawn every time; only when a temp line exists.
         // TODO: Only the Temporary line part of the image needs to be drawn, not the whole temp line screen.
         
-        // Draw the PicGraphics screen on top of everything else. This is mainly for the temporary lines.
-        offScreenGC.drawImage(this.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+        // Make the end of the temporary line flash so that it is obvious where the mouse is.
+        if (editStatus.isLineBeingDrawn()) {
+            int index = (editStatus.getMouseY() << 8) + (editStatus.getMouseY() << 6) + (editStatus.getMouseX() << 1);
+            int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
+            int rgbCode = (new java.awt.Color(brightness, brightness, brightness)).getRGB();
+            this.overlayScreen[index] = rgbCode;
+            this.overlayScreen[index + 1] = rgbCode;
+        }
+        
+        // Draw the overlay screen on top of everything else. This is mainly for the temporary lines.
+        offScreenGC.drawImage(this.overlayScreenImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 
         // Now display the screen to the user.
         g.drawImage(offScreenImage, 0, 0, this);
@@ -263,7 +251,7 @@ public class PicturePanel extends JPanel {
      * @param pictureType The type of picture currently being edited.
      */
     public void clearDrawingArea(PictureType pictureType) {
-        Arrays.fill(this.screen, 0, pictureType.getNumberOfEGAPixels(), EgaPalette.transparent);
+        Arrays.fill(this.overlayScreen, 0, pictureType.getNumberOfEGAPixels(), EgaPalette.transparent);
     }
 
     /**
@@ -271,62 +259,16 @@ public class PicturePanel extends JPanel {
      * lines are drawn.
      */
     public void createScreenImage(int width, int height) {
-        this.screen = new int[width * height];
-        Arrays.fill(this.screen, EgaPalette.transparent);
-        DataBufferInt dataBuffer = new DataBufferInt(this.screen, this.screen.length);
+        this.overlayScreen = new int[width * height];
+        Arrays.fill(this.overlayScreen, EgaPalette.transparent);
+        DataBufferInt dataBuffer = new DataBufferInt(this.overlayScreen, this.overlayScreen.length);
         ColorModel colorModel = ColorModel.getRGBdefault();
         int[] bandMasks = new int[] { 0x00ff0000, // red mask
                 0x0000ff00, // green mask
                 0x000000ff, // blue mask
                 0xff000000 }; // alpha mask
         WritableRaster raster = Raster.createPackedRaster(dataBuffer, width, height, width, bandMasks, null);
-        this.screenImage = new BufferedImage(colorModel, raster, false, null);
-    }
-
-    /**
-     * Draws the screen data onto the Image.
-     */
-    public void drawFrame() {
-        application.repaint();
-    }
-
-    /**
-     * Checks whether the frame should be drawn based on the frame rate. If so
-     * then it draws the frame.
-     */
-    public void checkDrawFrame() {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime > nextTime) {
-            drawFrame();
-            nextTime = currentTime + frameDuration;
-        }
-    }
-
-    /**
-     * Gets the underlying screen data array.
-     * 
-     * @return the underlying screen data array.
-     */
-    public int[] getScreen() {
-        return screen;
-    }
-    
-    /**
-     * Returns the main editor screen Image.
-     * 
-     * @return the main editor screen Image.
-     */
-    public Image getScreenImage() {
-        return screenImage;
-    }
-
-    /**
-     * Gets the background image.
-     * 
-     * @return the background image.
-     */
-    public Image getBackgroundImage() {
-        return backgroundImage;
+        this.overlayScreenImage = new BufferedImage(colorModel, raster, false, null);
     }
 
     /**
@@ -336,15 +278,6 @@ public class PicturePanel extends JPanel {
      */
     public void setBackgroundImage(Image backgroundImage) {
         this.backgroundImage = backgroundImage;
-    }
-
-    /**
-     * Gets the priority bands image.
-     * 
-     * @return the priority bands image.
-     */
-    public Image getPriorityBandsImage() {
-        return bandsImage;
     }
     
     /**
@@ -367,7 +300,7 @@ public class PicturePanel extends JPanel {
         int bgLineLength = bgLineData[0];
         for (int i = 1; i < bgLineLength;) {
             index = bgLineData[i++];
-            screen[index + 1] = screen[index] = bgLineData[i++];
+            overlayScreen[index + 1] = overlayScreen[index] = bgLineData[i++];
         }
 
         // Start storing at index 1. We'll use 0 for the length.
@@ -387,9 +320,9 @@ public class PicturePanel extends JPanel {
 
             for (; index <= endIndex; index += 320) {
                 bgLineData[bgIndex++] = index;
-                bgLineData[bgIndex++] = screen[index];
-                screen[index] = rgbCode;
-                screen[index + 1] = rgbCode;
+                bgLineData[bgIndex++] = overlayScreen[index];
+                overlayScreen[index] = rgbCode;
+                overlayScreen[index + 1] = rgbCode;
             }
         }
         // Horizontal Line.
@@ -406,9 +339,9 @@ public class PicturePanel extends JPanel {
 
             for (; index <= endIndex; index += 2) {
                 bgLineData[bgIndex++] = index;
-                bgLineData[bgIndex++] = screen[index];
-                screen[index] = rgbCode;
-                screen[index + 1] = rgbCode;
+                bgLineData[bgIndex++] = overlayScreen[index];
+                overlayScreen[index] = rgbCode;
+                overlayScreen[index + 1] = rgbCode;
             }
 
         } else {
@@ -449,9 +382,9 @@ public class PicturePanel extends JPanel {
             rgbCode = colours[c];
 
             bgLineData[bgIndex++] = index;
-            bgLineData[bgIndex++] = screen[index];
-            screen[index] = rgbCode;
-            screen[index + 1] = rgbCode;
+            bgLineData[bgIndex++] = overlayScreen[index];
+            overlayScreen[index] = rgbCode;
+            overlayScreen[index + 1] = rgbCode;
 
             do {
                 errorY = (errorY + deltaY);
@@ -468,24 +401,14 @@ public class PicturePanel extends JPanel {
 
                 index = (y << 8) + (y << 6) + (x << 1);
                 bgLineData[bgIndex++] = index;
-                bgLineData[bgIndex++] = screen[index];
-                screen[index] = rgbCode;
-                screen[index + 1] = rgbCode;
+                bgLineData[bgIndex++] = overlayScreen[index];
+                overlayScreen[index] = rgbCode;
+                overlayScreen[index + 1] = rgbCode;
                 count--;
             } while (count > 0);
         }
 
         // Store the length of the stored pixel data in first slot.
         bgLineData[0] = bgIndex;
-    }
-    
-    /**
-     * Override the default update behaviour to stop the screen from being
-     * cleared each time.
-     * 
-     * @param g the Graphics object to update.
-     */
-    public void update(Graphics g) {
-        paint(g);
     }
 }
