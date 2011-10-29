@@ -397,9 +397,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         
         EditStatus editStatus = application.getEditStatus();
         Picture picture = application.getPicture();
+        PicturePanel picturePanel = application.getPicturePanel();
 
         if (mouseButton != MouseEvent.BUTTON2) {
             // Mouse click clears the stored temporary line making it permanent.
+            picturePanel.clearTemporaryLine();
             editStatus.clearBGLineData();
         }
 
