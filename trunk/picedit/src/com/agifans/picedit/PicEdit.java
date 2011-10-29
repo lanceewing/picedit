@@ -16,7 +16,6 @@ import javax.swing.*;
 
 import com.agifans.picedit.gui.PicEditDesktopManager;
 import com.agifans.picedit.gui.StatusBarPanel;
-import com.agifans.picedit.gui.frame.PicGraphics;
 import com.agifans.picedit.gui.frame.PictureFrame;
 import com.agifans.picedit.gui.frame.PicturePanel;
 import com.agifans.picedit.gui.menu.Menu;
@@ -240,15 +239,6 @@ public final class PicEdit extends JApplet {
      */
     public Picture getPicture() {
         return getPictureFrame().getPicture();
-    }
-    
-    /**
-     * Gets the PicGraphics associated with the currently selected PictureFrame.
-     * 
-     * @return The PicGraphics associated with the currently selected PictureFrame.
-     */
-    public PicGraphics getPicGraphics() {
-        return getPictureFrame().getPicGraphics();
     }
     
     /**

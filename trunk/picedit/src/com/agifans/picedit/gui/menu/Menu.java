@@ -336,7 +336,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                             } else {
                                 // Otherwise reuse the old frame. We need to clear off the background image
                                 // since the EditStatus clear call doesn't handle this.
-                                application.getPicGraphics().setBackgroundImage(null);
+                                application.getPicturePanel().setBackgroundImage(null);
                             }
                             application.getPicture().loadPicture(pictureFile);
                             application.updateRecentPictures(pictureFile);
@@ -396,7 +396,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
                         } else {
                             // Otherwise reuse the old frame. We need to clear off the background image
                             // since the EditStatus clear call doesn't handle this.
-                            application.getPicGraphics().setBackgroundImage(null);
+                            application.getPicturePanel().setBackgroundImage(null);
                         }
                         application.getPicture().loadPicture(selectedFile);
                         application.updateRecentPictures(selectedFile);

@@ -19,8 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import com.agifans.picedit.PicEdit;
-import com.agifans.picedit.gui.frame.PicGraphics;
 import com.agifans.picedit.gui.frame.PictureFrame;
+import com.agifans.picedit.gui.frame.PicturePanel;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.picture.PictureCode;
@@ -168,19 +168,19 @@ public abstract class CommonHandler {
      */
     protected void loadBackgroundImage(File imageFile) {
         EditStatus editStatus = application.getEditStatus();
-        PicGraphics picGraphics = application.getPicGraphics();
+        PicturePanel picturePanel = application.getPicturePanel();
         
         try {
             Image image = ImageIO.read(imageFile);
             if (image != null) {
-                picGraphics.setBackgroundImage(image);
+            	picturePanel.setBackgroundImage(image);
                 editStatus.setBackgroundEnabled(true);
             } else {
-                picGraphics.setBackgroundImage(null);
+            	picturePanel.setBackgroundImage(null);
                 editStatus.setBackgroundEnabled(false);
             }
         } catch (IOException e) {
-            picGraphics.setBackgroundImage(null);
+        	picturePanel.setBackgroundImage(null);
             editStatus.setBackgroundEnabled(false);
         }
         

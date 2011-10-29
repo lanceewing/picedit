@@ -17,8 +17,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.agifans.picedit.PicEdit;
-import com.agifans.picedit.gui.frame.PicGraphics;
 import com.agifans.picedit.gui.frame.PictureFrame;
+import com.agifans.picedit.gui.frame.PicturePanel;
 import com.agifans.picedit.gui.toolbar.ColourChooserDialog;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
@@ -146,7 +146,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 if (pictureFrame.isSelected()) {
                     Point mousePoint = getPoint();
                     EditStatus editStatus = application.getEditStatus();
-                    PicGraphics picGraphics = application.getPicGraphics();
     
                     // Check if mouse point has changed.
                     if (!mousePoint.equals(lastPoint)) {
@@ -157,12 +156,13 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                             processMouseMove(mousePoint);
     
                             // Vary the colour of the end point of the temporary line so that it is obvious where it is.
+                            // TODO: Move this in to PicturePanel.
                             if (editStatus.isLineBeingDrawn()) {
                                 int index = (editStatus.getMouseY() << 8) + (editStatus.getMouseY() << 6) + (editStatus.getMouseX() << 1);
                                 int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
                                 int rgbCode = (new java.awt.Color(brightness, brightness, brightness)).getRGB();
-                                picGraphics.getScreen()[index] = rgbCode;
-                                picGraphics.getScreen()[index + 1] = rgbCode;
+                                application.getPicturePanel().getScreen()[index] = rgbCode;
+                                application.getPicturePanel().getScreen()[index + 1] = rgbCode;
                             }
                         }
     
@@ -170,7 +170,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                         updateMouseCursor();
     
                         // And check if we need to update the screen.
-                        picGraphics.checkDrawFrame();
+                        application.getPicturePanel().checkDrawFrame();
                     }
                 }
             }
@@ -343,7 +343,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      */
     public void processMouseMove(Point mousePoint) {
         EditStatus editStatus = application.getEditStatus();
-        PicGraphics picGraphics = application.getPicGraphics();
+        PicturePanel picturePanel = application.getPicturePanel();
         
         // Update the status line on every mouse movement.
         editStatus.updateMousePoint(mousePoint);
@@ -360,7 +360,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             int lineColour = editStatus.getTemporaryLineColour();
 
             if (editStatus.isLineActive()) {
-                picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+            	picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
             }
             if (editStatus.isStepActive()) {
                 int dX = 0;
@@ -375,7 +375,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                         } else {
                             x = clickX;
                         }
-                        picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+                        picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
                         break;
 
                     default:
@@ -385,14 +385,14 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                         } else {
                             y = clickY;
                         }
-                        picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+                        picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
                         break;
                 }
             }
             if (editStatus.isPenActive()) {
                 x = clickX + adjustForPen(x - clickX, 6);
                 y = clickY + adjustForPen(y - clickY, 7);
-                picGraphics.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+                picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
             }
             
             // Move the mouse to the tool restricted x/y position (if applicable).
