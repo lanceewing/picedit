@@ -371,9 +371,9 @@ public class Picture {
      * picture's internal visual or priority buffer.
      */
     public void updateScreen() {
-        // TODO: Replace all Picture updateScreen calls with a call to clearDrawingArea.
+        // TODO: Replace all Picture updateScreen calls with a call to clearOverlayScreen.
     	// TODO: Remove this method.
-        //picGraphics.clearDrawingArea(editStatus.getPictureType());
+        //picturePanel.clearOverlayScreen();
     }
 
     /**
