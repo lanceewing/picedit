@@ -246,12 +246,10 @@ public class PicturePanel extends JPanel {
     }
 
     /**
-     * Clears the picture part of the PICEDIT editor screen.
-     * 
-     * @param pictureType The type of picture currently being edited.
+     * Clears the overlay screen that temporary lines are drawn to.
      */
-    public void clearDrawingArea(PictureType pictureType) {
-        Arrays.fill(this.overlayScreen, 0, pictureType.getNumberOfEGAPixels(), EgaPalette.transparent);
+    public void clearOverlayScreen() {
+        Arrays.fill(this.overlayScreen, EgaPalette.transparent);
     }
 
     /**
