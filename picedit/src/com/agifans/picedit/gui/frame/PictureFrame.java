@@ -69,11 +69,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     private Picture picture;
     
     /**
-     * The graphics routines with which the application draws the screen.
-     */
-    private PicGraphics picGraphics;
-    
-    /**
      * The handler for managing the Ego Test mode.
      */
     private EgoTestHandler egoTestHandler;
@@ -110,10 +105,9 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.defaultPictureName = defaultPictureName;
         this.editStatus = new EditStatus();
         this.editStatus.setZoomFactor(initialZoomFactor);
-        this.picGraphics = new PicGraphics(320, editStatus.getPictureType().getHeight(), application, 25);
-        this.picture = new Picture(editStatus, picGraphics);
+        this.picture = new Picture(editStatus);
         this.egoTestHandler = new EgoTestHandler(editStatus, picture);
-        this.picturePanel = new PicturePanel(editStatus, picGraphics, picture, egoTestHandler);
+        this.picturePanel = new PicturePanel(editStatus, picture, application, egoTestHandler);
         
         mouseHandler = new MouseHandler(this, application);
         picturePanel.addMouseListener(mouseHandler);
@@ -207,10 +201,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     
     public PicturePanel getPicturePanel() {
         return picturePanel;
-    }
-    
-    public PicGraphics getPicGraphics() {
-        return picGraphics;
     }
     
     public JSlider getPositionSlider() {

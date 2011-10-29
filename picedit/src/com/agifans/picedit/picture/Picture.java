@@ -19,7 +19,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.agifans.picedit.gui.frame.PicGraphics;
 import com.agifans.picedit.picture.PictureCache.PictureCacheEntry;
 import com.agifans.picedit.types.PictureType;
 import com.agifans.picedit.types.ToolType;
@@ -83,11 +82,6 @@ public class Picture {
     private EditStatus editStatus;
 
     /**
-     * Holds the graphics routines for drawing to the PICEDIT screen. 
-     */
-    private PicGraphics picGraphics;
-
-    /**
      * Holds the cache of picture state at various picture positions. Used for faster picture draws.
      */
     private PictureCache pictureCache;
@@ -96,9 +90,8 @@ public class Picture {
      * Constructor for Picture.
      * 
      * @param editStatus the EditStatus containing current editing status.
-     * @param picGraphics the PicGraphics for drawing on the actual PICEDIT screen.
      */
-    public Picture(EditStatus editStatus, PicGraphics picGraphics) {
+    public Picture(EditStatus editStatus) {
         PictureType pictureType = editStatus.getPictureType();
 
         this.visualScreen = new int[pictureType.getNumberOfPixels()];
@@ -112,7 +105,6 @@ public class Picture {
         }
 
         this.editStatus = editStatus;
-        this.picGraphics = picGraphics;
         this.pictureCache = new PictureCache(editStatus);
         
         clearPicture();
@@ -380,7 +372,8 @@ public class Picture {
      */
     public void updateScreen() {
         // TODO: Replace all Picture updateScreen calls with a call to clearDrawingArea.
-        picGraphics.clearDrawingArea(editStatus.getPictureType());
+    	// TODO: Remove this method.
+        //picGraphics.clearDrawingArea(editStatus.getPictureType());
     }
 
     /**

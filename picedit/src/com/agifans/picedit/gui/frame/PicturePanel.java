@@ -5,12 +5,19 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.DataBufferInt;
+import java.awt.image.Raster;
 import java.awt.image.RescaleOp;
+import java.awt.image.WritableRaster;
+import java.util.Arrays;
 
 import javax.swing.JPanel;
 
+import com.agifans.picedit.PicEdit;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.types.PictureType;
 import com.agifans.picedit.utils.EgaPalette;
 import com.agifans.picedit.view.EgoTestHandler;
 
@@ -32,10 +39,40 @@ public class PicturePanel extends JPanel {
     private final static int[] colours = EgaPalette.colours;
     
     /**
-     * The graphics routines with which the application draws the screen.
+     * The Image for the background image.
      */
-    private PicGraphics picGraphics;
+    private Image backgroundImage;
 
+    /**
+     * The Image for the PICEDIT screen.
+     */
+    private Image screenImage;
+
+    /**
+     * The Image that is drawn for the priority bands when activated.
+     */
+    private Image bandsImage;
+
+    /**
+     * The RGB data array for the PICEDIT screen.
+     */
+    private int screen[];
+
+    /**
+     * Duration between frames (eg. 40 * 25 = 1000ms).
+     */
+    private long frameDuration;
+
+    /**
+     * The next time that the frame should be drawn.
+     */
+    public long nextTime = 0;
+
+    /**
+     * The PICEDIT application.
+     */
+    private PicEdit application;
+    
     /**
      * The AGI picture being edited.
      */
@@ -64,16 +101,23 @@ public class PicturePanel extends JPanel {
     /**
      * Constructor for PicturePanel.
      * 
-     * @param editStatus the EditStatus holding current picture editor state.
-     * @param picGraphics the PicGraphics object providing custom graphics API for PICEDIT.
-     * @param picture the AGI PICTURE currently being edited.
+     * @param editStatus The EditStatus holding current picture editor state.
+     * @param picture The AGI PICTURE currently being edited.
+     * @param application The PICEDIT application.
      * @param egoTestHandler The handler for managing the Ego Test mode.
      */
-    public PicturePanel(EditStatus editStatus, PicGraphics picGraphics, Picture picture, EgoTestHandler egoTestHandler) {
+    public PicturePanel(EditStatus editStatus, Picture picture, PicEdit application, EgoTestHandler egoTestHandler) {
         this.editStatus = editStatus;
-        this.picGraphics = picGraphics;
         this.picture = picture;
+        this.application = application;
         this.egoTestHandler = egoTestHandler;
+        
+        createScreenImage(320, editStatus.getPictureType().getHeight());
+        
+        this.frameDuration = (1000 / 25);
+        this.nextTime = System.currentTimeMillis() + this.frameDuration;
+
+        createPriorityBandsImage(PictureType.AGI);
         
         Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
         this.setPreferredSize(appDimension);
@@ -102,8 +146,8 @@ public class PicturePanel extends JPanel {
         }
 
         // Draw the background image (if there is one) to the offscreen image.
-        if ((picGraphics.getBackgroundImage() != null) && (editStatus.isBackgroundEnabled())) {
-            offScreenGC.drawImage(picGraphics.getBackgroundImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+        if ((this.getBackgroundImage() != null) && (editStatus.isBackgroundEnabled())) {
+            offScreenGC.drawImage(this.getBackgroundImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
         } else {
             // Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
             if (editStatus.isDualModeEnabled()) {
@@ -146,7 +190,7 @@ public class PicturePanel extends JPanel {
         }
 
         if (editStatus.isBandsOn()) {
-            offScreenGC.drawImage(picGraphics.getPriorityBandsImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+            offScreenGC.drawImage(this.getPriorityBandsImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
         }
         
         if (editStatus.isEgoTestEnabled()) {
@@ -157,10 +201,150 @@ public class PicturePanel extends JPanel {
         // TODO: Only the Temporary line part of the image needs to be drawn, not the whole temp line screen.
         
         // Draw the PicGraphics screen on top of everything else. This is mainly for the temporary lines.
-        offScreenGC.drawImage(picGraphics.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+        offScreenGC.drawImage(this.getScreenImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 
         // Now display the screen to the user.
         g.drawImage(offScreenImage, 0, 0, this);
+    }
+    
+    /**
+     * Creates the Image that is displayed when the show priority bands feature
+     * is turned on.
+     * 
+     * @param pictureType The type of picture being edited (AGI/SCI0).
+     */
+    public void createPriorityBandsImage(PictureType pictureType) {
+        bandsImage = new BufferedImage(pictureType.getWidth(), pictureType.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics bandsGraphics = bandsImage.getGraphics();
+
+        // Draw the bands onto the image so it is ready to be displayed when
+        // needed.
+        if (pictureType.equals(PictureType.SCI0)) {
+            int currentPriorityBand = 0;
+            
+            // For SCI0, the top 42 lines are for priority 0. The other 14 bands
+            // get an even share of the 148 remaining lines (which, btw, doesn't
+            // divide evenly, so the bands are not even as then are in AGI).
+            for (int y = 0; y < 190; y++) {
+                int priorityBand = ((int) ((y - 42) / ((190 - 42) / 14))) + 1;
+
+                if (priorityBand != currentPriorityBand) {
+                    currentPriorityBand = priorityBand;
+                    bandsGraphics.setColor(EgaPalette.COLOR_OBJECTS[priorityBand]);
+                    bandsGraphics.drawLine(0, y, 319, y);
+                }
+            }
+
+        } else if (pictureType.equals(PictureType.AGI)) {
+            int currentPriorityBand = 4;
+            
+            for (int y = 0; y < 168; y++) {
+                // For AGI it is evenly split, 168 lines split 14 ways.
+                int priorityBand = (y / 12) + 1;
+
+                // Make sure priority band is 4 or above for AGI since the
+                // bottom four priority colours are reserved as control lines.
+                if (priorityBand < 4) {
+                    priorityBand = 4;
+                }
+
+                if (priorityBand != currentPriorityBand) {
+                    currentPriorityBand = priorityBand;
+                    bandsGraphics.setColor(EgaPalette.COLOR_OBJECTS[priorityBand]);
+                    bandsGraphics.drawLine(0, y, 319, y);
+                }
+            }
+        }
+    }
+
+    /**
+     * Clears the picture part of the PICEDIT editor screen.
+     * 
+     * @param pictureType The type of picture currently being edited.
+     */
+    public void clearDrawingArea(PictureType pictureType) {
+        Arrays.fill(this.screen, 0, pictureType.getNumberOfEGAPixels(), EgaPalette.transparent);
+    }
+
+    /**
+     * Creates the image for the editor screen on which the editor panel, menu and temporary
+     * lines are drawn.
+     */
+    public void createScreenImage(int width, int height) {
+        this.screen = new int[width * height];
+        Arrays.fill(this.screen, EgaPalette.transparent);
+        DataBufferInt dataBuffer = new DataBufferInt(this.screen, this.screen.length);
+        ColorModel colorModel = ColorModel.getRGBdefault();
+        int[] bandMasks = new int[] { 0x00ff0000, // red mask
+                0x0000ff00, // green mask
+                0x000000ff, // blue mask
+                0xff000000 }; // alpha mask
+        WritableRaster raster = Raster.createPackedRaster(dataBuffer, width, height, width, bandMasks, null);
+        this.screenImage = new BufferedImage(colorModel, raster, false, null);
+    }
+
+    /**
+     * Draws the screen data onto the Image.
+     */
+    public void drawFrame() {
+        application.repaint();
+    }
+
+    /**
+     * Checks whether the frame should be drawn based on the frame rate. If so
+     * then it draws the frame.
+     */
+    public void checkDrawFrame() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime > nextTime) {
+            drawFrame();
+            nextTime = currentTime + frameDuration;
+        }
+    }
+
+    /**
+     * Gets the underlying screen data array.
+     * 
+     * @return the underlying screen data array.
+     */
+    public int[] getScreen() {
+        return screen;
+    }
+    
+    /**
+     * Returns the main editor screen Image.
+     * 
+     * @return the main editor screen Image.
+     */
+    public Image getScreenImage() {
+        return screenImage;
+    }
+
+    /**
+     * Gets the background image.
+     * 
+     * @return the background image.
+     */
+    public Image getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    /**
+     * Sets the background image.
+     * 
+     * @param backgroundImage the background image.
+     */
+    public void setBackgroundImage(Image backgroundImage) {
+        this.backgroundImage = backgroundImage;
+    }
+
+    /**
+     * Gets the priority bands image.
+     * 
+     * @return the priority bands image.
+     */
+    public Image getPriorityBandsImage() {
+        return bandsImage;
     }
     
     /**
@@ -183,7 +367,7 @@ public class PicturePanel extends JPanel {
         int bgLineLength = bgLineData[0];
         for (int i = 1; i < bgLineLength;) {
             index = bgLineData[i++];
-            //screen[index + 1] = screen[index] = bgLineData[i++];
+            screen[index + 1] = screen[index] = bgLineData[i++];
         }
 
         // Start storing at index 1. We'll use 0 for the length.
@@ -203,9 +387,9 @@ public class PicturePanel extends JPanel {
 
             for (; index <= endIndex; index += 320) {
                 bgLineData[bgIndex++] = index;
-                //bgLineData[bgIndex++] = screen[index];
-                //screen[index] = rgbCode;
-                //screen[index + 1] = rgbCode;
+                bgLineData[bgIndex++] = screen[index];
+                screen[index] = rgbCode;
+                screen[index + 1] = rgbCode;
             }
         }
         // Horizontal Line.
@@ -222,9 +406,9 @@ public class PicturePanel extends JPanel {
 
             for (; index <= endIndex; index += 2) {
                 bgLineData[bgIndex++] = index;
-                //bgLineData[bgIndex++] = screen[index];
-                //screen[index] = rgbCode;
-                //screen[index + 1] = rgbCode;
+                bgLineData[bgIndex++] = screen[index];
+                screen[index] = rgbCode;
+                screen[index + 1] = rgbCode;
             }
 
         } else {
@@ -265,9 +449,9 @@ public class PicturePanel extends JPanel {
             rgbCode = colours[c];
 
             bgLineData[bgIndex++] = index;
-            //bgLineData[bgIndex++] = screen[index];
-            //screen[index] = rgbCode;
-            //screen[index + 1] = rgbCode;
+            bgLineData[bgIndex++] = screen[index];
+            screen[index] = rgbCode;
+            screen[index + 1] = rgbCode;
 
             do {
                 errorY = (errorY + deltaY);
@@ -284,9 +468,9 @@ public class PicturePanel extends JPanel {
 
                 index = (y << 8) + (y << 6) + (x << 1);
                 bgLineData[bgIndex++] = index;
-                //bgLineData[bgIndex++] = screen[index];
-                //screen[index] = rgbCode;
-                //screen[index + 1] = rgbCode;
+                bgLineData[bgIndex++] = screen[index];
+                screen[index] = rgbCode;
+                screen[index + 1] = rgbCode;
                 count--;
             } while (count > 0);
         }
