@@ -1,5 +1,6 @@
 package com.agifans.picedit.gui.frame;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -179,15 +180,6 @@ public class PicturePanel extends JPanel {
         // TODO: Temporary line screen does not need to be drawn every time; only when a temp line exists.
         // TODO: Only the Temporary line part of the image needs to be drawn, not the whole temp line screen.
         
-        // Make the end of the temporary line flash so that it is obvious where the mouse is.
-        if (editStatus.isLineBeingDrawn()) {
-            int index = (editStatus.getMouseY() << 8) + (editStatus.getMouseY() << 6) + (editStatus.getMouseX() << 1);
-            int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
-            int rgbCode = (new java.awt.Color(brightness, brightness, brightness)).getRGB();
-            this.overlayScreen[index] = rgbCode;
-            this.overlayScreen[index + 1] = rgbCode;
-        }
-        
         // Draw the overlay screen on top of everything else. This is mainly for the temporary lines.
         offScreenGC.drawImage(this.overlayScreenImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
 
@@ -312,15 +304,19 @@ public class PicturePanel extends JPanel {
     public final void drawTemporaryLine(int x1, int y1, int x2, int y2, int c, int[] bgLineData) {
         int x, y, index, endIndex, rgbCode;
 
+        // Calculate flash index up front before x1/y1/x2/y2 are adjusted.
+        int flashIndex = (y2 << 8) + (y2 << 6) + (x2 << 1);
+        
         // TODO: Refactor BG line data to live within PicturePanel. Should be in this class, not EditStatus.
-        // TODO: Invoke clearTemporaryLine from mouse click.
+        
+        // TODO: Remove doubling of pixels. Not needed anymore. Was only needed when fonts and things were being drawn on overlay screen.
         
         // Redraw the pixels that were behind the previous temporary line.
         this.clearTemporaryLine();
 
         // Start storing at index 1. We'll use 0 for the length.
         int bgIndex = 1;
-
+        
         // Vertical Line.
         if (x1 == x2) {
             if (y1 > y2) {
@@ -423,6 +419,10 @@ public class PicturePanel extends JPanel {
             } while (count > 0);
         }
 
+        // Make the end of the temporary line flash so that it is obvious where the mouse is.
+        int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
+        overlayScreen[flashIndex] = overlayScreen[flashIndex + 1] = (new Color(brightness, brightness, brightness)).getRGB();;
+        
         // Store the length of the stored pixel data in first slot.
         bgLineData[0] = bgIndex;
     }
