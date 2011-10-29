@@ -279,6 +279,24 @@ public class PicturePanel extends JPanel {
     }
     
     /**
+     * Clears the previously drawn temporary line by redrawing the pixels that where
+     * behind it prior to the line being drawn. Usually this would be transparent 
+     * pixels, but it supports other things being on the overlay screen... just in 
+     * case this is ever needed.
+     */
+    public void clearTemporaryLine() {
+        // Redraw the pixels that were behind the previous temporary line.
+        int[] bgLineData = editStatus.getBGLineData();
+        int bgLineLength = bgLineData[0];
+        if (bgLineLength > 0) {
+            for (int i = 1; i < bgLineLength;) {
+                int index = bgLineData[i++];
+                overlayScreen[index + 1] = overlayScreen[index] = bgLineData[i++];
+            }
+        }
+    }
+    
+    /**
      * Draws a temporary picture line. These are the lines that are drawn while
      * a line drawing tool is active (line, pen, step). The line follows the
      * mouse's movements and allows the user to see where the line is going to
@@ -294,12 +312,11 @@ public class PicturePanel extends JPanel {
     public final void drawTemporaryLine(int x1, int y1, int x2, int y2, int c, int[] bgLineData) {
         int x, y, index, endIndex, rgbCode;
 
+        // TODO: Refactor BG line data to live within PicturePanel. Should be in this class, not EditStatus.
+        // TODO: Invoke clearTemporaryLine from mouse click.
+        
         // Redraw the pixels that were behind the previous temporary line.
-        int bgLineLength = bgLineData[0];
-        for (int i = 1; i < bgLineLength;) {
-            index = bgLineData[i++];
-            overlayScreen[index + 1] = overlayScreen[index] = bgLineData[i++];
-        }
+        this.clearTemporaryLine();
 
         // Start storing at index 1. We'll use 0 for the length.
         int bgIndex = 1;
