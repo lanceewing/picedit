@@ -240,6 +240,12 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             // Mouse wheel button, AKA. the middle button. This is not a picture related action, so
             // we process outside of the normal processMouseClick.
             if (event.getButton() == MouseEvent.BUTTON2) {
+                // Reset the current tool if line is being drawn. Doesn't make sense to keep line
+                // drawing enabled while colour is being chosen.
+                if (editStatus.isLineBeingDrawn()) {
+                    editStatus.resetTool();
+                }
+                
                 Point eventPoint = event.getLocationOnScreen();
                 Point dialogPoint = new Point(eventPoint.x - 34, eventPoint.y - 34);
                 
@@ -399,11 +405,9 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         Picture picture = application.getPicture();
         PicturePanel picturePanel = application.getPicturePanel();
 
-        if (mouseButton != MouseEvent.BUTTON2) {
-            // Mouse click clears the stored temporary line making it permanent.
-            picturePanel.clearTemporaryLine();
-            editStatus.clearBGLineData();
-        }
+        // Mouse click (regardless of which button) always clears the stored temporary line.
+        picturePanel.clearTemporaryLine();
+        editStatus.clearBGLineData();
 
         // Is it the LEFT mouse button?
         if (mouseButton == MouseEvent.BUTTON1) {
@@ -429,7 +433,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 // If a given tool is active then update the AGI picture.
                 if (editStatus.isFillActive()) {
                     picture.fill(x, y);
-                    picture.updateScreen();
                     if (editStatus.isFirstClick()) {
                         picture.addPictureCode(0xF8);
                     }
@@ -442,13 +445,11 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                             picture.addPictureCode(x);
                             picture.addPictureCode(y);
                             picture.putPixel(x, y);
-                            picture.updateScreen();
                             break;
                         default:
                             picture.addPictureCode(x);
                             picture.addPictureCode(y);
                             picture.drawLine(previousX, previousY, x, y);
-                            picture.updateScreen();
                             break;
                     }
                 } else if (editStatus.isPenActive()) {
@@ -462,7 +463,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                             picture.addPictureCode(x);
                             picture.addPictureCode(y);
                             picture.putPixel(x, y);
-                            picture.updateScreen();
                             break;
                         default:
                             dX = adjustForPen(x - previousX, 6);
@@ -482,7 +482,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                             }
                             picture.addPictureCode(disp);
                             picture.drawLine(previousX, previousY, x, y);
-                            picture.updateScreen();
                             editStatus.setClickPoint(new Point(x, y));
                             break;
                     }
@@ -496,7 +495,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                     }
                     patNum = (((new java.util.Random().nextInt(255)) % 0xEE) >> 1) & 0x7F;
                     picture.plotPattern(patNum, x, y);
-                    picture.updateScreen();
                     if (editStatus.getBrushTexture() == BrushTexture.SPRAY) {
                         picture.addPictureCode(patNum << 1);
                     }
@@ -529,7 +527,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                                 picture.addPictureCode(y);
                             }
                             picture.drawLine(previousX, previousY, x, y);
-                            picture.updateScreen();
                             editStatus.setClickPoint(new Point(x, y));
                             break;
 
@@ -543,7 +540,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                                 picture.addPictureCode(x);
                             }
                             picture.drawLine(previousX, previousY, x, y);
-                            picture.updateScreen();
                             editStatus.setClickPoint(new Point(x, y));
                             break;
                     }
@@ -552,7 +548,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
         }
         
         // Is it the RIGHT mouse button?
-        if (mouseButton == MouseEvent.BUTTON3 || mouseButton == MouseEvent.BUTTON2) {
+        if (mouseButton == MouseEvent.BUTTON3) {
             // Right-clicking on the AGI picture will clear the current tool selection.
             if ((editStatus.getNumOfClicks() == 1) && (editStatus.isStepActive())) {
                 // Single point line support for the Step tool.
@@ -586,7 +582,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 }
                 
                 picture.putPixel(previousX, previousY);
-                picture.updateScreen();
             }
             if (editStatus.getNumOfClicks() > 0) {
                 // If a tool is active (i.e. has a least one click) then right click resets 
@@ -596,7 +591,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                 // If no clicks performed yet then a right click sets tool to None.
                 editStatus.setTool(ToolType.NONE);
             }
-            picture.updateScreen();
         }
         
         // Update active status of the position slider based on whether a line is being

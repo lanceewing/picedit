@@ -58,8 +58,9 @@ public abstract class CommonHandler {
      * @param tool the tool to process the selection of.
      */
     protected void processToolSelect(ToolType tool) {
+        application.getPicturePanel().clearTemporaryLine();
+        application.getPictureFrame().getPositionSlider().setEnabled(true);
         application.getEditStatus().setTool(tool);
-        application.getPicture().updateScreen();
     }
 
     /**
@@ -97,10 +98,11 @@ public abstract class CommonHandler {
      * Toggles the display of the priority screen.
      */
     public void processTogglePriorityScreen() {
+        application.getPicturePanel().clearTemporaryLine();
+        application.getPictureFrame().getPositionSlider().setEnabled(true);
         EditStatus editStatus = application.getEditStatus();
         editStatus.toggleScreen();
         editStatus.setTool(ToolType.NONE);
-        application.getPicture().updateScreen();
     }
 
     /**

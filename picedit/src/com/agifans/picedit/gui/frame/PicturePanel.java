@@ -178,7 +178,6 @@ public class PicturePanel extends JPanel {
         }
         
         // TODO: Temporary line screen does not need to be drawn every time; only when a temp line exists.
-        // TODO: Only the Temporary line part of the image needs to be drawn, not the whole temp line screen.
         
         // Draw the overlay screen on top of everything else. This is mainly for the temporary lines.
         offScreenGC.drawImage(this.overlayScreenImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
