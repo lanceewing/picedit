@@ -6,7 +6,6 @@ import java.awt.event.KeyListener;
 import com.agifans.picedit.PicEdit;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
-import com.agifans.picedit.types.ToolType;
 import com.agifans.picedit.view.EgoTestHandler;
 
 /**
@@ -14,8 +13,13 @@ import com.agifans.picedit.view.EgoTestHandler;
  * 
  * @author Lance Ewing
  */
-public class KeyboardHandler extends CommonHandler implements KeyListener {
+public class KeyboardHandler implements KeyListener {
 
+    /**
+     * The PICEDIT application component.
+     */
+    protected PicEdit application;
+    
     /**
      * The handler for managing the Ego Test mode.
      */
@@ -28,8 +32,7 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
      * @param egoTestHandler The handler for managing the Ego Test mode.
      */
     public KeyboardHandler(PicEdit application, EgoTestHandler egoTestHandler) {
-        super(application);
-        
+        this.application = application;
         this.egoTestHandler = egoTestHandler;
     }
 
@@ -64,23 +67,6 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
             if (key == KeyEvent.VK_END) {
                 picture.moveToEndOfPictureBuffer();
             }
-        }
-
-        // Handle tool selection keys.
-        if ((key == KeyEvent.VK_F1) || (key == KeyEvent.VK_L)) {
-            processToolSelect(ToolType.LINE);
-        }
-        if ((key == KeyEvent.VK_F2) || (key == KeyEvent.VK_P)) {
-            processToolSelect(ToolType.SHORTLINE);
-        }
-        if ((key == KeyEvent.VK_F3) || (key == KeyEvent.VK_S)) {
-            processToolSelect(ToolType.STEPLINE);
-        }
-        if ((key == KeyEvent.VK_F4) || (key == KeyEvent.VK_F)) {
-            processToolSelect(ToolType.FILL);
-        }
-        if ((key == KeyEvent.VK_F5) || (key == KeyEvent.VK_B)) {
-            processToolSelect(ToolType.BRUSH);
         }
 
         // Handle picture action delete key.

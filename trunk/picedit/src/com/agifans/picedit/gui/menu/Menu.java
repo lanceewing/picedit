@@ -35,7 +35,6 @@ import javax.swing.event.MenuListener;
 import com.agifans.picedit.PicEdit;
 import com.agifans.picedit.gui.frame.PictureFrame;
 import com.agifans.picedit.gui.frame.PicturePanel;
-import com.agifans.picedit.gui.handler.CommonHandler;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.picture.PictureCode;
@@ -48,8 +47,13 @@ import com.agifans.picedit.types.ToolType;
  * 
  * @author Lance Ewing
  */
-public class Menu extends CommonHandler implements ActionListener, MenuListener {
+public class Menu implements ActionListener, MenuListener {
 
+    /**
+     * The PICEDIT application component.
+     */
+    protected PicEdit application;
+    
     /**
      * File chooser used by all open and save dialogs.
      */
@@ -101,7 +105,7 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      * @param application the PICEDIT application component (used for opening dialogs)
      */
     public Menu(PicEdit application) {
-        super(application);
+        this.application = application;
         
         // Set up a single JFileChooser for use with all open and save dialogs. This
         // allows the directory to be remembered between uses. Default to the current
@@ -595,6 +599,17 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
         application.setLastUsedDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
         
         return success;
+    }
+    
+    /**
+     * Processes the selection of a new tool.
+     * 
+     * @param tool the tool to process the selection of.
+     */
+    protected void processToolSelect(ToolType tool) {
+        application.getPicturePanel().clearTemporaryLine();
+        application.getPictureFrame().getPositionSlider().setEnabled(true);
+        application.getEditStatus().setTool(tool);
     }
     
     /**
