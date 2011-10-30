@@ -205,7 +205,6 @@ public class Picture {
         editStatus.setVisualColour(newVisualColour);
         this.addPictureCode(0xF0);
         this.addPictureCode(newVisualColour);
-        this.updateScreen();
     }
     
     /**
@@ -214,7 +213,6 @@ public class Picture {
     public void processVisualColourOff() {
         editStatus.setVisualColour(EditStatus.VISUAL_OFF);
         this.addPictureCode(0xF1);
-        this.updateScreen();
     }
     
     /**
@@ -226,7 +224,6 @@ public class Picture {
         editStatus.setPriorityColour(newPriorityColour);
         this.addPictureCode(0xF2);
         this.addPictureCode(newPriorityColour);
-        this.updateScreen();
     }
     
     /**
@@ -235,7 +232,6 @@ public class Picture {
     public void processPriorityColourOff() {
         editStatus.setPriorityColour(EditStatus.PRIORITY_OFF);
         this.addPictureCode(0xF3);
-        this.updateScreen();
     }
     
     /**
@@ -313,7 +309,6 @@ public class Picture {
         } while ((pictureCode != null) && !pictureCode.isActionCode() && (picturePosition > 0));
 
         drawPicture();
-        updateScreen();
     }
 
     /**
@@ -327,7 +322,6 @@ public class Picture {
             } while ((pictureCode != null) && !pictureCode.isActionCode());
 
             drawPicture();
-            updateScreen();
         }
     }
 
@@ -337,7 +331,6 @@ public class Picture {
     public void moveToStartOfPictureBuffer() {
         setPicturePosition(0);
         drawPicture();
-        updateScreen();
     }
 
     /**
@@ -347,7 +340,6 @@ public class Picture {
         if (picturePosition < (pictureCodes.size() - 1)) {
             setPicturePosition(pictureCodes.size() - 1);
             drawPicture();
-            updateScreen();
         }
     }
 
@@ -362,17 +354,6 @@ public class Picture {
         }
         pictureCache.clear(picturePosition);
         drawPicture();
-        updateScreen();
-    }
-    
-    /**
-     * Updates the PICEDIT screen with the current contents of the 
-     * picture's internal visual or priority buffer.
-     */
-    public void updateScreen() {
-        // TODO: Replace all Picture updateScreen calls with a call to clearOverlayScreen.
-    	// TODO: Remove this method.
-        //picturePanel.clearOverlayScreen();
     }
 
     /**
@@ -444,7 +425,6 @@ public class Picture {
             this.drawPicture();
             editStatus.setTool(ToolType.NONE);
             editStatus.setUnsavedChanges(false);
-            this.updateScreen();
 
         } catch (FileNotFoundException fnfe) {
             // This can happen for files in the history.
@@ -608,8 +588,6 @@ public class Picture {
                     }
                 }
             } while ((index < picturePosition) && (action != 0xFF));
-
-            updateScreen();
         }
     }
 
