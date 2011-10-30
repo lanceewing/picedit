@@ -30,8 +30,13 @@ import com.agifans.picedit.types.ToolType;
  * 
  * @author Lance Ewing
  */
-public class MouseHandler extends CommonHandler implements MouseMotionListener, MouseListener, MouseWheelListener {
+public class MouseHandler implements MouseMotionListener, MouseListener, MouseWheelListener {
 
+    /**
+     * The PICEDIT application component.
+     */
+    protected PicEdit application;
+    
     /** 
      * Holds the difference between mouse motion event X positions and absolute mouse X positions.
      */
@@ -89,9 +94,8 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
      * @param application The PICEDIT application component.
      */
     public MouseHandler(final PictureFrame pictureFrame, final PicEdit application) {
-        super(application);
-
         this.pictureFrame = pictureFrame;
+        this.application = application;
         
         // Create the different types of cursor used in different parts of the screen.
         crossHairCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
