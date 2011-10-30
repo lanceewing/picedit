@@ -15,7 +15,6 @@ import java.util.Arrays;
 
 import javax.swing.JPanel;
 
-import com.agifans.picedit.PicEdit;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.types.PictureType;
@@ -85,6 +84,11 @@ public class PicturePanel extends JPanel {
     private EgoTestHandler egoTestHandler;
     
     /**
+     * Holds the RGB pixel data that existed on the overlay screen underneath the temporary line.
+     */
+    private int[] bgLineData;
+    
+    /**
      * Constructor for PicturePanel.
      * 
      * @param editStatus The EditStatus holding current picture editor state.
@@ -95,6 +99,8 @@ public class PicturePanel extends JPanel {
         this.editStatus = editStatus;
         this.picture = picture;
         this.egoTestHandler = egoTestHandler;
+        this.bgLineData = new int[1024];
+        this.bgLineData[0] = 0;
         
         createScreenImage(320, editStatus.getPictureType().getHeight());
         createPriorityBandsImage(PictureType.AGI);
@@ -277,14 +283,18 @@ public class PicturePanel extends JPanel {
      */
     public void clearTemporaryLine() {
         // Redraw the pixels that were behind the previous temporary line.
-        int[] bgLineData = editStatus.getBGLineData();
-        int bgLineLength = bgLineData[0];
+        int[] lineData = this.bgLineData;
+        int bgLineLength = lineData[0];
         if (bgLineLength > 0) {
             for (int i = 1; i < bgLineLength;) {
-                int index = bgLineData[i++];
-                overlayScreen[index + 1] = overlayScreen[index] = bgLineData[i++];
+                int index = lineData[i++];
+                overlayScreen[index + 1] = overlayScreen[index] = lineData[i++];
             }
         }
+        
+        // Start again with a fresh array.
+        this.bgLineData = new int[1024];
+        this.bgLineData[0] = 0;
     }
     
     /**
@@ -298,15 +308,12 @@ public class PicturePanel extends JPanel {
      * @param x2 End X Coordinate.
      * @param y2 End Y Coordinate.
      * @param c the colour of the line.
-     * @param bgLineData an array to store the original pixels behind the temporary line.
      */
-    public final void drawTemporaryLine(int x1, int y1, int x2, int y2, int c, int[] bgLineData) {
+    public final void drawTemporaryLine(int x1, int y1, int x2, int y2, int c) {
         int x, y, index, endIndex, rgbCode;
 
         // Calculate flash index up front before x1/y1/x2/y2 are adjusted.
         int flashIndex = (y2 << 8) + (y2 << 6) + (x2 << 1);
-        
-        // TODO: Refactor BG line data to live within PicturePanel. Should be in this class, not EditStatus.
         
         // TODO: Remove doubling of pixels. Not needed anymore. Was only needed when fonts and things were being drawn on overlay screen.
         
