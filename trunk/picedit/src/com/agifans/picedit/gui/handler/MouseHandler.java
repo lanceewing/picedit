@@ -343,7 +343,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
             int lineColour = editStatus.getTemporaryLineColour();
 
             if (editStatus.isLineActive()) {
-            	picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+            	picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour);
             }
             if (editStatus.isStepActive()) {
                 int dX = 0;
@@ -358,7 +358,7 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                         } else {
                             x = clickX;
                         }
-                        picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+                        picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour);
                         break;
 
                     default:
@@ -368,14 +368,14 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
                         } else {
                             y = clickY;
                         }
-                        picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+                        picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour);
                         break;
                 }
             }
             if (editStatus.isPenActive()) {
                 x = clickX + adjustForPen(x - clickX, 6);
                 y = clickY + adjustForPen(y - clickY, 7);
-                picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour, editStatus.getBGLineData());
+                picturePanel.drawTemporaryLine(clickX, clickY, x, y, lineColour);
             }
             
             // Move the mouse to the tool restricted x/y position (if applicable).
@@ -407,7 +407,6 @@ public class MouseHandler extends CommonHandler implements MouseMotionListener, 
 
         // Mouse click (regardless of which button) always clears the stored temporary line.
         picturePanel.clearTemporaryLine();
-        editStatus.clearBGLineData();
 
         // Is it the LEFT mouse button?
         if (mouseButton == MouseEvent.BUTTON1) {

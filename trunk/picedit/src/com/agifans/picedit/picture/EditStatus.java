@@ -9,7 +9,6 @@ import com.agifans.picedit.types.PictureType;
 import com.agifans.picedit.types.StepType;
 import com.agifans.picedit.types.ToolType;
 
-
 /**
  * This class holds everything about the current picture editing status.
  * 
@@ -52,8 +51,6 @@ public class EditStatus {
     private int numOfClicks;
 
     private StepType stepType;
-
-    private int[] bgLineData;
 
     private boolean backgroundEnabled;
 
@@ -153,7 +150,6 @@ public class EditStatus {
         stepType = null;
         clickPoint = null;
         previousClickPoint = null;
-        clearBGLineData();
     }
 
     /**
@@ -464,15 +460,6 @@ public class EditStatus {
 
     public boolean isYCornerActive() {
         return (stepType == StepType.YCORNER);
-    }
-
-    public int[] getBGLineData() {
-        return bgLineData;
-    }
-
-    public void clearBGLineData() {
-        bgLineData = new int[1024];
-        bgLineData[0] = 0;
     }
 
     public boolean isBackgroundEnabled() {
