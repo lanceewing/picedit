@@ -290,11 +290,11 @@ public class PicturePanel extends JPanel {
                 int index = lineData[i++];
                 overlayScreen[index + 1] = overlayScreen[index] = lineData[i++];
             }
+            
+            // Start again with a fresh array.
+            this.bgLineData = new int[1024];
+            this.bgLineData[0] = 0;
         }
-        
-        // Start again with a fresh array.
-        this.bgLineData = new int[1024];
-        this.bgLineData[0] = 0;
     }
     
     /**

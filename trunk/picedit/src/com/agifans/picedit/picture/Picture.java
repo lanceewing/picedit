@@ -108,7 +108,6 @@ public class Picture {
         this.pictureCache = new PictureCache(editStatus);
         
         clearPicture();
-        updateScreen();
     }
 
     /**

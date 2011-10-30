@@ -378,8 +378,12 @@ public class Menu extends CommonHandler implements ActionListener, MenuListener 
      */
     private boolean processMenuSelection(MenuOption menuOption) {
         boolean success = true;
+        
         EditStatus editStatus = application.getEditStatus();
         Picture picture = application.getPicture();
+        
+        // If a menu option is selected, we'll always clear the temporary line.
+        application.getPicturePanel().clearTemporaryLine();
         
         switch (menuOption) {
             case NEW:
