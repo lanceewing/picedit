@@ -496,15 +496,20 @@ public class ToolPanel extends JToolBar {
     /**
      * The listener that processes tool bar button actions.
      */
-    class ToolPanelActionListener extends CommonHandler implements ActionListener {
+    class ToolPanelActionListener implements ActionListener {
 
+        /**
+         * The PICEDIT application component.
+         */
+        protected PicEdit application;
+        
         /**
          * Constructor for ToolPanelActionListener.
          * 
          * @param application The PicEdit application.
          */
         public ToolPanelActionListener(PicEdit application) {
-            super(application);
+            this.application = application;
         }
 
         /**
@@ -534,7 +539,12 @@ public class ToolPanel extends JToolBar {
                     break;
             }
             
-            processToolSelect(tool);
+            // Make sure that temporary line is cleared and slider reenabled.
+            application.getPicturePanel().clearTemporaryLine();
+            application.getPictureFrame().getPositionSlider().setEnabled(true);
+            
+            // Process the selected tool.
+            application.getEditStatus().setTool(tool);
         }
     }
 }
