@@ -43,6 +43,9 @@ public class KeyboardHandler extends CommonHandler implements KeyListener {
         EditStatus editStatus = application.getEditStatus();
         Picture picture = application.getPicture();
         
+        // If any key is pressed, we'll always clear the temporary line... just in case.
+        application.getPicturePanel().clearTemporaryLine();
+        
         if (editStatus.isEgoTestEnabled()) {
             // If Ego Test mode enabled, delegate to the EgoTestHandler.
             this.egoTestHandler.handleKeyEvent(e);

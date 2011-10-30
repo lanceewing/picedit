@@ -85,6 +85,7 @@ public abstract class CommonHandler {
                             newPosition = newPosition - 1;
                         }
                     }
+                    application.getPicturePanel().clearTemporaryLine();
                     picture.setPicturePosition(newPosition);
                     picture.drawPicture();
                 }
