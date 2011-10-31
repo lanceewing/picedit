@@ -84,6 +84,16 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     private JSlider positionSlider;
     
     /**
+     * The back navigation button. Goes back one picture action.
+     */
+    private NavigationButton backButton;
+    
+    /**
+     * The forward navigation button. Goes forward one picture action.
+     */
+    private NavigationButton forwardButton;
+    
+    /**
      * The mouse handler for this picture frame.
      */
     private MouseHandler mouseHandler;
@@ -129,8 +139,10 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
-        bottomPanel.add(new NavigationButton("Back24.gif", NavigationButtonType.BACK), BorderLayout.WEST);
-        bottomPanel.add(new NavigationButton("Forward24.gif", NavigationButtonType.FORWARD), BorderLayout.EAST);
+        backButton = new NavigationButton("Back24.gif", NavigationButtonType.BACK);
+        bottomPanel.add(backButton, BorderLayout.WEST);
+        forwardButton = new NavigationButton("Forward24.gif", NavigationButtonType.FORWARD);
+        bottomPanel.add(forwardButton, BorderLayout.EAST);
         
         positionSlider = new JSlider();
         positionSlider.setModel(new PositionSliderModel(picture));
@@ -262,6 +274,12 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
      */
     public void paint(Graphics g) {
         super.paint(g);
+        
+        // Update slider enabled status based on whether line is being drawn or not. Slider
+        // cannot be used if line drawing is active.
+        positionSlider.setEnabled(!editStatus.isLineBeingDrawn());
+        forwardButton.setEnabled(!editStatus.isLineBeingDrawn());
+        backButton.setEnabled(!editStatus.isLineBeingDrawn());
         
         // Make sure the slider is up to date with the picture position.
         positionSlider.getModel().setValue(picture.getPicturePosition()); 

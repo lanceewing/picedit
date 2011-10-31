@@ -407,10 +407,6 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
         
         EditStatus editStatus = application.getEditStatus();
         Picture picture = application.getPicture();
-        PicturePanel picturePanel = application.getPicturePanel();
-
-        // Mouse click (regardless of which button) always clears the stored temporary line.
-        picturePanel.clearTemporaryLine();
 
         // Is it the LEFT mouse button?
         if (mouseButton == MouseEvent.BUTTON1) {

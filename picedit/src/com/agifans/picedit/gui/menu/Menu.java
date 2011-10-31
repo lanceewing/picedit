@@ -408,9 +408,6 @@ public class Menu implements ActionListener, MenuListener {
         EditStatus editStatus = application.getEditStatus();
         Picture picture = application.getPicture();
         
-        // If a menu option is selected, we'll always clear the temporary line.
-        application.getPicturePanel().clearTemporaryLine();
-        
         switch (menuOption) {
             case NEW:
                 newPicture();
@@ -607,8 +604,6 @@ public class Menu implements ActionListener, MenuListener {
      * @param tool the tool to process the selection of.
      */
     protected void processToolSelect(ToolType tool) {
-        application.getPicturePanel().clearTemporaryLine();
-        application.getPictureFrame().getPositionSlider().setEnabled(true);
         application.getEditStatus().setTool(tool);
     }
     
@@ -634,7 +629,6 @@ public class Menu implements ActionListener, MenuListener {
                             newPosition = newPosition - 1;
                         }
                     }
-                    application.getPicturePanel().clearTemporaryLine();
                     picture.setPicturePosition(newPosition);
                     picture.drawPicture();
                 }
@@ -648,8 +642,6 @@ public class Menu implements ActionListener, MenuListener {
      * Toggles the display of the priority screen.
      */
     public void processTogglePriorityScreen() {
-        application.getPicturePanel().clearTemporaryLine();
-        application.getPictureFrame().getPositionSlider().setEnabled(true);
         EditStatus editStatus = application.getEditStatus();
         editStatus.toggleScreen();
         editStatus.setTool(ToolType.NONE);
