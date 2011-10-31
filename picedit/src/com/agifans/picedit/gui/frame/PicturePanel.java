@@ -102,7 +102,7 @@ public class PicturePanel extends JPanel {
         this.bgLineData = new int[1024];
         this.bgLineData[0] = 0;
         
-        createScreenImage(320, editStatus.getPictureType().getHeight());
+        createOverlayScreenImage(160, editStatus.getPictureType().getHeight());
         createPriorityBandsImage(PictureType.AGI);
         
         Dimension appDimension = new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
@@ -201,7 +201,7 @@ public class PicturePanel extends JPanel {
      * 
      * @param pictureType The type of picture being edited (AGI/SCI0).
      */
-    public void createPriorityBandsImage(PictureType pictureType) {
+    private void createPriorityBandsImage(PictureType pictureType) {
         bandsImage = new BufferedImage(pictureType.getWidth(), pictureType.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics bandsGraphics = bandsImage.getGraphics();
 
@@ -253,10 +253,9 @@ public class PicturePanel extends JPanel {
     }
 
     /**
-     * Creates the image for the editor screen on which the editor panel, menu and temporary
-     * lines are drawn.
+     * Creates the overlay image on which the temporary lines are drawn.
      */
-    public void createScreenImage(int width, int height) {
+    private void createOverlayScreenImage(int width, int height) {
         this.overlayScreen = new int[width * height];
         Arrays.fill(this.overlayScreen, EgaPalette.transparent);
         DataBufferInt dataBuffer = new DataBufferInt(this.overlayScreen, this.overlayScreen.length);
@@ -284,14 +283,14 @@ public class PicturePanel extends JPanel {
      * pixels, but it supports other things being on the overlay screen... just in 
      * case this is ever needed.
      */
-    public void clearTemporaryLine() {
+    private void clearTemporaryLine() {
         // Redraw the pixels that were behind the previous temporary line.
         int[] lineData = this.bgLineData;
         int bgLineLength = lineData[0];
         if (bgLineLength > 0) {
             for (int i = 1; i < bgLineLength;) {
                 int index = lineData[i++];
-                overlayScreen[index + 1] = overlayScreen[index] = lineData[i++];
+                overlayScreen[index] = lineData[i++];
             }
             
             // Start again with a fresh array.
@@ -316,9 +315,7 @@ public class PicturePanel extends JPanel {
         int x, y, index, endIndex, rgbCode;
 
         // Calculate flash index up front before x1/y1/x2/y2 are adjusted.
-        int flashIndex = (y2 << 8) + (y2 << 6) + (x2 << 1);
-        
-        // TODO: Remove doubling of pixels. Not needed anymore. Was only needed when fonts and things were being drawn on overlay screen.
+        int flashIndex = (y2 << 7) + (y2 << 5) + x2;
         
         // Redraw the pixels that were behind the previous temporary line.
         clearTemporaryLine();
@@ -334,15 +331,14 @@ public class PicturePanel extends JPanel {
                 y2 = y;
             }
 
-            index = (y1 << 8) + (y1 << 6) + (x1 << 1);
-            endIndex = (y2 << 8) + (y2 << 6) + (x2 << 1);
+            index = (y1 << 7) + (y1 << 5) + x1;
+            endIndex = (y2 << 7) + (y2 << 5) + x2;
             rgbCode = colours[c];
 
-            for (; index <= endIndex; index += 320) {
+            for (; index <= endIndex; index += 160) {
                 bgLineData[bgIndex++] = index;
                 bgLineData[bgIndex++] = overlayScreen[index];
                 overlayScreen[index] = rgbCode;
-                overlayScreen[index + 1] = rgbCode;
             }
         }
         // Horizontal Line.
@@ -353,15 +349,14 @@ public class PicturePanel extends JPanel {
                 x2 = x;
             }
 
-            index = (y1 << 8) + (y1 << 6) + (x1 << 1);
-            endIndex = (y2 << 8) + (y2 << 6) + (x2 << 1);
+            index = (y1 << 7) + (y1 << 5) + x1;
+            endIndex = (y2 << 7) + (y2 << 5) + x2;
             rgbCode = colours[c];
 
-            for (; index <= endIndex; index += 2) {
+            for (; index <= endIndex; index++) {
                 bgLineData[bgIndex++] = index;
                 bgLineData[bgIndex++] = overlayScreen[index];
                 overlayScreen[index] = rgbCode;
-                overlayScreen[index + 1] = rgbCode;
             }
 
         } else {
@@ -398,13 +393,12 @@ public class PicturePanel extends JPanel {
 
             x = x1;
             y = y1;
-            index = (y1 << 8) + (y1 << 6) + (x1 << 1);
+            index = (y1 << 7) + (y1 << 5) + x1;
             rgbCode = colours[c];
 
             bgLineData[bgIndex++] = index;
             bgLineData[bgIndex++] = overlayScreen[index];
             overlayScreen[index] = rgbCode;
-            overlayScreen[index + 1] = rgbCode;
 
             do {
                 errorY = (errorY + deltaY);
@@ -419,18 +413,17 @@ public class PicturePanel extends JPanel {
                     x += stepX;
                 }
 
-                index = (y << 8) + (y << 6) + (x << 1);
+                index = (y << 7) + (y << 5) + x;
                 bgLineData[bgIndex++] = index;
                 bgLineData[bgIndex++] = overlayScreen[index];
                 overlayScreen[index] = rgbCode;
-                overlayScreen[index + 1] = rgbCode;
                 count--;
             } while (count > 0);
         }
 
         // Make the end of the temporary line flash so that it is obvious where the mouse is.
         int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
-        overlayScreen[flashIndex] = overlayScreen[flashIndex + 1] = (new Color(brightness, brightness, brightness)).getRGB();;
+        overlayScreen[flashIndex] = (new Color(brightness, brightness, brightness)).getRGB();;
         
         // Store the length of the stored pixel data in first slot.
         bgLineData[0] = bgIndex;
