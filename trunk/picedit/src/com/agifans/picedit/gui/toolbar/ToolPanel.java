@@ -538,10 +538,6 @@ public class ToolPanel extends JToolBar {
                     break;
             }
             
-            // Make sure that temporary line is cleared and slider reenabled.
-            application.getPicturePanel().clearTemporaryLine();
-            application.getPictureFrame().getPositionSlider().setEnabled(true);
-            
             // Process the selected tool.
             application.getEditStatus().setTool(tool);
         }

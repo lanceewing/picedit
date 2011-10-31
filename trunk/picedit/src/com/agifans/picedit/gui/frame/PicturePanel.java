@@ -183,10 +183,13 @@ public class PicturePanel extends JPanel {
             egoTestHandler.drawEgo(offScreenGC, editStatus.getZoomFactor());
         }
         
-        // TODO: Temporary line screen does not need to be drawn every time; only when a temp line exists.
-        
         // Draw the overlay screen on top of everything else. This is mainly for the temporary lines.
-        offScreenGC.drawImage(this.overlayScreenImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+        if (editStatus.isLineBeingDrawn()) {
+        	offScreenGC.drawImage(this.overlayScreenImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+        } else if (bgLineData[0] != 0) {
+        	// Clear temporary line if line is no longer being drawn.
+        	clearTemporaryLine();
+        }
 
         // Now display the screen to the user.
         g.drawImage(offScreenImage, 0, 0, this);
@@ -318,7 +321,7 @@ public class PicturePanel extends JPanel {
         // TODO: Remove doubling of pixels. Not needed anymore. Was only needed when fonts and things were being drawn on overlay screen.
         
         // Redraw the pixels that were behind the previous temporary line.
-        this.clearTemporaryLine();
+        clearTemporaryLine();
 
         // Start storing at index 1. We'll use 0 for the length.
         int bgIndex = 1;
