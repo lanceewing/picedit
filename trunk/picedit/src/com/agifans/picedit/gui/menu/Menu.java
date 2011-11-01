@@ -90,6 +90,11 @@ public class Menu implements ActionListener, MenuListener {
     private JMenu openRecentMenu;
     
     /**
+     * The Window menu.
+     */
+    private JMenu windowMenu;
+    
+    /**
      * The View menu.
      */
     private JMenu viewMenu;
@@ -314,7 +319,13 @@ public class Menu implements ActionListener, MenuListener {
         toolsMenu.addMenuListener(this);
         menuBar.add(toolsMenu);
         
-        // Create the Info menu.
+        // Create the Window menu.
+        windowMenu = new JMenu("Window");
+        windowMenu.setMnemonic(KeyEvent.VK_W);
+        windowMenu.addMenuListener(this);
+        menuBar.add(windowMenu);
+        
+        // Create the Help menu.
         JMenu helpMenu = new JMenu("Help");
         helpMenu.setMnemonic(KeyEvent.VK_H);
         JMenuItem helpMenuItem = new JMenuItem(MenuOption.HELP.getDisplayValue(), KeyEvent.VK_H);
@@ -349,6 +360,7 @@ public class Menu implements ActionListener, MenuListener {
         EditStatus editStatus = application.getEditStatus();
         editStatus.setMenuActive(true);
         if (openRecentMenu.equals(e.getSource())) {
+            // Open Recent sub menu was selected.
             openRecentMenu.removeAll();
             for (String pictureName : application.getRecentPictures()) {
                 if (!pictureName.equals("")) {
@@ -369,6 +381,27 @@ public class Menu implements ActionListener, MenuListener {
                         }
                     });
                     openRecentMenu.add(pictureMenuItem);
+                }
+            }
+        } else if (windowMenu.equals(e.getSource())) {
+            // Window menu was selected. Clear what was previously showing and rebuild
+            // from the desktop state.
+            windowMenu.removeAll();
+            JInternalFrame[] pictureFrames = application.getDesktopPane().getAllFrames();
+            if (pictureFrames != null) {
+                // Add each of the PictureFrames on the desktop to the Window menu.
+                for (int frameNum=0; frameNum < pictureFrames.length; frameNum++) {
+                    final PictureFrame pictureFrame = (PictureFrame)pictureFrames[frameNum];
+                    JCheckBoxMenuItem windowMenuItem = new JCheckBoxMenuItem("" + frameNum + " " + pictureFrame.getTitle());
+                    windowMenuItem.setSelected(pictureFrame.isSelected());
+                    windowMenuItem.setMnemonic((char)(0x30 + frameNum));
+                    windowMenuItem.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            // If a window is selected from the menu, switch to that window.
+                            application.getDesktopPane().setSelectedFrame(pictureFrame);
+                        }
+                    });
+                    windowMenu.add(windowMenuItem);
                 }
             }
         }
