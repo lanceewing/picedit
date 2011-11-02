@@ -99,6 +99,15 @@ public final class PicEdit extends JApplet {
         statusbar.setPreferredSize(new Dimension(320, 20));
         this.getContentPane().add(statusbar, BorderLayout.SOUTH);
         
+        DefaultListModel pictureListModel = new DefaultListModel();
+        pictureListModel.addElement("One");
+        JList pictureList = new JList(pictureListModel);
+        JList pictureCodeList = new JList();
+        JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pictureList, pictureCodeList);
+        
+        JPanel desktopPanel = new JPanel();
+        desktopPanel.setLayout(new BorderLayout());
+        
         // Add the desktop pane that holds the picture that is being edited.
         desktopPane = new JDesktopPane();
         desktopPane.setBackground(new Color(0x4169AA));
@@ -111,27 +120,32 @@ public final class PicEdit extends JApplet {
         	  getPictureFrame().getMouseHandler().mouseWheelMoved(event);
         	}
         });
-        this.getContentPane().add(desktopPane, BorderLayout.CENTER);
+        desktopPanel.add(desktopPane, BorderLayout.CENTER);
         
         // Tool panel.
         ToolPanelLocation toolPanelLocation = getToolPanelLocation();
         ToolPanel toolPanel = new ToolPanel(this);
         switch (toolPanelLocation) {
             case DOCKED_LEFT:
-                this.getContentPane().add(toolPanel, BorderLayout.WEST);
+                desktopPanel.add(toolPanel, BorderLayout.WEST);
                 break;
             case DOCKED_RIGHT:
-                this.getContentPane().add(toolPanel, BorderLayout.EAST);
+                desktopPanel.add(toolPanel, BorderLayout.EAST);
                 break;
             case DOCKED_TOP:
                 toolPanel.setOrientation(JToolBar.HORIZONTAL);
-                this.getContentPane().add(toolPanel, BorderLayout.NORTH);
+                desktopPanel.add(toolPanel, BorderLayout.NORTH);
                 break;
             case FLOATING:
                 // TODO: Not sure if this one is possible, so might need to default to WEST.
-                this.getContentPane().add(toolPanel, BorderLayout.WEST);
+                desktopPanel.add(toolPanel, BorderLayout.WEST);
                 break;
         }
+        
+        JSplitPane centerSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSplitPane, desktopPanel);
+        centerSplitPane.setDividerLocation(150);
+        
+        this.getContentPane().add(centerSplitPane, BorderLayout.CENTER);
         
         // Create the menu and register the menu event listeners.
         this.menu = new Menu(this);
