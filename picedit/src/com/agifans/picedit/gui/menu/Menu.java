@@ -398,7 +398,10 @@ public class Menu implements ActionListener, MenuListener {
                     windowMenuItem.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             // If a window is selected from the menu, switch to that window.
-                            application.getDesktopPane().setSelectedFrame(pictureFrame);
+                            try {
+                                pictureFrame.setSelected(true);
+                            } catch (PropertyVetoException e1) {
+                            }
                         }
                     });
                     windowMenu.add(windowMenuItem);
