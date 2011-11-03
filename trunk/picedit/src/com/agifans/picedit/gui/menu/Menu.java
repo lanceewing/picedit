@@ -392,7 +392,7 @@ public class Menu implements ActionListener, MenuListener {
                 // Add each of the PictureFrames on the desktop to the Window menu.
                 for (int frameNum=0; frameNum < pictureFrames.length; frameNum++) {
                     final PictureFrame pictureFrame = (PictureFrame)pictureFrames[frameNum];
-                    JCheckBoxMenuItem windowMenuItem = new JCheckBoxMenuItem("" + frameNum + " " + pictureFrame.getTitle());
+                    JCheckBoxMenuItem windowMenuItem = new JCheckBoxMenuItem("" + (frameNum + 1) + " " + pictureFrame.getTitle());
                     windowMenuItem.setSelected(pictureFrame.isSelected());
                     windowMenuItem.setMnemonic((char)(0x30 + frameNum));
                     windowMenuItem.addActionListener(new ActionListener() {
