@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,6 +88,11 @@ public class Picture {
     private PictureCache pictureCache;
     
     /**
+     * List of registered PictureChangeListeners.
+     */
+    private List<PictureChangeListener> pictureChangeListeners;
+    
+    /**
      * Constructor for Picture.
      * 
      * @param editStatus the EditStatus containing current editing status.
@@ -106,10 +112,45 @@ public class Picture {
 
         this.editStatus = editStatus;
         this.pictureCache = new PictureCache(editStatus);
+        this.pictureChangeListeners = new ArrayList<PictureChangeListener>();
         
         clearPicture();
     }
 
+    /**
+     * Adds the given PictureChangeListener to the List of listeners that are notified when 
+     * the data for this Picture changes.
+     * 
+     * @param pictureChangeListener The PictureChangeListener to add.
+     */
+    public void addPictureChangeListener(PictureChangeListener pictureChangeListener) {
+        this.pictureChangeListeners.add(pictureChangeListener);
+    }
+    
+    /**
+     * Fires a picture codes removed event to all PictureChangeListeners.
+     * 
+     * @param fromIndex The index where the picture codes started to be removed.
+     * @param toIndex The index where the picture codes finished being removed.
+     */
+    public void firePictureCodesRemoved(int fromIndex, int toIndex) {
+        for (PictureChangeListener listener : pictureChangeListeners) {
+            listener.pictureCodesRemoved(fromIndex, toIndex);
+        }
+    }
+    
+    /**
+     * Fires a pictures codes added event to all PictureChangeListeners.
+     * 
+     * @param fromIndex The index where the picture codes started to be added.
+     * @param toIndex The index where the picture codes finished being added.
+     */
+    public void firePictureCodesAdded(int fromIndex, int toIndex) {
+        for (PictureChangeListener listener : pictureChangeListeners) {
+            listener.pictureCodesAdded(fromIndex, toIndex);
+        }
+    }
+    
     /**
      * Creates a BufferedImage of the given size using the given data array to hold
      * the pixel data.
@@ -161,6 +202,9 @@ public class Picture {
      * Clears the picture code buffer.
      */
     public void clearPictureCodes() {
+        if (pictureCodes != null) {
+            firePictureCodesRemoved(0, pictureCodes.size() - 1);
+        }
         picturePosition = 0;
         pictureCodes = new LinkedList<PictureCode>();
         pictureCodes.add(new PictureCode(0xFF));
@@ -192,6 +236,7 @@ public class Picture {
     public void addPictureCode(int code) {
         pictureCache.clear(picturePosition);
         pictureCodes.add(picturePosition, new PictureCode(code));
+        firePictureCodesAdded(picturePosition, picturePosition);
         picturePosition = picturePosition + 1;
         editStatus.setUnsavedChanges(true);
     }
@@ -290,6 +335,7 @@ public class Picture {
         PictureCode pictureCode = null;
         if (picturePosition < (pictureCodes.size() - 1)) {
             pictureCodes.remove(picturePosition);
+            firePictureCodesRemoved(picturePosition, picturePosition);
             if (picturePosition < (pictureCodes.size() - 1)) {
                 pictureCode = pictureCodes.get(picturePosition);
             }
