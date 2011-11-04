@@ -116,6 +116,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.editStatus = new EditStatus();
         this.editStatus.setZoomFactor(initialZoomFactor);
         this.picture = new Picture(editStatus);
+        this.picture.addPictureChangeListener(application.getPictureCodeList());
         this.egoTestHandler = new EgoTestHandler(editStatus, picture);
         this.picturePanel = new PicturePanel(editStatus, picture, egoTestHandler);
         
@@ -305,6 +306,9 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         
         // Updates the View menu items to reflect the new frames picture edit status.
         application.getMenu().updateViewMenuItems();
+        
+        // Completely refreshes the JList that holds the picture codes for the current PictureFrame.
+        application.getPictureCodeList().refreshList();
     }
 
     public void internalFrameClosed(InternalFrameEvent event) {

@@ -16,6 +16,8 @@ import java.util.prefs.Preferences;
 import javax.swing.*;
 
 import com.agifans.picedit.gui.PicEditDesktopManager;
+import com.agifans.picedit.gui.PictureCodeList;
+import com.agifans.picedit.gui.PictureList;
 import com.agifans.picedit.gui.StatusBarPanel;
 import com.agifans.picedit.gui.frame.PictureFrame;
 import com.agifans.picedit.gui.frame.PicturePanel;
@@ -74,12 +76,20 @@ public final class PicEdit extends JApplet {
     private ToolPanelLocation toolPanelLocation;
     
     /**
+     * The JList of picture codes for the currently selected Picture.
+     */
+    private PictureCodeList pictureCodeList;
+    
+    /**
      * Constructor for PicEdit.
      */
     @SuppressWarnings("unchecked")
     public PicEdit() {
         // Load the preferences saved the last time the application was closed down.
         loadPreferences();
+        
+        PictureList pictureList = new PictureList(this);
+        pictureCodeList = new PictureCodeList(this);
         
         this.activePictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3), "Untitled");
         this.activePictureFrame.setLocation(20, 20);
@@ -98,12 +108,6 @@ public final class PicEdit extends JApplet {
         StatusBarPanel statusbar = new StatusBarPanel(this);
         statusbar.setPreferredSize(new Dimension(320, 20));
         this.getContentPane().add(statusbar, BorderLayout.SOUTH);
-        
-        DefaultListModel pictureListModel = new DefaultListModel();
-        pictureListModel.addElement("One");
-        JList pictureList = new JList(pictureListModel);
-        JList pictureCodeList = new JList();
-        JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pictureList, pictureCodeList);
         
         JPanel desktopPanel = new JPanel();
         desktopPanel.setLayout(new BorderLayout());
@@ -142,7 +146,13 @@ public final class PicEdit extends JApplet {
                 break;
         }
         
-        JSplitPane centerSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSplitPane, desktopPanel);
+        JTabbedPane leftTabbedPane = new JTabbedPane();
+        JScrollPane pictureListScrollPane = new JScrollPane(pictureList);
+        JScrollPane pictureCodeScrollPane = new JScrollPane(pictureCodeList);
+        leftTabbedPane.add("Pictures", pictureListScrollPane);
+        leftTabbedPane.add("Commands", pictureCodeScrollPane);
+        
+        JSplitPane centerSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftTabbedPane, desktopPanel);
         centerSplitPane.setDividerLocation(150);
         
         this.getContentPane().add(centerSplitPane, BorderLayout.CENTER);
@@ -335,6 +345,15 @@ public final class PicEdit extends JApplet {
     }
     
     /**
+     * Gets the picture code JList component that holds the list of human readable picture codes.
+     * 
+     * @return The picture code JList component that holds the list of human readable picture codes.
+     */
+    public PictureCodeList getPictureCodeList() {
+        return pictureCodeList;
+    }
+    
+    /**
      * Resizes the screen according to the new zoom factor.
      * 
      * @param zoomFactor the new zoom factor.
@@ -355,13 +374,9 @@ public final class PicEdit extends JApplet {
      */
     public static void main(String[] args) {
         try {
-          //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
           UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-          //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception e) {
         }
-        //JDialog.setDefaultLookAndFeelDecorated(true);
-        //JFrame.setDefaultLookAndFeelDecorated(false);
       
         final PicEdit app = new PicEdit();
         JFrame frame = new JFrame();
