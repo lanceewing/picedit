@@ -33,15 +33,6 @@ public class PictureCode {
     }
 
     /**
-     * Sets the raw code value.
-     * 
-     * @param code the raw code value.
-     */
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    /**
      * Returns true if this is an action code; otherwise false.
      * 
      * @return true if this is an action code; otherwise false.
@@ -57,5 +48,15 @@ public class PictureCode {
      */
     public boolean isDataCode() {
         return (code < 0xF0);
+    }
+    
+    /**
+     * Gets the PictureActionCodeType associated with this PictureCode. Returns null
+     * if it is not an action code.
+     * 
+     * @return The PictureActionCodeType or null if it is not an action code.
+     */
+    public PictureActionCodeType getActionCodeType() {
+        return PictureActionCodeType.getPictureCodeType(code);
     }
 }
