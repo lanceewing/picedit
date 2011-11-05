@@ -4,6 +4,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.JList;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.PictureActionCodeType;
 import com.agifans.picedit.picture.PictureChangeListener;
 import com.agifans.picedit.picture.PictureCode;
 
@@ -51,7 +52,17 @@ public class PictureCodeList extends JList implements PictureChangeListener {
             } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
-            return String.format("0x%02X", pictureCode.getCode());
+            
+            String displayText = null;
+            if (pictureCode.isActionCode()) {
+                PictureActionCodeType actionCodeType = pictureCode.getActionCodeType();
+                displayText = actionCodeType.getDisplayableText();
+                
+            } else {
+                displayText = String.format("0x%02X", pictureCode.getCode());
+            }
+            
+            return displayText;
         }
 
         /**
