@@ -207,7 +207,7 @@ public class Picture {
         }
         picturePosition = 0;
         pictureCodes = new LinkedList<PictureCode>();
-        pictureCodes.add(new PictureCode(0xFF));
+        pictureCodes.add(new PictureCode(PictureCodeType.END));
     }
     
     /**
@@ -231,11 +231,21 @@ public class Picture {
     /**
      * Adds a code to the picture code buffer.
      * 
+     * @param type The type of PictureCode.
+     */
+    public void addPictureCode(PictureCodeType type) {
+        addPictureCode(type, type.getActionCode());
+    }
+    
+    /**
+     * Adds a code to the picture code buffer.
+     * 
+     * @param type The type of PictureCode.
      * @param code The code to add to the picture code buffer.
      */
-    public void addPictureCode(int code) {
+    public void addPictureCode(PictureCodeType type, int code) {
         pictureCache.clear(picturePosition);
-        pictureCodes.add(picturePosition, new PictureCode(code));
+        pictureCodes.add(picturePosition, new PictureCode(type, code));
         firePictureCodesAdded(picturePosition, picturePosition);
         picturePosition = picturePosition + 1;
         editStatus.setUnsavedChanges(true);
@@ -248,8 +258,8 @@ public class Picture {
      */
     public void processVisualColourChange(int newVisualColour) {
         editStatus.setVisualColour(newVisualColour);
-        this.addPictureCode(0xF0);
-        this.addPictureCode(newVisualColour);
+        this.addPictureCode(PictureCodeType.SET_VISUAL_COLOR);
+        this.addPictureCode(PictureCodeType.COLOR_DATA, newVisualColour);
     }
     
     /**
@@ -257,7 +267,7 @@ public class Picture {
      */
     public void processVisualColourOff() {
         editStatus.setVisualColour(EditStatus.VISUAL_OFF);
-        this.addPictureCode(0xF1);
+        this.addPictureCode(PictureCodeType.TURN_VISUAL_OFF);
     }
     
     /**
@@ -267,8 +277,8 @@ public class Picture {
      */
     public void processPriorityColourChange(int newPriorityColour) {
         editStatus.setPriorityColour(newPriorityColour);
-        this.addPictureCode(0xF2);
-        this.addPictureCode(newPriorityColour);
+        this.addPictureCode(PictureCodeType.SET_PRIORITY_COLOR);
+        this.addPictureCode(PictureCodeType.COLOR_DATA, newPriorityColour);
     }
     
     /**
@@ -276,7 +286,7 @@ public class Picture {
      */
     public void processPriorityColourOff() {
         editStatus.setPriorityColour(EditStatus.PRIORITY_OFF);
-        this.addPictureCode(0xF3);
+        this.addPictureCode(PictureCodeType.TURN_PRIORITY_OFF);
     }
     
     /**
@@ -456,12 +466,99 @@ public class Picture {
             
             // Open the file for reading.
             in = new BufferedInputStream(new FileInputStream(pictureFile));
+            
+            // Read the file in to an int array to make it easy to convert to PictureCodes.
+            int[] rawPictureCodes = new int[(int)pictureFile.length() + 1];
+            int rawPictureCodesIndex = 0;
+            while ((rawPictureCodes[rawPictureCodesIndex++] = in.read()) != -1) {}
 
-            // Read each of the bytes and store it in the pictureCodes LinkedList.
-            int pictureCode;
-            while ((pictureCode = in.read()) != -1) {
+            // Process the raw int array to create a PictureCodes LinkedList.
+            int pictureCode, index = 0, x, y;
+            while ((pictureCode = rawPictureCodes[index++]) != -1) {
                 if (pictureCode != 0xFF) {
-                    this.addPictureCode(pictureCode);
+                    switch (pictureCode) {
+                        case 0xF0:
+                            addPictureCode(PictureCodeType.SET_VISUAL_COLOR);
+                            addPictureCode(PictureCodeType.COLOR_DATA, rawPictureCodes[index++]);
+                            break;
+                            
+                        case 0xF1:
+                            addPictureCode(PictureCodeType.TURN_VISUAL_OFF);
+                            break;
+                            
+                        case 0xF2:
+                            addPictureCode(PictureCodeType.SET_PRIORITY_COLOR);
+                            addPictureCode(PictureCodeType.COLOR_DATA, rawPictureCodes[index++]);
+                            break;
+                            
+                        case 0xF3:
+                            addPictureCode(PictureCodeType.TURN_PRIORITY_OFF);
+                            break;
+                            
+                        case 0xF4:
+                            // TODO:
+                            break;
+                            
+                        case 0xF5:
+                            // TODO:
+                            break;
+                            
+                        case 0xF6:
+                            addPictureCode(PictureCodeType.DRAW_LINE);
+                            while (true) {
+                                if ((x = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                if ((y = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                addPictureCode(PictureCodeType.ABSOLUTE_POINT_DATA, ((x << 8) | y));
+                            }
+                            index--;
+                            break;
+                            
+                        case 0xF7:
+                            addPictureCode(PictureCodeType.DRAW_LINE);
+                            while ((pictureCode = rawPictureCodes[index++]) < 0xF0) {
+                                addPictureCode(PictureCodeType.RELATIVE_POINT_DATA, pictureCode);
+                            }
+                            index--;
+                            break;
+                            
+                        case 0xF8:
+                            addPictureCode(PictureCodeType.FILL);
+                            while (true) {
+                                if ((x = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                if ((y = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                addPictureCode(PictureCodeType.ABSOLUTE_POINT_DATA, ((x << 8) | y));
+                            }
+                            index--;
+                            break;
+                            
+                        case 0xF9:
+                            addPictureCode(PictureCodeType.SET_BRUSH_TYPE);
+                            addPictureCode(PictureCodeType.BRUSH_TYPE_DATA, rawPictureCodes[index++]);
+                            break;
+                            
+                        case 0xFA:
+                            // TODO:
+                            break;
+                            
+                        case 0xFF:
+                            // End of the picture.
+                            break;
+                            
+                        default:
+                            // An attempt to load a picture that is corrupt.
+                            System.out.printf("Unknown picture code : %X\n", pictureCode);
+                            System.exit(0);
+                            break;
+                    }
+                    
                 } else {
                     // 0xFF is the end of an AGI picture.
                     break;
