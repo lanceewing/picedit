@@ -1,5 +1,8 @@
 package com.agifans.picedit.gui;
 
+import java.awt.Color;
+import java.awt.Font;
+
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
 
@@ -7,6 +10,7 @@ import com.agifans.picedit.PicEdit;
 import com.agifans.picedit.picture.PictureCodeType;
 import com.agifans.picedit.picture.PictureChangeListener;
 import com.agifans.picedit.picture.PictureCode;
+import com.agifans.picedit.types.BrushType;
 
 /**
  * The JList that holds the human readable list of picture codes for the currently 
@@ -30,6 +34,8 @@ public class PictureCodeList extends JList implements PictureChangeListener {
     public PictureCodeList(PicEdit application) {
         this.application = application;
         this.setModel(new PictureCodeListModel());
+        this.setFont(new Font("Courier New", Font.PLAIN, 10));
+        this.setForeground(Color.BLACK);
     }
     
     /**
@@ -46,9 +52,13 @@ public class PictureCodeList extends JList implements PictureChangeListener {
          * @return The human readable form of the requested PictureCode.
          */
         public Object getElementAt(int index) {
+            if (index == 0) {
+                return "<html><b>Start</b></html>";
+            }
+            
             PictureCode pictureCode = null;
             try {
-                pictureCode = application.getPicture().getPictureCodes().get(index);
+                pictureCode = application.getPicture().getPictureCodes().get(index - 1);
             } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
@@ -56,7 +66,7 @@ public class PictureCodeList extends JList implements PictureChangeListener {
             String displayText = null;
             if (pictureCode.isActionCode()) {
                 PictureCodeType actionCodeType = pictureCode.getType();
-                displayText = actionCodeType.getDisplayableText();
+                displayText = "<html><b>&nbsp;&nbsp;" + actionCodeType.getDisplayableText() + "</b></html>";
                 
             } else {
                 int code = pictureCode.getCode();
@@ -74,31 +84,35 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                             dy = (-1) * (dy & 0x07);
                         }
                         StringBuilder displayTextBuilder = new StringBuilder();
-                        displayTextBuilder.append("(");
+                        displayTextBuilder.append("    RelativeLineTo ");
                         if (dx >= 0) {
                           displayTextBuilder.append("+");
                         }
                         displayTextBuilder.append(dx);
-                        displayTextBuilder.append(", ");
+                        displayTextBuilder.append(" ");
                         if (dy >= 0) {
                           displayTextBuilder.append("+");
                         }
                         displayTextBuilder.append(dy);
-                        displayTextBuilder.append(")");
                         displayText = displayTextBuilder.toString();
                         break;
-                    //case X_POSITION_DATA:
-                    //    break;
-                    //case Y_POSITION_DATA:
-                    //    break;
+                    case X_POSITION_DATA:
+                        displayText = String.format("(%d, _)", code);
+                        break;
+                    case Y_POSITION_DATA:
+                        displayText = String.format("(_, %d)", code);
+                        break;
                     case BRUSH_PATTERN_DATA:
                         displayText = String.format("0x%02X", pictureCode.getCode());
                         break;
                     case BRUSH_TYPE_DATA:
-                        displayText = String.format("0x%02X", pictureCode.getCode());
+                        displayText = BrushType.getBrushTypeForBrushCode(pictureCode.getCode()).getDisplayName();
                         break;
                     case COLOR_DATA:
                         displayText = String.format("0x%02X", pictureCode.getCode());
+                        break;
+                    case END:
+                        displayText = "<html><b>End</b></html>";
                         break;
                     default:
                         displayText = String.format("0x%02X", pictureCode.getCode());
@@ -115,7 +129,7 @@ public class PictureCodeList extends JList implements PictureChangeListener {
          * @return The number of items in the picture code list.
          */
         public int getSize() {
-            int listSize = application.getPicture().getPictureCodes().size();
+            int listSize = application.getPicture().getPictureCodes().size() + 1;
             return listSize;
         }
         

@@ -11,17 +11,17 @@ import java.util.Map;
 public enum PictureCodeType {
 
     // These are the different types of action code.
-    SET_VISUAL_COLOR(0xF0, "Visual Color"),
-    TURN_VISUAL_OFF(0xF1, "Visual Off"),
-    SET_PRIORITY_COLOR(0xF2, "Priority Color"),
-    TURN_PRIORITY_OFF(0xF3, "Priority Off"),
-    DRAW_VERTICAL_STEP_LINE(0xF4, "Step Line"),
-    DRAW_HORIZONTAL_STEP_LINE(0xF5, "Step Line"),
-    DRAW_LINE(0xF6, "Line"),
-    DRAW_SHORT_LINE(0xF7, "Short Line"),
+    SET_VISUAL_COLOR(0xF0, "SetVisualColor"),
+    TURN_VISUAL_OFF(0xF1, "SetVisualColor Off"),
+    SET_PRIORITY_COLOR(0xF2, "SetPriorityColor"),
+    TURN_PRIORITY_OFF(0xF3, "SetPriorityColor Off"),
+    DRAW_VERTICAL_STEP_LINE(0xF4, "DrawStepLinePath"),
+    DRAW_HORIZONTAL_STEP_LINE(0xF5, "DrawStepLinePath"),
+    DRAW_LINE(0xF6, "DrawAbsoluteLinePath"),
+    DRAW_SHORT_LINE(0xF7, "DrawRelativeLinePath"),
     FILL(0xF8, "Fill"),
-    SET_BRUSH_TYPE(0xF9, "Set Brush"),
-    DRAW_BRUSH_POINT(0xFA, "Plot Brush"),
+    SET_BRUSH_TYPE(0xF9, "SetBrushType"),
+    DRAW_BRUSH_POINT(0xFA, "PlotBrushAt"),
     
     // These are the different types of data codes associated with action codes.
     COLOR_DATA(-1, ""),
@@ -67,9 +67,11 @@ public enum PictureCodeType {
     /**
      * Constructor for PictureCodeType.
      * 
+     * @param actionCode The action code for this PictureCodeType (only applicable for 0xF0 to 0xFA).
      * @param displayableText The text to display for this PictureCodeType.
      */
     PictureCodeType(int actionCode, String displayableText) {
+        this.actionCode = actionCode;
         this.displayableText = displayableText;
     }
 
