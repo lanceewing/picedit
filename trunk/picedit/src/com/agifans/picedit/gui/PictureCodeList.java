@@ -59,7 +59,51 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                 displayText = actionCodeType.getDisplayableText();
                 
             } else {
-                displayText = String.format("0x%02X", pictureCode.getCode());
+                int code = pictureCode.getCode();
+                switch (pictureCode.getType()) {
+                    case ABSOLUTE_POINT_DATA:
+                        displayText = String.format("(%d, %d)", (code & 0xFF00) >> 8, code & 0x00FF);
+                        break;
+                    case RELATIVE_POINT_DATA:
+                        int dx = ((code & 0xF0) >> 4) & 0x0F;
+                        int dy = (code & 0x0F);
+                        if ((dx & 0x08) > 0) {
+                            dx = (-1) * (dx & 0x07);
+                        }
+                        if ((dy & 0x08) > 0) {
+                            dy = (-1) * (dy & 0x07);
+                        }
+                        StringBuilder displayTextBuilder = new StringBuilder();
+                        displayTextBuilder.append("(");
+                        if (dx >= 0) {
+                          displayTextBuilder.append("+");
+                        }
+                        displayTextBuilder.append(dx);
+                        displayTextBuilder.append(", ");
+                        if (dy >= 0) {
+                          displayTextBuilder.append("+");
+                        }
+                        displayTextBuilder.append(dy);
+                        displayTextBuilder.append(")");
+                        displayText = displayTextBuilder.toString();
+                        break;
+                    //case X_POSITION_DATA:
+                    //    break;
+                    //case Y_POSITION_DATA:
+                    //    break;
+                    case BRUSH_PATTERN_DATA:
+                        displayText = String.format("0x%02X", pictureCode.getCode());
+                        break;
+                    case BRUSH_TYPE_DATA:
+                        displayText = String.format("0x%02X", pictureCode.getCode());
+                        break;
+                    case COLOR_DATA:
+                        displayText = String.format("0x%02X", pictureCode.getCode());
+                        break;
+                    default:
+                        displayText = String.format("0x%02X", pictureCode.getCode());
+                        break;
+                }
             }
             
             return displayText;
