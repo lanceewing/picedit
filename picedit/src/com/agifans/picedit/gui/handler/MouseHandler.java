@@ -20,6 +20,7 @@ import com.agifans.picedit.gui.frame.PicturePanel;
 import com.agifans.picedit.gui.toolbar.ColourChooserDialog;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.picture.PictureCodeType;
 import com.agifans.picedit.types.BrushTexture;
 import com.agifans.picedit.types.PictureType;
 import com.agifans.picedit.types.StepType;
@@ -433,21 +434,18 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                 if (editStatus.isFillActive()) {
                     picture.fill(x, y);
                     if (editStatus.isFirstClick()) {
-                        picture.addPictureCode(0xF8);
+                        picture.addPictureCode(PictureCodeType.FILL);
                     }
-                    picture.addPictureCode(x);
-                    picture.addPictureCode(y);
+                    picture.addPictureCode(x, y);
                 } else if (editStatus.isLineActive()) {
                     switch (editStatus.getNumOfClicks()) {
                         case 1:
-                            picture.addPictureCode(0xF6);
-                            picture.addPictureCode(x);
-                            picture.addPictureCode(y);
+                            picture.addPictureCode(PictureCodeType.DRAW_LINE);
+                            picture.addPictureCode(x, y);
                             picture.putPixel(x, y);
                             break;
                         default:
-                            picture.addPictureCode(x);
-                            picture.addPictureCode(y);
+                            picture.addPictureCode(x, y);
                             picture.drawLine(previousX, previousY, x, y);
                             break;
                     }
@@ -458,9 +456,8 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
 
                     switch (editStatus.getNumOfClicks()) {
                         case 1:
-                            picture.addPictureCode(0xF7);
-                            picture.addPictureCode(x);
-                            picture.addPictureCode(y);
+                            picture.addPictureCode(PictureCodeType.DRAW_SHORT_LINE);
+                            picture.addPictureCode(x, y);
                             picture.putPixel(x, y);
                             break;
                         default:
@@ -479,7 +476,7 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                             } else {
                                 disp |= dY;
                             }
-                            picture.addPictureCode(disp);
+                            picture.addPictureCode(PictureCodeType.RELATIVE_POINT_DATA, disp);
                             picture.drawLine(previousX, previousY, x, y);
                             editStatus.setClickPoint(new Point(x, y));
                             break;
@@ -488,17 +485,16 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                     int patNum = 0;
 
                     if (editStatus.isFirstClick()) {
-                        picture.addPictureCode(0xF9);
-                        picture.addPictureCode(editStatus.getBrushCode());
-                        picture.addPictureCode(0xFA);
+                        picture.addPictureCode(PictureCodeType.SET_BRUSH_TYPE);
+                        picture.addPictureCode(PictureCodeType.BRUSH_TYPE_DATA, editStatus.getBrushCode());
+                        picture.addPictureCode(PictureCodeType.DRAW_BRUSH_POINT);
                     }
                     patNum = (((new java.util.Random().nextInt(255)) % 0xEE) >> 1) & 0x7F;
                     picture.plotPattern(patNum, x, y);
                     if (editStatus.getBrushTexture() == BrushTexture.SPRAY) {
-                        picture.addPictureCode(patNum << 1);
+                        picture.addPictureCode(PictureCodeType.BRUSH_PATTERN_DATA, patNum << 1);
                     }
-                    picture.addPictureCode(x);
-                    picture.addPictureCode(y);
+                    picture.addPictureCode(x, y);
                 } else if (editStatus.isStepActive()) {
                     int dX = 0;
                     int dY = 0;
@@ -513,17 +509,15 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                             if (Math.abs(dX) > Math.abs(dY)) { /* X or Y corner */
                                 y = previousY;
                                 editStatus.setStepType(StepType.XCORNER);
-                                picture.addPictureCode(0xF5);
-                                picture.addPictureCode(previousX);
-                                picture.addPictureCode(previousY);
-                                picture.addPictureCode(x);
+                                picture.addPictureCode(PictureCodeType.DRAW_HORIZONTAL_STEP_LINE);
+                                picture.addPictureCode(previousX, previousY);
+                                picture.addPictureCode(PictureCodeType.X_POSITION_DATA, x);
                             } else {
                                 x = previousX;
                                 editStatus.setStepType(StepType.YCORNER);
-                                picture.addPictureCode(0xF4);
-                                picture.addPictureCode(previousX);
-                                picture.addPictureCode(previousY);
-                                picture.addPictureCode(y);
+                                picture.addPictureCode(PictureCodeType.DRAW_VERTICAL_STEP_LINE);
+                                picture.addPictureCode(previousX, previousY);
+                                picture.addPictureCode(PictureCodeType.Y_POSITION_DATA, y);
                             }
                             picture.drawLine(previousX, previousY, x, y);
                             editStatus.setClickPoint(new Point(x, y));
@@ -533,10 +527,10 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                             if ((editStatus.isXCornerActive() && ((editStatus.getNumOfClicks() % 2) > 0)) || (editStatus.isYCornerActive() && ((editStatus.getNumOfClicks() % 2) == 0))) {
                                 // X and Y corners toggle different direction based on number of clicks.	
                                 x = previousX;
-                                picture.addPictureCode(y);
+                                picture.addPictureCode(PictureCodeType.Y_POSITION_DATA, y);
                             } else {
                                 y = previousY;
-                                picture.addPictureCode(x);
+                                picture.addPictureCode(PictureCodeType.X_POSITION_DATA, x);
                             }
                             picture.drawLine(previousX, previousY, x, y);
                             editStatus.setClickPoint(new Point(x, y));
@@ -571,13 +565,11 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                 int dX = x - previousX;
                 int dY = y - previousY;
                 if (Math.abs(dX) > Math.abs(dY)) { /* X or Y corner */
-                    picture.addPictureCode(0xF5);
-                    picture.addPictureCode(previousX);
-                    picture.addPictureCode(previousY);
+                    picture.addPictureCode(PictureCodeType.DRAW_HORIZONTAL_STEP_LINE);
+                    picture.addPictureCode(previousX, previousY);
                 } else {
-                    picture.addPictureCode(0xF4);
-                    picture.addPictureCode(previousX);
-                    picture.addPictureCode(previousY);
+                    picture.addPictureCode(PictureCodeType.DRAW_VERTICAL_STEP_LINE);
+                    picture.addPictureCode(previousX, previousY);
                 }
                 
                 picture.putPixel(previousX, previousY);

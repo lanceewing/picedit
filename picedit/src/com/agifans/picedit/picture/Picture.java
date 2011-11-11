@@ -238,6 +238,16 @@ public class Picture {
     }
     
     /**
+     * Adds a code of type ABSOLUTE_POINT to the picture code buffer.
+     * 
+     * @param x The x position of the point.
+     * @param y The y position of the point.
+     */
+    public void addPictureCode(int x, int y) {
+        addPictureCode(PictureCodeType.ABSOLUTE_POINT_DATA, ((x << 8) | y));
+    }
+    
+    /**
      * Adds a code to the picture code buffer.
      * 
      * @param type The type of PictureCode.
@@ -473,7 +483,7 @@ public class Picture {
             while ((rawPictureCodes[rawPictureCodesIndex++] = in.read()) != -1) {}
 
             // Process the raw int array to create a PictureCodes LinkedList.
-            int pictureCode, index = 0, x, y;
+            int pictureCode, index = 0, x, y, brushCode = 0;
             while ((pictureCode = rawPictureCodes[index++]) != -1) {
                 if (pictureCode != 0xFF) {
                     switch (pictureCode) {
@@ -496,11 +506,33 @@ public class Picture {
                             break;
                             
                         case 0xF4:
-                            // TODO:
+                            addPictureCode(PictureCodeType.DRAW_VERTICAL_STEP_LINE);
+                            while (true) {
+                                if ((y = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                addPictureCode(PictureCodeType.Y_POSITION_DATA, y);
+                                if ((x = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                addPictureCode(PictureCodeType.X_POSITION_DATA, x);
+                            }
+                            index--;
                             break;
                             
                         case 0xF5:
-                            // TODO:
+                            addPictureCode(PictureCodeType.DRAW_HORIZONTAL_STEP_LINE);
+                            while (true) {
+                                if ((x = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                addPictureCode(PictureCodeType.X_POSITION_DATA, x);
+                                if ((y = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                addPictureCode(PictureCodeType.Y_POSITION_DATA, y);
+                            }
+                            index--;
                             break;
                             
                         case 0xF6:
@@ -512,7 +544,7 @@ public class Picture {
                                 if ((y = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
                                 }
-                                addPictureCode(PictureCodeType.ABSOLUTE_POINT_DATA, ((x << 8) | y));
+                                addPictureCode(x, y);
                             }
                             index--;
                             break;
@@ -534,18 +566,35 @@ public class Picture {
                                 if ((y = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
                                 }
-                                addPictureCode(PictureCodeType.ABSOLUTE_POINT_DATA, ((x << 8) | y));
+                                addPictureCode(x, y);
                             }
                             index--;
                             break;
                             
                         case 0xF9:
                             addPictureCode(PictureCodeType.SET_BRUSH_TYPE);
-                            addPictureCode(PictureCodeType.BRUSH_TYPE_DATA, rawPictureCodes[index++]);
+                            brushCode = rawPictureCodes[index++];
+                            addPictureCode(PictureCodeType.BRUSH_TYPE_DATA, brushCode);
                             break;
                             
                         case 0xFA:
-                            // TODO:
+                            addPictureCode(PictureCodeType.DRAW_BRUSH_POINT);
+                            while (true) {
+                                if ((brushCode & 0x20) > 0) {
+                                    if ((pictureCode = pictureCodes.get(index++).getCode()) >= 0xF0) {
+                                        break;
+                                    }
+                                    addPictureCode(PictureCodeType.BRUSH_PATTERN_DATA, pictureCode);
+                                }
+                                if ((x = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                if ((y = rawPictureCodes[index++]) >= 0xF0) {
+                                    break;
+                                }
+                                addPictureCode(x, y);
+                            }
+                            index--;
                             break;
                             
                         case 0xFF:
