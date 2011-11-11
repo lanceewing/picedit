@@ -550,7 +550,7 @@ public class Picture {
                             break;
                             
                         case 0xF7:
-                            addPictureCode(PictureCodeType.DRAW_LINE);
+                            addPictureCode(PictureCodeType.DRAW_SHORT_LINE);
                             while ((pictureCode = rawPictureCodes[index++]) < 0xF0) {
                                 addPictureCode(PictureCodeType.RELATIVE_POINT_DATA, pictureCode);
                             }
@@ -603,7 +603,7 @@ public class Picture {
                             
                         default:
                             // An attempt to load a picture that is corrupt.
-                            System.out.printf("Unknown picture code : %X\n", pictureCode);
+                            System.out.printf("Unknown picture code : %X, picturePosition: %d\n", pictureCode, pictureCodes.size());
                             System.exit(0);
                             break;
                     }
@@ -715,8 +715,9 @@ public class Picture {
                 boolean isCacheable = true;
                 
                 // Get the next picture action.
-                action = pictureCodes.get(index++).getCode();
-
+                PictureCode pictureCode = pictureCodes.get(index++);
+                action = pictureCode.getCode();
+                
                 // Process the actions data.
                 switch (action) {
                     case 0xF0:
@@ -768,7 +769,7 @@ public class Picture {
                         break;
                     default:
                         // An attempt to load a picture that is corrupt.
-                        System.out.printf("Unknown picture code : %X\n", action);
+                        System.out.printf("Unknown picture code : %X, index: %d, picturePosition: %d, pictureSize: %d\n", action, index, picturePosition, pictureCodes.size());
                         System.exit(0);
                         break;
                 }
@@ -864,7 +865,8 @@ public class Picture {
     public int drawPictureAbsoluteLine(List<PictureCode> pictureCodes, int index) {
         int code, x1, y1, x2, y2, lineCount=0;
 
-        code = pictureCodes.get(index++).getCode();
+        PictureCode pictureCode = pictureCodes.get(index++);
+        code = pictureCode.getCode();
         x1 = (code & 0xFF00) >> 8;
         y1 = (code & 0x00FF);
 
@@ -872,9 +874,11 @@ public class Picture {
         putPixel(x1, y1);
         
         while (true) {
-            if ((code = pictureCodes.get(index++).getCode()) >= 0xF0) {
+            pictureCode = pictureCodes.get(index++);
+            if (pictureCode.getType() != PictureCodeType.ABSOLUTE_POINT_DATA) {
                 break;
             }
+            code = pictureCode.getCode();
             x2 = (code & 0xFF00) >> 8;
             y2 = (code & 0x00FF);
             drawLine(x1, y1, x2, y2);
@@ -937,9 +941,11 @@ public class Picture {
         int code, x1, y1;
 
         while (true) {
-            if ((code = pictureCodes.get(index++).getCode()) >= 0xF0) {
+            PictureCode pictureCode = pictureCodes.get(index++);
+            if (pictureCode.getType() != PictureCodeType.ABSOLUTE_POINT_DATA) {
                 break;
             }
+            code = pictureCode.getCode();
             x1 = (code & 0xFF00) >> 8;
             y1 = (code & 0x00FF);
             fill(x1, y1);
@@ -968,9 +974,11 @@ public class Picture {
                 }
                 patNum = (patNum >> 1 & 0x7f);
             }
-            if ((code = pictureCodes.get(index++).getCode()) >= 0xF0) {
+            PictureCode pictureCode = pictureCodes.get(index++);
+            if (pictureCode.getType() != PictureCodeType.ABSOLUTE_POINT_DATA) {
                 break;
             }
+            code = pictureCode.getCode();
             x1 = (code & 0xFF00) >> 8;
             y1 = (code & 0x00FF);
             plotPattern(patNum, x1, y1);

@@ -65,7 +65,7 @@ public class PictureCode {
      * @return true if this is an action code; otherwise false.
      */
     public boolean isActionCode() {
-        return ((code >= 0xF0) && (code != 0xFF));
+        return ((code >= 0xF0) && (code < 0xFF));
     }
 
     /**
