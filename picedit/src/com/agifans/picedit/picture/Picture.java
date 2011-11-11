@@ -813,21 +813,21 @@ public class Picture {
      * @return the index of the next picture action.
      */
     public int drawPictureAbsoluteLine(List<PictureCode> pictureCodes, int index) {
-        int x1, y1, x2, y2, lineCount=0;
+        int code, x1, y1, x2, y2, lineCount=0;
 
-        x1 = pictureCodes.get(index++).getCode();
-        y1 = pictureCodes.get(index++).getCode();
+        code = pictureCodes.get(index++).getCode();
+        x1 = (code & 0xFF00) >> 8;
+        y1 = (code & 0x00FF);
 
         // A line must always have a least one point.
         putPixel(x1, y1);
         
         while (true) {
-            if ((x2 = pictureCodes.get(index++).getCode()) >= 0xF0) {
+            if ((code = pictureCodes.get(index++).getCode()) >= 0xF0) {
                 break;
             }
-            if ((y2 = pictureCodes.get(index++).getCode()) >= 0xF0) {
-                break;
-            }
+            x2 = (code & 0xFF00) >> 8;
+            y2 = (code & 0x00FF);
             drawLine(x1, y1, x2, y2);
             x1 = x2;
             y1 = y2;
@@ -885,15 +885,14 @@ public class Picture {
      * @return the index of the next picture action.
      */
     public int drawPictureFill(List<PictureCode> pictureCodes, int index) {
-        int x1, y1;
+        int code, x1, y1;
 
         while (true) {
-            if ((x1 = pictureCodes.get(index++).getCode()) >= 0xF0) {
+            if ((code = pictureCodes.get(index++).getCode()) >= 0xF0) {
                 break;
             }
-            if ((y1 = pictureCodes.get(index++).getCode()) >= 0xF0) {
-                break;
-            }
+            x1 = (code & 0xFF00) >> 8;
+            y1 = (code & 0x00FF);
             fill(x1, y1);
         }
 
@@ -909,7 +908,7 @@ public class Picture {
      * @return the index of the next picture action.
      */
     public int drawPicturePlotBrush(List<PictureCode> pictureCodes, int index) {
-        int x1, y1, patNum = 0;
+        int code, x1, y1, patNum = 0;
 
         int patCode = editStatus.getBrushCode();
 
@@ -920,12 +919,11 @@ public class Picture {
                 }
                 patNum = (patNum >> 1 & 0x7f);
             }
-            if ((x1 = pictureCodes.get(index++).getCode()) >= 0xF0) {
+            if ((code = pictureCodes.get(index++).getCode()) >= 0xF0) {
                 break;
             }
-            if ((y1 = pictureCodes.get(index++).getCode()) >= 0xF0) {
-                break;
-            }
+            x1 = (code & 0xFF00) >> 8;
+            y1 = (code & 0x00FF);
             plotPattern(patNum, x1, y1);
         }
 
