@@ -85,4 +85,15 @@ public class PictureCode {
     public boolean isDataCode() {
         return (code < 0xF0);
     }
+    
+    /**
+     * Returns true if the PictureCode represents an absolute point.
+     * 
+     * @return true if the PictureCode represents an absolute point.
+     */
+    public boolean isAbsolutePoint() {
+        return (type == PictureCodeType.ABSOLUTE_POINT_DATA) ||
+               (type == PictureCodeType.BRUSH_POINT_DATA) || 
+               (type == PictureCodeType.FILL_POINT_DATA);
+    }
 }
