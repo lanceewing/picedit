@@ -121,8 +121,8 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.defaultPictureName = defaultPictureName;
         this.editStatus = new EditStatus();
         this.editStatus.setZoomFactor(initialZoomFactor);
-        this.pictureCodeList = new PictureCodeList(application);
         this.picture = new Picture(editStatus);
+        this.pictureCodeList = new PictureCodeList(picture);
         this.picture.addPictureChangeListener(pictureCodeList);
         this.egoTestHandler = new EgoTestHandler(editStatus, picture);
         this.picturePanel = new PicturePanel(editStatus, picture, egoTestHandler);
