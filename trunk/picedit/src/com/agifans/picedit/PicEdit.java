@@ -153,7 +153,7 @@ public final class PicEdit extends JApplet {
         leftTabbedPane.add("Commands", pictureCodeScrollPane);
         
         JSplitPane centerSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftTabbedPane, desktopPanel);
-        centerSplitPane.setDividerLocation(200);
+        centerSplitPane.setDividerLocation(175);
         
         this.getContentPane().add(centerSplitPane, BorderLayout.CENTER);
         
