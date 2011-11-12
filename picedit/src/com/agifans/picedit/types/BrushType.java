@@ -127,7 +127,7 @@ public enum BrushType {
             displayName.append("Circle ");
         }
         if (texture.equals(BrushTexture.SPRAY)) {
-            displayName.append("Aibrush ");
+            displayName.append("Airbrush ");
         } else {
             displayName.append("Brush ");
         }
