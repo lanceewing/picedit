@@ -83,7 +83,7 @@ public class PictureCode {
      * @return true if this is a data code; otherwise false.
      */
     public boolean isDataCode() {
-        return (code < 0xF0);
+        return !isActionCode();
     }
     
     /**
