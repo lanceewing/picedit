@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -47,6 +48,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         this.setFont(new Font("Courier New", Font.PLAIN, 10));
         this.setForeground(Color.BLACK);
         this.setFocusable(true);
+        this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
     
     /**
