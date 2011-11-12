@@ -68,4 +68,9 @@ public class EgaPalette {
      * Holds the Color objects for the 16 EGA colours.
      */
     public final static Color[] COLOR_OBJECTS = { BLACK, BLUE, GREEN, CYAN, RED, MAGENTA, BROWN, GREY, DARKGREY, LIGHTBLUE, LIGHTGREEN, LIGHTCYAN, PINK, LIGHTMAGENTA, YELLOW, WHITE, TRANSPARENT };
+
+    /**
+     * Holds the display names of the 16 EGA colours.
+     */
+    public final static String[] COLOR_NAMES = { "Black", "Blue", "Green", "Cyan", "Red", "Magenta", "Brown", "Grey", "DarkGrey", "LightBlue", "LightGreen", "LightCyan", "Pink", "LightMagenta", "Yellow", "White" };
 }
