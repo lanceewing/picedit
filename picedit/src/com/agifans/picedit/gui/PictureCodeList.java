@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
 
-import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.picture.PictureCodeType;
 import com.agifans.picedit.picture.PictureChangeListener;
 import com.agifans.picedit.picture.PictureCode;
@@ -24,17 +24,17 @@ import com.agifans.picedit.utils.EgaPalette;
 public class PictureCodeList extends JList implements PictureChangeListener {
 
     /**
-     * The PICEDIT application.
+     * The Picture whose picture codes will be displayed in this JList.
      */
-    private PicEdit application;
+    private Picture picture;
     
     /**
      * Constructor for PictureCodeList.
      * 
-     * @param application The PICEDIT application.
+     * @param picture The Picture whose picture codes will be displayed in this JList.
      */
-    public PictureCodeList(PicEdit application) {
-        this.application = application;
+    public PictureCodeList(Picture picture) {
+        this.picture = picture;
         this.setModel(new PictureCodeListModel());
         this.setFont(new Font("Courier New", Font.PLAIN, 10));
         this.setForeground(Color.BLACK);
@@ -59,7 +59,7 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                 return "<html><b>Start</b></html>";
             }
             
-            LinkedList<PictureCode> pictureCodes = application.getPicture().getPictureCodes();
+            LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
             PictureCode pictureCode = null;
             PictureCode previousPictureCode = null;
             try {
@@ -145,7 +145,7 @@ public class PictureCodeList extends JList implements PictureChangeListener {
          * @return The number of items in the picture code list.
          */
         public int getSize() {
-            int listSize = application.getPicture().getPictureCodes().size() + 1;
+            int listSize = picture.getPictureCodes().size() + 1;
             return listSize;
         }
         
