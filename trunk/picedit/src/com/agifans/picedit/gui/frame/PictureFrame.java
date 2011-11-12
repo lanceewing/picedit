@@ -26,6 +26,7 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
 import com.agifans.picedit.PicEdit;
+import com.agifans.picedit.gui.PictureCodeList;
 import com.agifans.picedit.gui.handler.KeyboardHandler;
 import com.agifans.picedit.gui.handler.MouseHandler;
 import com.agifans.picedit.picture.EditStatus;
@@ -104,6 +105,11 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
     private String defaultPictureName;
     
     /**
+     * The JList of picture codes for this PictureFrames Picture.
+     */
+    private PictureCodeList pictureCodeList;
+    
+    /**
      * Constructor for PictureFrame.
      * 
      * @param application The PicEdit application.
@@ -115,11 +121,11 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         this.defaultPictureName = defaultPictureName;
         this.editStatus = new EditStatus();
         this.editStatus.setZoomFactor(initialZoomFactor);
+        this.pictureCodeList = new PictureCodeList(application);
         this.picture = new Picture(editStatus);
-        this.picture.addPictureChangeListener(application.getPictureCodeList());
+        this.picture.addPictureChangeListener(pictureCodeList);
         this.egoTestHandler = new EgoTestHandler(editStatus, picture);
         this.picturePanel = new PicturePanel(editStatus, picture, egoTestHandler);
-        
         mouseHandler = new MouseHandler(this, application);
         picturePanel.addMouseListener(mouseHandler);
         picturePanel.addMouseMotionListener(mouseHandler);
@@ -220,6 +226,15 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         return positionSlider;
     }
     
+    /**
+     * Gets the picture code JList component that holds the list of human readable picture codes.
+     * 
+     * @return The picture code JList component that holds the list of human readable picture codes.
+     */
+    public PictureCodeList getPictureCodeList() {
+        return pictureCodeList;
+    }
+    
     public void calculateResizeDimensions() {
         this.maximumSizeMap = new HashMap<Integer, Dimension>();
         for (int i=1; i<=5; i++) {
@@ -307,8 +322,8 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         // Updates the View menu items to reflect the new frames picture edit status.
         application.getMenu().updateViewMenuItems();
         
-        // Completely refreshes the JList that holds the picture codes for the current PictureFrame.
-        application.getPictureCodeList().refreshList();
+        // Switch in the JList that holds the picture codes for the current PictureFrame.
+        application.switchPictureCodeList();
     }
 
     public void internalFrameClosed(InternalFrameEvent event) {

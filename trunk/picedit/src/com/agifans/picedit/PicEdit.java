@@ -76,9 +76,9 @@ public final class PicEdit extends JApplet {
     private ToolPanelLocation toolPanelLocation;
     
     /**
-     * The JList of picture codes for the currently selected Picture.
+     * The scroll pane for the currently active picture code JList.
      */
-    private PictureCodeList pictureCodeList;
+    private JScrollPane pictureCodeScrollPane;
     
     /**
      * Constructor for PicEdit.
@@ -89,8 +89,6 @@ public final class PicEdit extends JApplet {
         loadPreferences();
         
         PictureList pictureList = new PictureList(this);
-        pictureCodeList = new PictureCodeList(this);
-        pictureCodeList.setFocusable(false);
         
         this.activePictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3), "Untitled");
         this.activePictureFrame.setLocation(20, 20);
@@ -149,8 +147,7 @@ public final class PicEdit extends JApplet {
         
         JTabbedPane leftTabbedPane = new JTabbedPane();
         leftTabbedPane.setFocusable(false);
-        //JScrollPane pictureListScrollPane = new JScrollPane(pictureList);
-        JScrollPane pictureCodeScrollPane = new JScrollPane(pictureCodeList);
+        pictureCodeScrollPane = new JScrollPane(activePictureFrame.getPictureCodeList());
         pictureCodeScrollPane.setFocusable(false);
         //leftTabbedPane.add("Pictures", pictureListScrollPane);
         leftTabbedPane.add("Commands", pictureCodeScrollPane);
@@ -349,12 +346,12 @@ public final class PicEdit extends JApplet {
     }
     
     /**
-     * Gets the picture code JList component that holds the list of human readable picture codes.
-     * 
-     * @return The picture code JList component that holds the list of human readable picture codes.
+     * Switches the PictureCodeList currently being displayed with the one for the current picture.
      */
-    public PictureCodeList getPictureCodeList() {
-        return pictureCodeList;
+    public void switchPictureCodeList() {
+        PictureCodeList activeList = this.getPictureFrame().getPictureCodeList();
+        pictureCodeScrollPane.setViewportView(activeList);
+        pictureCodeScrollPane.repaint();
     }
     
     /**
