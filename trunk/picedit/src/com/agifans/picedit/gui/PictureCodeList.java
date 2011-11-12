@@ -78,6 +78,9 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                     case FILL_POINT_DATA:
                         displayText = String.format("    Fill %d %d", (code & 0xFF00) >> 8, code & 0x00FF);
                         break;
+                    case BRUSH_POINT_DATA:
+                        displayText = String.format("    Plot %d %d", (code & 0xFF00) >> 8, code & 0x00FF);
+                        break;
                     case ABSOLUTE_POINT_DATA:
                         previousPictureCode = pictureCodes.get(index  - 2);
                         if (previousPictureCode.isActionCode()) {

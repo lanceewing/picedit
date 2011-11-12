@@ -494,7 +494,7 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                     if (editStatus.getBrushTexture() == BrushTexture.SPRAY) {
                         picture.addPictureCode(PictureCodeType.BRUSH_PATTERN_DATA, patNum << 1);
                     }
-                    picture.addPictureCode(x, y);
+                    picture.addPictureCode(PictureCodeType.BRUSH_POINT_DATA, x, y);
                 } else if (editStatus.isStepActive()) {
                     int dX = 0;
                     int dY = 0;
