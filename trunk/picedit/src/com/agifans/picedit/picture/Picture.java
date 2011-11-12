@@ -248,6 +248,17 @@ public class Picture {
     }
     
     /**
+     * Adds a cod of the given point type to the picture code buffer.
+     * 
+     * @param pointType The type of PictureCode.
+     * @param x The x position of the point.
+     * @param y The y position of the point.
+     */
+    public void addPictureCode(PictureCodeType pointType, int x, int y) {
+        addPictureCode(pointType, ((x << 8) | y));
+    }
+    
+    /**
      * Adds a code to the picture code buffer.
      * 
      * @param type The type of PictureCode.
@@ -566,7 +577,7 @@ public class Picture {
                                 if ((y = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
                                 }
-                                addPictureCode(x, y);
+                                addPictureCode(PictureCodeType.FILL_POINT_DATA, x, y);
                             }
                             index--;
                             break;
@@ -613,7 +624,7 @@ public class Picture {
                     break;
                 }
             }
-
+            
             this.drawPicture();
             editStatus.setTool(ToolType.NONE);
             editStatus.setUnsavedChanges(false);
@@ -942,7 +953,7 @@ public class Picture {
 
         while (true) {
             PictureCode pictureCode = pictureCodes.get(index++);
-            if (pictureCode.getType() != PictureCodeType.ABSOLUTE_POINT_DATA) {
+            if (pictureCode.getType() != PictureCodeType.FILL_POINT_DATA) {
                 break;
             }
             code = pictureCode.getCode();

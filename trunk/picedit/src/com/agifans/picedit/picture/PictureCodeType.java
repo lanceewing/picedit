@@ -27,6 +27,7 @@ public enum PictureCodeType {
     COLOR_DATA(-1, ""),
     ABSOLUTE_POINT_DATA(-1, ""),
     RELATIVE_POINT_DATA(-1, ""),
+    FILL_POINT_DATA(-1, ""),
     X_POSITION_DATA(-1, ""),
     Y_POSITION_DATA(-1, ""),
     BRUSH_TYPE_DATA(-1, ""),

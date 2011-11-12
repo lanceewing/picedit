@@ -2,6 +2,7 @@ package com.agifans.picedit.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.LinkedList;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
@@ -11,6 +12,7 @@ import com.agifans.picedit.picture.PictureCodeType;
 import com.agifans.picedit.picture.PictureChangeListener;
 import com.agifans.picedit.picture.PictureCode;
 import com.agifans.picedit.types.BrushType;
+import com.agifans.picedit.utils.EgaPalette;
 
 /**
  * The JList that holds the human readable list of picture codes for the currently 
@@ -56,9 +58,11 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                 return "<html><b>Start</b></html>";
             }
             
+            LinkedList<PictureCode> pictureCodes = application.getPicture().getPictureCodes();
             PictureCode pictureCode = null;
+            PictureCode previousPictureCode = null;
             try {
-                pictureCode = application.getPicture().getPictureCodes().get(index - 1);
+                pictureCode = pictureCodes.get(index - 1);
             } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
@@ -71,8 +75,16 @@ public class PictureCodeList extends JList implements PictureChangeListener {
             } else {
                 int code = pictureCode.getCode();
                 switch (pictureCode.getType()) {
+                    case FILL_POINT_DATA:
+                        displayText = String.format("    Fill %d %d", (code & 0xFF00) >> 8, code & 0x00FF);
+                        break;
                     case ABSOLUTE_POINT_DATA:
-                        displayText = String.format("(%d, %d)", (code & 0xFF00) >> 8, code & 0x00FF);
+                        previousPictureCode = pictureCodes.get(index  - 2);
+                        if (previousPictureCode.isActionCode()) {
+                            displayText = String.format("    MoveTo %d %d", (code & 0xFF00) >> 8, code & 0x00FF);
+                        } else {
+                            displayText = String.format("    LineTo %d %d", (code & 0xFF00) >> 8, code & 0x00FF);
+                        }
                         break;
                     case RELATIVE_POINT_DATA:
                         int dx = ((code & 0xF0) >> 4) & 0x0F;
@@ -84,7 +96,7 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                             dy = (-1) * (dy & 0x07);
                         }
                         StringBuilder displayTextBuilder = new StringBuilder();
-                        displayTextBuilder.append("    RelativeLineTo ");
+                        displayTextBuilder.append("    LineTo ");
                         if (dx >= 0) {
                           displayTextBuilder.append("+");
                         }
@@ -97,10 +109,10 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                         displayText = displayTextBuilder.toString();
                         break;
                     case X_POSITION_DATA:
-                        displayText = String.format("(%d, _)", code);
+                        displayText = String.format("    LineTo %d +0", code);
                         break;
                     case Y_POSITION_DATA:
-                        displayText = String.format("(_, %d)", code);
+                        displayText = String.format("    LineTo +0 %d", code);
                         break;
                     case BRUSH_PATTERN_DATA:
                         displayText = String.format("0x%02X", pictureCode.getCode());
@@ -109,7 +121,7 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                         displayText = BrushType.getBrushTypeForBrushCode(pictureCode.getCode()).getDisplayName();
                         break;
                     case COLOR_DATA:
-                        displayText = String.format("0x%02X", pictureCode.getCode());
+                        displayText = "    " +  EgaPalette.COLOR_NAMES[pictureCode.getCode()];
                         break;
                     case END:
                         displayText = "<html><b>End</b></html>";
