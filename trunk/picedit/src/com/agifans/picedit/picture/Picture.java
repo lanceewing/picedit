@@ -562,6 +562,9 @@ public class Picture {
                             
                         case 0xF7:
                             addPictureCode(PictureCodeType.DRAW_SHORT_LINE);
+                            x = pictureCode = rawPictureCodes[index++];
+                            y = pictureCode = rawPictureCodes[index++];
+                            addPictureCode(x, y);
                             while ((pictureCode = rawPictureCodes[index++]) < 0xF0) {
                                 addPictureCode(PictureCodeType.RELATIVE_POINT_DATA, pictureCode);
                             }
@@ -913,8 +916,10 @@ public class Picture {
         int x1, y1, disp;
         int dx, dy;
 
-        x1 = pictureCodes.get(index++).getCode();
-        y1 = pictureCodes.get(index++).getCode();
+        PictureCode pictureCode = pictureCodes.get(index++);
+        int code = pictureCode.getCode();
+        x1 = (code & 0xFF00) >> 8;
+        y1 = (code & 0x00FF);
 
         // A line must always have a least one point.
         putPixel(x1, y1);
