@@ -29,13 +29,19 @@ public class PictureCodeList extends JList implements PictureChangeListener {
     private Picture picture;
     
     /**
+     * Provides direct access to the model.
+     */
+    private PictureCodeListModel pictureCodeListModel;
+    
+    /**
      * Constructor for PictureCodeList.
      * 
      * @param picture The Picture whose picture codes will be displayed in this JList.
      */
     public PictureCodeList(Picture picture) {
         this.picture = picture;
-        this.setModel(new PictureCodeListModel());
+        this.pictureCodeListModel = new PictureCodeListModel();
+        this.setModel(pictureCodeListModel);
         this.setFont(new Font("Courier New", Font.PLAIN, 10));
         this.setForeground(Color.BLACK);
         this.setFocusable(true);
@@ -47,6 +53,11 @@ public class PictureCodeList extends JList implements PictureChangeListener {
      */
     class PictureCodeListModel extends AbstractListModel implements PictureChangeListener {
 
+        /**
+         * The last rendered picture position.
+         */
+        private int lastPicturePosition = -1;
+        
         /**
          * Gets a human readable form for the picture code item at the given index.
          * 
@@ -176,26 +187,44 @@ public class PictureCodeList extends JList implements PictureChangeListener {
         public void pictureCodesRemoved(int fromIndex, int toIndex) {
             fireIntervalRemoved(this, fromIndex, toIndex);
         }
+        
+        public void updatePicturePosition() {
+            int currentPicturePosition = picture.getPicturePosition();
+            if (currentPicturePosition != lastPicturePosition) {
+                if (lastPicturePosition != -1) {
+                    //fireContentsChanged(this, lastPicturePosition, lastPicturePosition);
+                }
+                //fireContentsChanged(this, currentPicturePosition, currentPicturePosition);
+                this.lastPicturePosition = currentPicturePosition;
+            }
+        }
     }
 
     /**
      * Completely refreshes the JList content.
      */
     public void refreshList() {
-        ((PictureCodeListModel)(this.getModel())).refreshList();
+        pictureCodeListModel.refreshList();
     }
     
     /**
      * Invoked when picture codes are added to the Picture. Delegates to the PictureCodeListModel.
      */
     public void pictureCodesAdded(int fromIndex, int toIndex) {
-        ((PictureCodeListModel)this.getModel()).pictureCodesAdded(fromIndex, toIndex);
+        pictureCodeListModel.pictureCodesAdded(fromIndex, toIndex);
     }
 
     /**
      * Invoked when picture codes are removed from the Picture. Delegates to the PictureCodeListModel.
      */
     public void pictureCodesRemoved(int fromIndex, int toIndex) {
-        ((PictureCodeListModel)this.getModel()).pictureCodesRemoved(fromIndex, toIndex);
+        pictureCodeListModel.pictureCodesRemoved(fromIndex, toIndex);
+    }
+    
+    /**
+     * Updates the JList to show the current picture position (if required).
+     */
+    public void updatePicturePosition() {
+        pictureCodeListModel.updatePicturePosition();
     }
 }
