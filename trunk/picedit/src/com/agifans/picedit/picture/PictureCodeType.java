@@ -12,9 +12,9 @@ public enum PictureCodeType {
 
     // These are the different types of action code.
     SET_VISUAL_COLOR(0xF0, "SetVisualColor"),
-    TURN_VISUAL_OFF(0xF1, "SetVisualColor Off"),
+    TURN_VISUAL_OFF(0xF1, "SetVisualColorOff"),
     SET_PRIORITY_COLOR(0xF2, "SetPriorityColor"),
-    TURN_PRIORITY_OFF(0xF3, "SetPriorityColor Off"),
+    TURN_PRIORITY_OFF(0xF3, "SetPriorityColorOff"),
     DRAW_VERTICAL_STEP_LINE(0xF4, "DrawStepLine"),
     DRAW_HORIZONTAL_STEP_LINE(0xF5, "DrawStepLine"),
     DRAW_LINE(0xF6, "DrawAbsoluteLine"),
