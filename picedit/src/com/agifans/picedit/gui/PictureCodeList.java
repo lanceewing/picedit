@@ -70,6 +70,8 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                 return "<html><b>Start</b></html>";
             }
             
+            boolean isCurrentPosition = (index == picture.getPicturePosition() + 1);
+            
             LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
             PictureCode pictureCode = null;
             PictureCode previousPictureCode = null;
@@ -82,8 +84,14 @@ public class PictureCodeList extends JList implements PictureChangeListener {
             String displayText = null;
             if (pictureCode.isActionCode()) {
                 PictureCodeType actionCodeType = pictureCode.getType();
-                displayText = "<html><b>&nbsp;&nbsp;" + actionCodeType.getDisplayableText() + "</b></html>";
-                
+                StringBuilder displayTextBuf = new StringBuilder("<html><b");
+                if (isCurrentPosition) {
+                    displayTextBuf.append(" style='color: #000077; background-color: #BBBBDD; width: 170px;'");
+                }
+                displayTextBuf.append(">&nbsp;&nbsp;");
+                displayTextBuf.append(actionCodeType.getDisplayableText());
+                displayTextBuf.append("</b></html>");
+                displayText = displayTextBuf.toString();
             } else {
                 int code = pictureCode.getCode();
                 switch (pictureCode.getType()) {
@@ -140,9 +148,6 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                         break;
                     case END:
                         displayText = "<html><b>End</b></html>";
-                        break;
-                    default:
-                        displayText = String.format("0x%02X", pictureCode.getCode());
                         break;
                 }
             }
