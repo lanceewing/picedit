@@ -21,7 +21,7 @@ public enum PictureCodeType {
     DRAW_SHORT_LINE(0xF7, "DrawRelativeLinePath"),
     FILL(0xF8, "Fill"),
     SET_BRUSH_TYPE(0xF9, "SetBrushType"),
-    DRAW_BRUSH_POINT(0xFA, "PlotBrushAt"),
+    DRAW_BRUSH_POINT(0xFA, "DrawBrush"),
     
     // These are the different types of data codes associated with action codes.
     COLOR_DATA(-1, ""),

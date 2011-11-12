@@ -115,10 +115,10 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                         displayText = String.format("    LineTo +0 %d", code);
                         break;
                     case BRUSH_PATTERN_DATA:
-                        displayText = String.format("0x%02X", pictureCode.getCode());
+                        displayText = String.format("    SetPattern %d", pictureCode.getCode());
                         break;
                     case BRUSH_TYPE_DATA:
-                        displayText = BrushType.getBrushTypeForBrushCode(pictureCode.getCode()).getDisplayName();
+                        displayText = "    " + BrushType.getBrushTypeForBrushCode(pictureCode.getCode()).getDisplayName();
                         break;
                     case COLOR_DATA:
                         displayText = "    " +  EgaPalette.COLOR_NAMES[pictureCode.getCode()];
