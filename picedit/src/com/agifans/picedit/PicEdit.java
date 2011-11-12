@@ -427,5 +427,10 @@ public final class PicEdit extends JApplet {
         
         app.requestFocusInWindow();
         app.getDesktopPane().selectFrame(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                app.getPictureFrame().resizeForZoomFactor(app.getEditStatus().getZoomFactor());
+            }
+        });
     }
 }
