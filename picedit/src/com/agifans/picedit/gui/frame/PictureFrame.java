@@ -285,6 +285,8 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         picturePanel.revalidate();
     }
     
+    private long lastPictureCodeListUpdateTime;
+    
     /**
      * Paints the PictureFrame.
      */
@@ -298,7 +300,16 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         backButton.setEnabled(!editStatus.isLineBeingDrawn());
         
         // Make sure the slider is up to date with the picture position.
-        positionSlider.getModel().setValue(picture.getPicturePosition()); 
+        positionSlider.getModel().setValue(picture.getPicturePosition());
+        
+        // No more than every second, check if PictureCodeList needs to update
+        // what item is highlighted as the current picture position. Doing it 
+        // based on a change listener makes things way too slow. So we poll instead.
+        long currentTime = System.currentTimeMillis();
+        if ((currentTime - lastPictureCodeListUpdateTime) > 1000) {
+            pictureCodeList.updatePicturePosition();
+            lastPictureCodeListUpdateTime = currentTime;
+        }
         
         // Update the title to show the current picture name.
         StringBuilder title = new StringBuilder();
