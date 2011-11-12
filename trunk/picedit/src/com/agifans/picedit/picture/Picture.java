@@ -666,7 +666,15 @@ public class Picture {
 
             // Write each of the picture codes out to the file.
             for (PictureCode pictureCode : this.getPictureCodes()) {
-                out.write(pictureCode.getCode());
+                if (pictureCode.isAbsolutePoint()) {
+                    int code = pictureCode.getCode();
+                    int x = (code & 0xFF00) >> 8;
+                    int y = (code & 0x00FF);
+                    out.write(x);
+                    out.write(y);
+                } else {
+                    out.write(pictureCode.getCode());
+                }
             }
             
             editStatus.setUnsavedChanges(false);
