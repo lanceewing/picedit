@@ -93,6 +93,11 @@ public class Picture {
     private List<PictureChangeListener> pictureChangeListeners;
     
     /**
+     * Says whether the picture is currently being loaded from a file.
+     */
+    private boolean isLoading;
+    
+    /**
      * Constructor for Picture.
      * 
      * @param editStatus the EditStatus containing current editing status.
@@ -146,8 +151,10 @@ public class Picture {
      * @param toIndex The index where the picture codes finished being added.
      */
     public void firePictureCodesAdded(int fromIndex, int toIndex) {
-        for (PictureChangeListener listener : pictureChangeListeners) {
-            listener.pictureCodesAdded(fromIndex, toIndex);
+        if (!isLoading) {
+            for (PictureChangeListener listener : pictureChangeListeners) {
+                listener.pictureCodesAdded(fromIndex, toIndex);
+            }
         }
     }
     
@@ -478,6 +485,9 @@ public class Picture {
         BufferedInputStream in = null;
         
         try {
+            // This stops the change listening from firing. We'll call that at the end of the method instead.
+            isLoading = true;
+            
             // Make sure we start with a clean picture.
             editStatus.clear();
             this.clearPicture();
@@ -631,6 +641,10 @@ public class Picture {
             this.drawPicture();
             editStatus.setTool(ToolType.NONE);
             editStatus.setUnsavedChanges(false);
+            
+            // Now that we've finished loading, trigger an event for the whole Picture.
+            isLoading = false;
+            firePictureCodesAdded(0, pictureCodes.size());
 
         } catch (FileNotFoundException fnfe) {
             // This can happen for files in the history.
