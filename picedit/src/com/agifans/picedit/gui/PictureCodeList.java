@@ -6,6 +6,8 @@ import java.util.LinkedList;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.picture.PictureCodeType;
@@ -21,7 +23,7 @@ import com.agifans.picedit.utils.EgaPalette;
  * @author Lance Ewing
  */
 @SuppressWarnings("serial")
-public class PictureCodeList extends JList implements PictureChangeListener {
+public class PictureCodeList extends JList implements PictureChangeListener, ChangeListener {
 
     /**
      * The Picture whose picture codes will be displayed in this JList.
@@ -70,8 +72,6 @@ public class PictureCodeList extends JList implements PictureChangeListener {
                 return "<html><b>Start</b></html>";
             }
             
-            boolean isCurrentPosition = (index == picture.getPicturePosition() + 1);
-            
             LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
             PictureCode pictureCode = null;
             PictureCode previousPictureCode = null;
@@ -85,9 +85,6 @@ public class PictureCodeList extends JList implements PictureChangeListener {
             if (pictureCode.isActionCode()) {
                 PictureCodeType actionCodeType = pictureCode.getType();
                 StringBuilder displayTextBuf = new StringBuilder("<html><b");
-                if (isCurrentPosition) {
-                    displayTextBuf.append(" style='color: #000077; background-color: #BBBBDD; width: 170px;'");
-                }
                 displayTextBuf.append(">&nbsp;&nbsp;");
                 displayTextBuf.append(actionCodeType.getDisplayableText());
                 displayTextBuf.append("</b></html>");
@@ -192,17 +189,6 @@ public class PictureCodeList extends JList implements PictureChangeListener {
         public void pictureCodesRemoved(int fromIndex, int toIndex) {
             fireIntervalRemoved(this, fromIndex, toIndex);
         }
-        
-        public void updatePicturePosition() {
-            int currentPicturePosition = picture.getPicturePosition();
-            if (currentPicturePosition != lastPicturePosition) {
-                if (lastPicturePosition != -1) {
-                    //fireContentsChanged(this, lastPicturePosition, lastPicturePosition);
-                }
-                //fireContentsChanged(this, currentPicturePosition, currentPicturePosition);
-                this.lastPicturePosition = currentPicturePosition;
-            }
-        }
     }
 
     /**
@@ -225,11 +211,11 @@ public class PictureCodeList extends JList implements PictureChangeListener {
     public void pictureCodesRemoved(int fromIndex, int toIndex) {
         pictureCodeListModel.pictureCodesRemoved(fromIndex, toIndex);
     }
-    
+
     /**
-     * Updates the JList to show the current picture position (if required).
+     * Invoked when the position slider value changes. Keeps the picture code list selected index in sync.
      */
-    public void updatePicturePosition() {
-        pictureCodeListModel.updatePicturePosition();
+    public void stateChanged(ChangeEvent e) {
+        setSelectedIndex(picture.getPicturePosition() + 1);
     }
 }
