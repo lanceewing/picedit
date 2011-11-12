@@ -603,7 +603,7 @@ public class Picture {
                                 if ((y = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
                                 }
-                                addPictureCode(x, y);
+                                addPictureCode(PictureCodeType.BRUSH_POINT_DATA, x, y);
                             }
                             index--;
                             break;
@@ -986,7 +986,7 @@ public class Picture {
                 patNum = (patNum >> 1 & 0x7f);
             }
             PictureCode pictureCode = pictureCodes.get(index++);
-            if (pictureCode.getType() != PictureCodeType.ABSOLUTE_POINT_DATA) {
+            if (pictureCode.getType() != PictureCodeType.BRUSH_POINT_DATA) {
                 break;
             }
             code = pictureCode.getCode();
