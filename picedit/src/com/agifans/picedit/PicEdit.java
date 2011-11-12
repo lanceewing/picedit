@@ -90,6 +90,7 @@ public final class PicEdit extends JApplet {
         
         PictureList pictureList = new PictureList(this);
         pictureCodeList = new PictureCodeList(this);
+        pictureCodeList.setFocusable(false);
         
         this.activePictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3), "Untitled");
         this.activePictureFrame.setLocation(20, 20);
@@ -147,12 +148,15 @@ public final class PicEdit extends JApplet {
         }
         
         JTabbedPane leftTabbedPane = new JTabbedPane();
+        leftTabbedPane.setFocusable(false);
         //JScrollPane pictureListScrollPane = new JScrollPane(pictureList);
         JScrollPane pictureCodeScrollPane = new JScrollPane(pictureCodeList);
+        pictureCodeScrollPane.setFocusable(false);
         //leftTabbedPane.add("Pictures", pictureListScrollPane);
         leftTabbedPane.add("Commands", pictureCodeScrollPane);
         
         JSplitPane centerSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftTabbedPane, desktopPanel);
+        centerSplitPane.setFocusable(false);
         centerSplitPane.setDividerLocation(175);
         
         this.getContentPane().add(centerSplitPane, BorderLayout.CENTER);
