@@ -1,11 +1,17 @@
 package com.agifans.picedit.gui;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.util.LinkedList;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -57,6 +63,9 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         this.setFocusable(true);
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.addListSelectionListener(this);
+        
+        //FontMetrics metrics = this.getFontMetrics(this.getFont());
+        //this.setCellRenderer(new TextCellRenderer(metrics, 130));
         
         // These two settings make the JList SIGNIFICANTLY faster when adding new picture
         // codes within the middle of the list.
@@ -256,6 +265,84 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
                 picture.setPicturePosition(value);
                 picture.drawPicture();
             }
+        }
+    }
+    
+    class PictureCodeListItemValue {
+        String text;
+        Color color;
+        
+        PictureCodeListItemValue(String text, Color color) {
+            this.text = text;
+            this.color = color;
+        }
+    }
+    
+    /** 
+     * A CellRenderer that eliminates any of the overhead that the
+     * DefaultListCellRenderer (a JLabel) adds.  Only left justified
+     * strings are displayed, and cells have a fixed preferred
+     * height and width.   
+     */
+    class TextCellRenderer extends JPanel implements ListCellRenderer {
+        String text;
+        final int borderWidth = 2;
+        final int baseline;
+        final int width;
+        final int height;
+
+        TextCellRenderer(FontMetrics metrics, int width) {
+            super();
+            baseline = metrics.getAscent() + borderWidth;
+            this.height = metrics.getHeight() + (2 * borderWidth);
+            this.width = width;
+        }
+
+        /** 
+         * Return the renderers fixed size here.  
+         */
+        public Dimension getPreferredSize() {
+            return new Dimension(width, height);
+        }
+
+        /**
+         * Completely bypass all of the standard JComponent painting machinery.
+         * This is a special case: the renderer is guaranteed to be opaque,
+         * it has no children, and it's only a child of the JList while
+         * it's being used to rubber stamp cells.
+         * <p>
+         * Clear the background and then draw the text.
+         */
+        public void paint(Graphics g) {
+            g.setColor(getBackground());
+            g.fillRect(0, 0, getWidth(), getHeight());
+            g.setColor(getForeground());
+            g.drawString(text, borderWidth, baseline);
+        }
+
+
+        /* This is is the ListCellRenderer method.  It just sets
+         * the foreground and background properties and updates the
+         * local text field.
+         */
+        public Component getListCellRendererComponent(
+            JList list,
+            Object value,
+            int index,
+            boolean isSelected,
+            boolean cellHasFocus) {
+            
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            }
+            else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
+            text = value.toString();
+    
+            return this;
         }
     }
 }
