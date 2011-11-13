@@ -9,6 +9,8 @@ import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.picture.PictureCodeType;
@@ -24,7 +26,7 @@ import com.agifans.picedit.utils.EgaPalette;
  * @author Lance Ewing
  */
 @SuppressWarnings("serial")
-public class PictureCodeList extends JList implements PictureChangeListener, ChangeListener {
+public class PictureCodeList extends JList implements PictureChangeListener, ChangeListener, ListSelectionListener {
 
     /**
      * The Picture whose picture codes will be displayed in this JList.
@@ -49,6 +51,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         this.setForeground(Color.BLACK);
         this.setFocusable(true);
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.addListSelectionListener(this);
     }
     
     /**
@@ -218,6 +221,25 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
      * Invoked when the position slider value changes. Keeps the picture code list selected index in sync.
      */
     public void stateChanged(ChangeEvent e) {
-        setSelectedIndex(picture.getPicturePosition() + 1);
+        int pictureIndex = picture.getPicturePosition() + 1;
+        if (pictureIndex != getSelectedIndex()) {
+            setSelectedIndex(pictureIndex);
+        }
+    }
+
+    /**
+     * Invoked when the user selects something on the picture code JList.
+     */
+    public void valueChanged(ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            int value = this.getSelectedIndex();
+            value = (value > 0? value - 1 : 0);
+            
+            // This check is so that we don't redraw picture if picture is already at the position.
+            if (value != picture.getPicturePosition()) {
+                picture.setPicturePosition(value);
+                picture.drawPicture();
+            }
+        }
     }
 }
