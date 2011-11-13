@@ -19,7 +19,7 @@ public enum PictureCodeType {
     DRAW_HORIZONTAL_STEP_LINE(0xF5, "DrawStepLine"),
     DRAW_LINE(0xF6, "DrawAbsoluteLine"),
     DRAW_SHORT_LINE(0xF7, "DrawRelativeLine"),
-    FILL(0xF8, "Fill"),
+    FILL(0xF8, "DrawFill"),
     SET_BRUSH_TYPE(0xF9, "SetBrushType"),
     DRAW_BRUSH_POINT(0xFA, "DrawBrush"),
     

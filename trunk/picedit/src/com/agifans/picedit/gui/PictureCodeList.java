@@ -39,6 +39,11 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
     private PictureCodeListModel pictureCodeListModel;
     
     /**
+     * Is true if the picture codes are being added to or removed from; otherwise false.
+     */
+    private boolean pictureCodesAreAdjusting;
+    
+    /**
      * Constructor for PictureCodeList.
      * 
      * @param picture The Picture whose picture codes will be displayed in this JList.
@@ -60,11 +65,6 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
      */
     class PictureCodeListModel extends AbstractListModel implements PictureChangeListener {
 
-        /**
-         * The last rendered picture position.
-         */
-        private int lastPicturePosition = -1;
-        
         /**
          * Gets a human readable form for the picture code item at the given index.
          * 
@@ -89,8 +89,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             String displayText = null;
             if (pictureCode.isActionCode()) {
                 PictureCodeType actionCodeType = pictureCode.getType();
-                StringBuilder displayTextBuf = new StringBuilder("<html><b");
-                displayTextBuf.append(">&nbsp;&nbsp;");
+                StringBuilder displayTextBuf = new StringBuilder("<html><b>&nbsp;&nbsp;");
                 displayTextBuf.append(actionCodeType.getDisplayableText());
                 displayTextBuf.append("</b></html>");
                 displayText = displayTextBuf.toString();
@@ -207,14 +206,18 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
      * Invoked when picture codes are added to the Picture. Delegates to the PictureCodeListModel.
      */
     public void pictureCodesAdded(int fromIndex, int toIndex) {
+        pictureCodesAreAdjusting = true;
         pictureCodeListModel.pictureCodesAdded(fromIndex, toIndex);
+        pictureCodesAreAdjusting = false;
     }
 
     /**
      * Invoked when picture codes are removed from the Picture. Delegates to the PictureCodeListModel.
      */
     public void pictureCodesRemoved(int fromIndex, int toIndex) {
+        pictureCodesAreAdjusting = true;
         pictureCodeListModel.pictureCodesRemoved(fromIndex, toIndex);
+        pictureCodesAreAdjusting = false;
     }
 
     /**
@@ -231,7 +234,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
      * Invoked when the user selects something on the picture code JList.
      */
     public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
+        if (!e.getValueIsAdjusting() && !pictureCodesAreAdjusting) {
             int value = this.getSelectedIndex();
             value = (value > 0? value - 1 : 0);
             
@@ -244,7 +247,6 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             }
             
             // This check is so that we don't redraw picture if picture is already at the position.
-            // TODO: This should not trigger drawing the picture if it has come from the MouseHandler.
             if (value != picture.getPicturePosition()) {
                 picture.setPicturePosition(value);
                 picture.drawPicture();
