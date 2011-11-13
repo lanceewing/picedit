@@ -81,6 +81,16 @@ public final class PicEdit extends JApplet {
     private JScrollPane pictureCodeScrollPane;
     
     /**
+     * The tool panel containing all of the picture drawing tools.
+     */
+    private ToolPanel toolPanel;
+    
+    /**
+     * The status bar at the bottom of the PICEDIT screen.
+     */
+    private StatusBarPanel statusBarPanel;
+    
+    /**
      * Constructor for PicEdit.
      */
     @SuppressWarnings("unchecked")
@@ -104,9 +114,9 @@ public final class PicEdit extends JApplet {
         this.getContentPane().setLayout(new BorderLayout());
         
         // Add the status bar above the picture.
-        StatusBarPanel statusbar = new StatusBarPanel(this);
-        statusbar.setPreferredSize(new Dimension(320, 20));
-        this.getContentPane().add(statusbar, BorderLayout.SOUTH);
+        statusBarPanel = new StatusBarPanel(this);
+        statusBarPanel.setPreferredSize(new Dimension(320, 20));
+        this.getContentPane().add(statusBarPanel, BorderLayout.SOUTH);
         
         JPanel desktopPanel = new JPanel();
         desktopPanel.setLayout(new BorderLayout());
@@ -127,7 +137,7 @@ public final class PicEdit extends JApplet {
         
         // Tool panel.
         ToolPanelLocation toolPanelLocation = getToolPanelLocation();
-        ToolPanel toolPanel = new ToolPanel(this);
+        toolPanel = new ToolPanel(this);
         switch (toolPanelLocation) {
             case DOCKED_LEFT:
                 desktopPanel.add(toolPanel, BorderLayout.WEST);
@@ -184,8 +194,10 @@ public final class PicEdit extends JApplet {
                     selectedPictureFrame.getMouseHandler().checkForMouseMotion();
                 }
                 
-                // Repaints the PICEDIT screen 25 times a second.
-                repaint();
+                // Repaints the changing parts of the PICEDIT screen 25 times a second.
+                getPictureFrame().repaint();
+                toolPanel.repaint();
+                statusBarPanel.repaint();
             }
         };
         timer.scheduleAtFixedRate(timerTask, 40, 40);
