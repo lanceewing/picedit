@@ -57,6 +57,11 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         this.setFocusable(true);
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.addListSelectionListener(this);
+        
+        // These two settings make the JList SIGNIFICANTLY faster when adding new picture
+        // codes within the middle of the list.
+        this.setPrototypeCellValue("Start");
+        this.setFixedCellWidth(130);
     }
     
     /**
