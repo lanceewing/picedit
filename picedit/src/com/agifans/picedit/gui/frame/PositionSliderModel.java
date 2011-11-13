@@ -240,7 +240,7 @@ public class PositionSliderModel implements BoundedRangeModel {
         LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
         if (value < (pictureCodes.size() - 1)) {
             // Find the closest picture action to the entered position.
-            while (pictureCodes.get(value).getCode() < 0xF0) {
+            while (pictureCodes.get(value).isDataCode()) {
                 value = value - 1;
             }
         }

@@ -235,6 +235,14 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             int value = this.getSelectedIndex();
             value = (value > 0? value - 1 : 0);
             
+            LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
+            if (value < (pictureCodes.size() - 1)) {
+                // Find the closest picture action to the entered position.
+                while (pictureCodes.get(value).isDataCode()) {
+                    value = value - 1;
+                }
+            }
+            
             // This check is so that we don't redraw picture if picture is already at the position.
             if (value != picture.getPicturePosition()) {
                 picture.setPicturePosition(value);
