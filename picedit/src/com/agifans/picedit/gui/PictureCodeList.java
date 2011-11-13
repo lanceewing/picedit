@@ -244,6 +244,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             }
             
             // This check is so that we don't redraw picture if picture is already at the position.
+            // TODO: This should not trigger drawing the picture if it has come from the MouseHandler.
             if (value != picture.getPicturePosition()) {
                 picture.setPicturePosition(value);
                 picture.drawPicture();
