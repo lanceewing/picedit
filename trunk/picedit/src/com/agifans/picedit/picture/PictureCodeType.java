@@ -12,14 +12,14 @@ public enum PictureCodeType {
 
     // These are the different types of action code.
     SET_VISUAL_COLOR(0xF0, "SetVisualColor"),
-    TURN_VISUAL_OFF(0xF1, "SetVisualColorOff"),
+    SET_VISUAL_COLOR_OFF(0xF1, "SetVisualColorOff"),
     SET_PRIORITY_COLOR(0xF2, "SetPriorityColor"),
-    TURN_PRIORITY_OFF(0xF3, "SetPriorityColorOff"),
+    SET_PRIORITY_COLOR_OFF(0xF3, "SetPriorityColorOff"),
     DRAW_VERTICAL_STEP_LINE(0xF4, "DrawStepLine"),
     DRAW_HORIZONTAL_STEP_LINE(0xF5, "DrawStepLine"),
     DRAW_LINE(0xF6, "DrawAbsoluteLine"),
     DRAW_SHORT_LINE(0xF7, "DrawRelativeLine"),
-    FILL(0xF8, "DrawFill"),
+    DRAW_FILL(0xF8, "DrawFill"),
     SET_BRUSH_TYPE(0xF9, "SetBrushType"),
     DRAW_BRUSH_POINT(0xFA, "DrawBrush"),
     
@@ -53,14 +53,14 @@ public enum PictureCodeType {
     static Map<Integer, PictureCodeType> pictureCodeTypes = new HashMap<Integer, PictureCodeType>();
     static {
         pictureCodeTypes.put(0xF0, SET_VISUAL_COLOR);
-        pictureCodeTypes.put(0xF1, TURN_VISUAL_OFF);
+        pictureCodeTypes.put(0xF1, SET_VISUAL_COLOR_OFF);
         pictureCodeTypes.put(0xF2, SET_PRIORITY_COLOR);
-        pictureCodeTypes.put(0xF3, TURN_PRIORITY_OFF);
+        pictureCodeTypes.put(0xF3, SET_PRIORITY_COLOR_OFF);
         pictureCodeTypes.put(0xF4, DRAW_VERTICAL_STEP_LINE);
         pictureCodeTypes.put(0xF5, DRAW_HORIZONTAL_STEP_LINE);
         pictureCodeTypes.put(0xF6, DRAW_LINE);
         pictureCodeTypes.put(0xF7, DRAW_SHORT_LINE);
-        pictureCodeTypes.put(0xF8, FILL);
+        pictureCodeTypes.put(0xF8, DRAW_FILL);
         pictureCodeTypes.put(0xF9, SET_BRUSH_TYPE);
         pictureCodeTypes.put(0xFA, DRAW_BRUSH_POINT);
         pictureCodeTypes.put(0xFF, END);

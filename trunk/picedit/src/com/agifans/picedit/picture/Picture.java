@@ -295,7 +295,7 @@ public class Picture {
      */
     public void processVisualColourOff() {
         editStatus.setVisualColour(EditStatus.VISUAL_OFF);
-        this.addPictureCode(PictureCodeType.TURN_VISUAL_OFF);
+        this.addPictureCode(PictureCodeType.SET_VISUAL_COLOR_OFF);
     }
     
     /**
@@ -314,7 +314,7 @@ public class Picture {
      */
     public void processPriorityColourOff() {
         editStatus.setPriorityColour(EditStatus.PRIORITY_OFF);
-        this.addPictureCode(PictureCodeType.TURN_PRIORITY_OFF);
+        this.addPictureCode(PictureCodeType.SET_PRIORITY_COLOR_OFF);
     }
     
     /**
@@ -514,7 +514,7 @@ public class Picture {
                             break;
                             
                         case 0xF1:
-                            addPictureCode(PictureCodeType.TURN_VISUAL_OFF);
+                            addPictureCode(PictureCodeType.SET_VISUAL_COLOR_OFF);
                             break;
                             
                         case 0xF2:
@@ -523,7 +523,7 @@ public class Picture {
                             break;
                             
                         case 0xF3:
-                            addPictureCode(PictureCodeType.TURN_PRIORITY_OFF);
+                            addPictureCode(PictureCodeType.SET_PRIORITY_COLOR_OFF);
                             break;
                             
                         case 0xF4:
@@ -582,7 +582,7 @@ public class Picture {
                             break;
                             
                         case 0xF8:
-                            addPictureCode(PictureCodeType.FILL);
+                            addPictureCode(PictureCodeType.DRAW_FILL);
                             while (true) {
                                 if ((x = rawPictureCodes[index++]) >= 0xF0) {
                                     break;

@@ -434,7 +434,7 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                 if (editStatus.isFillActive()) {
                     picture.fill(x, y);
                     if (editStatus.isFirstClick()) {
-                        picture.addPictureCode(PictureCodeType.FILL);
+                        picture.addPictureCode(PictureCodeType.DRAW_FILL);
                     }
                     picture.addPictureCode(PictureCodeType.FILL_POINT_DATA, x, y);
                 } else if (editStatus.isLineActive()) {
