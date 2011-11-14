@@ -6,10 +6,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -116,6 +118,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
      * @param initialZoomFactor The initial zoome factor for this picture frame.
      * @param defaultPictureName The initial default name for the picture prior to the first save.
      */
+    @SuppressWarnings("unchecked")
     public PictureFrame(final PicEdit application, int initialZoomFactor, String defaultPictureName) {
         this.application = application;
         this.defaultPictureName = defaultPictureName;
@@ -130,6 +133,10 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         picturePanel.addMouseListener(mouseHandler);
         picturePanel.addMouseMotionListener(mouseHandler);
         picturePanel.addMouseWheelListener(mouseHandler);
+        
+        // This is import since without it a click on the picture frame stops the TAB accelerator key from working.
+        this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
+        this.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
         
         this.calculateResizeDimensions();
         this.setLayout(new BorderLayout());
@@ -285,8 +292,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         // This will tell the scroll pane to adjust itself.
         picturePanel.revalidate();
     }
-    
-    private long lastPictureCodeListUpdateTime;
     
     /**
      * Paints the PictureFrame.

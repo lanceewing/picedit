@@ -151,7 +151,7 @@ public final class PicEdit extends JApplet {
                 break;
             case FLOATING:
                 // TODO: Not sure if this one is possible, so might need to default to WEST.
-                desktopPanel.add(toolPanel, BorderLayout.WEST);
+                desktopPanel.add(toolPanel, BorderLayout.NORTH);
                 break;
         }
         
@@ -217,7 +217,7 @@ public final class PicEdit extends JApplet {
         this.recentPictures.add(2,prefs.get("RECENT_PICTURE_3", ""));
         this.recentPictures.add(3,prefs.get("RECENT_PICTURE_4", ""));
         
-        this.toolPanelLocation = ToolPanelLocation.valueOf(prefs.get("TOOL_PANEL_LOCATION", "DOCKED_LEFT"));
+        this.toolPanelLocation = ToolPanelLocation.valueOf(prefs.get("TOOL_PANEL_LOCATION", "DOCKED_TOP"));
     }
     
     /**
