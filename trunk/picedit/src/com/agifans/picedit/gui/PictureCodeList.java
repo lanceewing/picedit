@@ -60,7 +60,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         this.setModel(pictureCodeListModel);
         this.setFont(new Font("Courier New", Font.BOLD, 10));
         this.setForeground(Color.BLACK);
-        this.setFocusable(true);
+        this.setFocusable(false);
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.addListSelectionListener(this);
         
@@ -312,6 +312,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             baseline = metrics.getAscent() + borderWidth;
             this.height = metrics.getHeight() + (2 * borderWidth);
             this.width = width;
+            this.setFocusable(false);
         }
 
         /** 
@@ -337,9 +338,9 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         }
 
 
-        /* This is is the ListCellRenderer method.  It just sets
-         * the foreground and background properties and updates the
-         * local text field.
+        /**
+         * This is is the ListCellRenderer method.  It just sets the foreground and background 
+         * properties and updates the local text field.
          */
         public Component getListCellRendererComponent(
             JList list,

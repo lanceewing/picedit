@@ -91,20 +91,20 @@ public class StatusBarPanel extends JPanel {
             }
         };
         
-        StatusBarSection memoryPanel = new StatusBarSection(300) {
-            void drawSectionDetail(Graphics2D graphics) {
-              Runtime runtime = Runtime.getRuntime();
-              String memStr = String.format("%d/%d/%d", runtime.freeMemory(), runtime.totalMemory(), runtime.maxMemory());
-              graphics.drawString(memStr, 8, 15);
-            }
-        };
+        //StatusBarSection memoryPanel = new StatusBarSection(300) {
+        //    void drawSectionDetail(Graphics2D graphics) {
+        //      Runtime runtime = Runtime.getRuntime();
+        //      String memStr = String.format("%d/%d/%d", runtime.freeMemory(), runtime.totalMemory(), runtime.maxMemory());
+        //      graphics.drawString(memStr, 8, 15);
+        //    }
+        //};
         
         mainPanel.add(toolNamePanel);
         mainPanel.add(positionPanel);
         mainPanel.add(xPanel);
         mainPanel.add(yPanel);
         mainPanel.add(priBandPanel);
-        mainPanel.add(memoryPanel);
+        //mainPanel.add(memoryPanel);
         
         this.add(mainPanel, BorderLayout.WEST);
     }
