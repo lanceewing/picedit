@@ -112,6 +112,7 @@ public class ToolPanel extends JToolBar {
         JPanel filler = new JPanel();
         this.add(filler);
         
+        this.setFocusable(false);
         this.setUI(new PicEditToolBarUI());
         this.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(final java.beans.PropertyChangeEvent evt) {
