@@ -58,7 +58,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         this.picture = picture;
         this.pictureCodeListModel = new PictureCodeListModel();
         this.setModel(pictureCodeListModel);
-        this.setFont(new Font("Courier New", Font.PLAIN, 10));
+        this.setFont(new Font("Courier New", Font.BOLD, 10));
         this.setForeground(Color.BLACK);
         this.setFocusable(true);
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
