@@ -358,6 +358,25 @@ public final class PicEdit extends JApplet {
     }
     
     /**
+     * Switches to the next picture frame on the desktop. This would normally be invoked when the
+     * previously active picture frame is closed thereby automatically activating the next
+     * picture frame.
+     */
+    public void selectNextPictureFrame() {
+        JInternalFrame[] allPictureFrames = desktopPane.getAllFrames();
+        if ((allPictureFrames == null) || (allPictureFrames.length == 0)) {
+            // If there are no frames currently on the desktop then we create a blank one for 
+            // the purposes of resetting the tool bar, status bar and picture code list.
+            activePictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3), "Untitled");
+            switchPictureCodeList();
+            
+        } else {
+            // Otherwise proceed with selecting the next picture frame.
+            desktopPane.selectFrame(true);
+        }
+    }
+    
+    /**
      * Switches the PictureCodeList currently being displayed with the one for the current picture.
      */
     public void switchPictureCodeList() {
