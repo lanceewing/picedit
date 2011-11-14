@@ -286,29 +286,25 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         }
     }
     
-    class PictureCodeListItemValue {
-        String text;
-        Color color;
-        
-        PictureCodeListItemValue(String text, Color color) {
-            this.text = text;
-            this.color = color;
-        }
-    }
-    
     /** 
-     * A CellRenderer that eliminates any of the overhead that the
-     * DefaultListCellRenderer (a JLabel) adds.  Only left justified
-     * strings are displayed, and cells have a fixed preferred
-     * height and width.   
+     * A CellRenderer that eliminates any of the overhead that the DefaultListCellRenderer (a JLabel) 
+     * adds.  Only left justified strings are displayed, and cells have a fixed preferred height and 
+     * width.   
      */
     class TextCellRenderer extends JPanel implements ListCellRenderer {
+        
         String text;
         final int borderWidth = 2;
         final int baseline;
         final int width;
         final int height;
 
+        /**
+         * Constructor for TextCellRenderer.
+         * 
+         * @param metrics FontMetrics from which we get info for drawing the text.
+         * @param width The width of the renderer component.
+         */
         TextCellRenderer(FontMetrics metrics, int width) {
             super();
             baseline = metrics.getAscent() + borderWidth;
