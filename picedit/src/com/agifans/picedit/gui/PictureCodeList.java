@@ -92,13 +92,8 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             }
             
             LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
-            PictureCode pictureCode = null;
+            PictureCode pictureCode = pictureCodes.get(index - 1);
             PictureCode previousPictureCode = null;
-            try {
-                pictureCode = pictureCodes.get(index - 1);
-            } catch (IndexOutOfBoundsException e) {
-                e.printStackTrace();
-            }
             
             String displayText = null;
             if (pictureCode.isActionCode()) {
@@ -107,21 +102,34 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
                 displayTextBuf.append(actionCodeType.getDisplayableText());
                 displayText = displayTextBuf.toString();
             } else {
+                StringBuilder displayTextBuf = null;
                 int code = pictureCode.getCode();
                 switch (pictureCode.getType()) {
                     case FILL_POINT_DATA:
-                        displayText = String.format("    Fill %d %d", (code & 0xFF00) >> 8, code & 0x00FF);
+                        displayTextBuf = new StringBuilder("    Fill ");
+                        displayTextBuf.append((code & 0xFF00) >> 8);
+                        displayTextBuf.append(" ");
+                        displayTextBuf.append(code & 0x00FF);
+                        displayText = displayTextBuf.toString();
                         break;
                     case BRUSH_POINT_DATA:
-                        displayText = String.format("    Plot %d %d", (code & 0xFF00) >> 8, code & 0x00FF);
+                        displayTextBuf = new StringBuilder("    Plot ");
+                        displayTextBuf.append((code & 0xFF00) >> 8);
+                        displayTextBuf.append(" ");
+                        displayTextBuf.append(code & 0x00FF);
+                        displayText = displayTextBuf.toString();
                         break;
                     case ABSOLUTE_POINT_DATA:
                         previousPictureCode = pictureCodes.get(index  - 2);
                         if (previousPictureCode.isActionCode()) {
-                            displayText = String.format("    MoveTo %d %d", (code & 0xFF00) >> 8, code & 0x00FF);
+                            displayTextBuf = new StringBuilder("    MoveTo ");
                         } else {
-                            displayText = String.format("    LineTo %d %d", (code & 0xFF00) >> 8, code & 0x00FF);
+                            displayTextBuf = new StringBuilder("    LineTo ");
                         }
+                        displayTextBuf.append((code & 0xFF00) >> 8);
+                        displayTextBuf.append(" ");
+                        displayTextBuf.append(code & 0x00FF);
+                        displayText = displayTextBuf.toString();
                         break;
                     case RELATIVE_POINT_DATA:
                         int dx = ((code & 0xF0) >> 4) & 0x0F;
@@ -146,19 +154,30 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
                         displayText = displayTextBuilder.toString();
                         break;
                     case X_POSITION_DATA:
-                        displayText = String.format("    LineTo %d +0", code);
+                        displayTextBuf = new StringBuilder("    LineTo ");
+                        displayTextBuf.append(code);
+                        displayTextBuf.append(" +0");
+                        displayText = displayTextBuf.toString();
                         break;
                     case Y_POSITION_DATA:
-                        displayText = String.format("    LineTo +0 %d", code);
+                        displayTextBuf = new StringBuilder("    LineTo +0 ");
+                        displayTextBuf.append(code);
+                        displayText = displayTextBuf.toString();
                         break;
                     case BRUSH_PATTERN_DATA:
-                        displayText = String.format("    SetPattern %d", pictureCode.getCode());
+                        displayTextBuf = new StringBuilder("    SetPattern ");
+                        displayTextBuf.append(code);
+                        displayText = displayTextBuf.toString();
                         break;
                     case BRUSH_TYPE_DATA:
-                        displayText = "    " + BrushType.getBrushTypeForBrushCode(pictureCode.getCode()).getDisplayName();
+                        displayTextBuf = new StringBuilder("    ");
+                        displayTextBuf.append(BrushType.getBrushTypeForBrushCode(pictureCode.getCode()).getDisplayName());
+                        displayText = displayTextBuf.toString();
                         break;
                     case COLOR_DATA:
-                        displayText = "    " +  EgaPalette.COLOR_NAMES[pictureCode.getCode()];
+                        displayTextBuf = new StringBuilder("    ");
+                        displayTextBuf.append(EgaPalette.COLOR_NAMES[pictureCode.getCode()]);
+                        displayText = displayTextBuf.toString();
                         break;
                     case END:
                         displayText = "End";
