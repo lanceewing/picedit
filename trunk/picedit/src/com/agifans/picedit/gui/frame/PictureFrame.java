@@ -369,7 +369,7 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         }
         
         // After closing, select the next frame (if there is one)
-        application.getDesktopPane().selectFrame(true);
+        application.selectNextPictureFrame();
     }
 
     /**
