@@ -64,8 +64,8 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.addListSelectionListener(this);
         
-        //FontMetrics metrics = this.getFontMetrics(this.getFont());
-        //this.setCellRenderer(new TextCellRenderer(metrics, 130));
+        FontMetrics metrics = this.getFontMetrics(this.getFont());
+        this.setCellRenderer(new TextCellRenderer(metrics, 130));
         
         // These two settings make the JList SIGNIFICANTLY faster when adding new picture
         // codes within the middle of the list.
@@ -88,7 +88,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
          */
         public Object getElementAt(int index) {
             if (index == 0) {
-                return "<html><b>Start</b></html>";
+                return "Start";
             }
             
             LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
@@ -103,9 +103,8 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             String displayText = null;
             if (pictureCode.isActionCode()) {
                 PictureCodeType actionCodeType = pictureCode.getType();
-                StringBuilder displayTextBuf = new StringBuilder("<html><b>&nbsp;&nbsp;");
+                StringBuilder displayTextBuf = new StringBuilder("  ");
                 displayTextBuf.append(actionCodeType.getDisplayableText());
-                displayTextBuf.append("</b></html>");
                 displayText = displayTextBuf.toString();
             } else {
                 int code = pictureCode.getCode();
@@ -162,7 +161,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
                         displayText = "    " +  EgaPalette.COLOR_NAMES[pictureCode.getCode()];
                         break;
                     case END:
-                        displayText = "<html><b>End</b></html>";
+                        displayText = "End";
                         break;
                 }
             }
@@ -334,13 +333,27 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
             }
             else {
                 setBackground(list.getBackground());
-                setForeground(list.getForeground());
             }
+            
             text = value.toString();
+            
+            if (text.startsWith("    ")) {
+                if (isSelected) {
+                    setForeground(Color.WHITE);
+                } else {
+                    setForeground(Color.GRAY);
+                }
+            }
+            else {
+                if (isSelected) {
+                    setForeground(Color.WHITE);
+                } else {
+                    setForeground(Color.BLACK);
+                }
+            }
     
             return this;
         }
