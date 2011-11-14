@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import com.agifans.picedit.PicEdit;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.types.ToolType;
 import com.agifans.picedit.view.EgoTestHandler;
 
 /**
@@ -65,7 +66,7 @@ public class KeyboardHandler implements KeyListener {
                 picture.moveToEndOfPictureBuffer();
             }
         }
-
+        
         // Handle picture action delete key.
         if (key == KeyEvent.VK_DELETE) {
             picture.deleteCurrentPictureAction();
