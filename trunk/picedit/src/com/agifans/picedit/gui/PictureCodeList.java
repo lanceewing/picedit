@@ -282,6 +282,8 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             if (value != picture.getPicturePosition()) {
                 picture.setPicturePosition(value);
                 picture.drawPicture();
+            } else {
+                setSelectedIndex(value + 1);
             }
         }
     }
