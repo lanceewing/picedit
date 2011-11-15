@@ -25,6 +25,7 @@ import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -307,6 +308,23 @@ public class ToolPanel extends JToolBar {
                         return false;
                 }
             }
+            
+            /**
+             * Indicates if the button can be selected or triggered by an input device, such
+             * as a mouse pointer.
+             *
+             * @return <code>true</code> if the button is enabled
+             */
+            public boolean isEnabled() {
+                boolean enabled = false;
+                
+                if (application != null) {
+                    // Tools are only active when at least one picture frame is displayed.
+                    enabled = application.hasVisiblePictureFrame();
+                }
+                
+                return enabled;
+            }
         }
         
         /**
@@ -320,45 +338,49 @@ public class ToolPanel extends JToolBar {
              * @param event The mouse pressed event to process.
              */
             public void mousePressed(MouseEvent event) {
-                Point mousePoint = event.getPoint();
-                Rectangle colourBox = new Rectangle(30, 5, 30, 23);
-                boolean clickInColourBox = colourBox.contains(mousePoint);
-                EditStatus editStatus = application.getEditStatus();
-                Picture picture = application.getPicture();
-                
-                switch (colourType) {
-                    case VISUAL:
-                        if (editStatus.isVisualDrawEnabled() && !clickInColourBox) {
-                            // If click is on the visual button but not in the colour box and visual
-                            // drawing is currently on then turn off visual drawing.
-                            picture.processVisualColourOff();
-                        } else {
-                            // Pop up colour chooser.
-                            ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
-                            dialog.setVisible(true);
-                            
-                            // Process the chosen visual colour.
-                            if (dialog.getChosenColour() != -1) {
-                                picture.processVisualColourChange(dialog.getChosenColour());
+                // We will only process mouse clicks if at least one picture frame is
+                // being displayed.
+                if (application.hasVisiblePictureFrame()) {
+                    Point mousePoint = event.getPoint();
+                    Rectangle colourBox = new Rectangle(30, 5, 30, 23);
+                    boolean clickInColourBox = colourBox.contains(mousePoint);
+                    EditStatus editStatus = application.getEditStatus();
+                    Picture picture = application.getPicture();
+                    
+                    switch (colourType) {
+                        case VISUAL:
+                            if (editStatus.isVisualDrawEnabled() && !clickInColourBox) {
+                                // If click is on the visual button but not in the colour box and visual
+                                // drawing is currently on then turn off visual drawing.
+                                picture.processVisualColourOff();
+                            } else {
+                                // Pop up colour chooser.
+                                ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
+                                dialog.setVisible(true);
+                                
+                                // Process the chosen visual colour.
+                                if (dialog.getChosenColour() != -1) {
+                                    picture.processVisualColourChange(dialog.getChosenColour());
+                                }
                             }
-                        }
-                        break;
-                    case PRIORITY:
-                        if (editStatus.isPriorityDrawEnabled() && !clickInColourBox) {
-                            // If click is on the priority button but not in the colour box and priority
-                            // drawing is currently on then turn off priority drawing.
-                            picture.processPriorityColourOff();
-                        } else {
-                            // Pop up colour chooser.
-                            ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
-                            dialog.setVisible(true);
-                            
-                            // Process the chosen priority colour.
-                            if (dialog.getChosenColour() != -1) {
-                                picture.processPriorityColourChange(dialog.getChosenColour());
+                            break;
+                        case PRIORITY:
+                            if (editStatus.isPriorityDrawEnabled() && !clickInColourBox) {
+                                // If click is on the priority button but not in the colour box and priority
+                                // drawing is currently on then turn off priority drawing.
+                                picture.processPriorityColourOff();
+                            } else {
+                                // Pop up colour chooser.
+                                ColourChooserDialog dialog = new ColourChooserDialog(ColourButton.this);
+                                dialog.setVisible(true);
+                                
+                                // Process the chosen priority colour.
+                                if (dialog.getChosenColour() != -1) {
+                                    picture.processPriorityColourChange(dialog.getChosenColour());
+                                }
                             }
-                        }
-                        break;
+                            break;
+                    }
                 }
             }
         }
@@ -471,6 +493,31 @@ public class ToolPanel extends JToolBar {
          */
         public boolean isSelected() {
         	return application.getEditStatus().getTool().equals(tool);
+        }
+        
+        /**
+         * Indicates if the button can be selected or triggered by an input device, such
+         * as a mouse pointer.
+         *
+         * @return <code>true</code> if the button is enabled
+         */
+        public boolean isEnabled() {
+            boolean enabled = false;
+            
+            if (application != null) {
+                if (tool.equals(ToolType.AIRBRUSH) || 
+                    tool.equals(ToolType.BRUSH) || 
+                    tool.equals(ToolType.FILL) || 
+                    tool.equals(ToolType.LINE) || 
+                    tool.equals(ToolType.SHORTLINE) || 
+                    tool.equals(ToolType.STEPLINE)) {
+                  
+                  // Tools are only active when at least one picture frame is displayed.
+                  enabled = application.hasVisiblePictureFrame();
+                }
+            }
+          
+          return enabled;
         }
     }
     
