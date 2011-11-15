@@ -356,6 +356,19 @@ public final class PicEdit extends JApplet {
         
         return activePictureFrame;
     }
+
+    /**
+     * Returns true if the application has at least one visible picture frame.
+     * 
+     * @return true if the application has at least one visible picture frame.
+     */
+    public boolean hasVisiblePictureFrame() {
+      if (desktopPane != null) {
+        return (desktopPane.getAllFrames().length > 0);
+      } else {
+        return false;
+      }
+    }
     
     /**
      * Switches to the next picture frame on the desktop. This would normally be invoked when the
