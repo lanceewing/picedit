@@ -560,33 +560,45 @@ public class Menu implements ActionListener, MenuListener {
                 break;
                 
             case LINE:
-                processToolSelect(ToolType.LINE);
+                if (application.hasVisiblePictureFrame()) {
+                    processToolSelect(ToolType.LINE);
+                }
                 break;
                 
             case PEN:
-                processToolSelect(ToolType.SHORTLINE);
+                if (application.hasVisiblePictureFrame()) {
+                    processToolSelect(ToolType.SHORTLINE);
+                }
                 break;
                 
             case STEP:
-                processToolSelect(ToolType.STEPLINE);
+                if (application.hasVisiblePictureFrame()) {
+                    processToolSelect(ToolType.STEPLINE);
+                }
                 break;
             
             case FILL:
-                processToolSelect(ToolType.FILL);
+                if (application.hasVisiblePictureFrame()) {
+                    processToolSelect(ToolType.FILL);
+                }
                 break;
             
             case BRUSH:
-                processToolSelect(ToolType.BRUSH);
-                application.getEditStatus().setBrushShape(BrushShape.CIRCLE);
-                application.getEditStatus().setBrushTexture(BrushTexture.SOLID);
-                application.getEditStatus().setBrushSize(0);
+                if (application.hasVisiblePictureFrame()) {
+                    processToolSelect(ToolType.BRUSH);
+                    application.getEditStatus().setBrushShape(BrushShape.CIRCLE);
+                    application.getEditStatus().setBrushTexture(BrushTexture.SOLID);
+                    application.getEditStatus().setBrushSize(0);
+                }
                 break;
                 
             case AIRBRUSH:
-                processToolSelect(ToolType.AIRBRUSH);
-                application.getEditStatus().setBrushShape(BrushShape.CIRCLE);
-                application.getEditStatus().setBrushTexture(BrushTexture.SPRAY);
-                application.getEditStatus().setBrushSize(0);
+                if (application.hasVisiblePictureFrame()) {
+                    processToolSelect(ToolType.AIRBRUSH);
+                    application.getEditStatus().setBrushShape(BrushShape.CIRCLE);
+                    application.getEditStatus().setBrushTexture(BrushTexture.SPRAY);
+                    application.getEditStatus().setBrushSize(0);
+                }
                 break;
             
             case START:
