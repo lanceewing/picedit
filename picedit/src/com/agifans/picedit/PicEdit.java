@@ -3,6 +3,7 @@ package com.agifans.picedit;
 import java.awt.*;
 import java.awt.event.HierarchyBoundsAdapter;
 import java.awt.event.HierarchyEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
@@ -95,10 +96,11 @@ public final class PicEdit extends JApplet {
      */
     @SuppressWarnings("unchecked")
     public PicEdit() {
+        // This stops the PicEdit applet from getting default focus. Instead we want the PictureFrame to get the focus.
+        this.setFocusable(false);
+        
         // Load the preferences saved the last time the application was closed down.
         loadPreferences();
-        
-        PictureList pictureList = new PictureList(this);
         
         this.activePictureFrame = new PictureFrame(this, prefs.getInt("ZOOM_FACTOR", 3), "Untitled");
         this.activePictureFrame.setLocation(20, 20);
@@ -120,6 +122,7 @@ public final class PicEdit extends JApplet {
         
         JPanel desktopPanel = new JPanel();
         desktopPanel.setLayout(new BorderLayout());
+        desktopPanel.setFocusable(false);
         
         // Add the desktop pane that holds the picture that is being edited.
         desktopPane = new JDesktopPane();
@@ -470,11 +473,11 @@ public final class PicEdit extends JApplet {
             }           
         });
         
-        app.requestFocusInWindow();
         app.getDesktopPane().selectFrame(true);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                app.getPictureFrame().resizeForZoomFactor(app.getEditStatus().getZoomFactor());
+                PictureFrame pictureFrame = app.getPictureFrame();
+                pictureFrame.resizeForZoomFactor(app.getEditStatus().getZoomFactor());
             }
         });
     }

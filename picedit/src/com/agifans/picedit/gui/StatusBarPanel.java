@@ -33,6 +33,7 @@ public class StatusBarPanel extends JPanel {
      */
     public StatusBarPanel(final PicEdit application) {
         this.setLayout(new BorderLayout());
+        this.setFocusable(false);
         
         JPanel fillerPanel = new JPanel();
         fillerPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
