@@ -267,23 +267,31 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
      */
     public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting() && !pictureCodesAreAdjusting) {
-            int value = this.getSelectedIndex();
-            value = (value > 0? value - 1 : 0);
+            int selectedIndex = this.getSelectedIndex();
+            int selectedPicturePosition = (selectedIndex > 0? selectedIndex - 1 : 0);
             
             LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
-            if (value < (pictureCodes.size() - 1)) {
+            if (selectedPicturePosition < (pictureCodes.size() - 1)) {
                 // Find the closest picture action to the entered position.
-                while (pictureCodes.get(value).isDataCode()) {
-                    value = value - 1;
+                while (pictureCodes.get(selectedPicturePosition).isDataCode()) {
+                    selectedPicturePosition = selectedPicturePosition - 1;
                 }
             }
             
             // This check is so that we don't redraw picture if picture is already at the position.
-            if (value != picture.getPicturePosition()) {
-                picture.setPicturePosition(value);
+            if (selectedPicturePosition != picture.getPicturePosition()) {
+                picture.setPicturePosition(selectedPicturePosition);
                 picture.drawPicture();
             } else {
-                setSelectedIndex(value + 1);
+                setSelectedIndex(selectedPicturePosition + 1);
+            }
+            
+            // Auto-scroll the JList to show the selected picture code if it isn't visible.
+            if (selectedIndex < this.getFirstVisibleIndex() || selectedIndex > this.getLastVisibleIndex()) {
+                int numOfVisibleItems = (this.getLastVisibleIndex() - this.getFirstVisibleIndex()) - 1;
+                int topIndex = selectedIndex;
+                int bottomIndex = Math.min(selectedIndex + numOfVisibleItems, picture.getPictureCodes().size() + 1);
+                scrollRectToVisible(getCellBounds(topIndex, bottomIndex));
             }
         }
     }
