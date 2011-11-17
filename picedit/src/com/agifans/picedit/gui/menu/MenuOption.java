@@ -35,7 +35,7 @@ public enum MenuOption {
     DUAL_MODE("Dual Mode"),
     EGO_TEST("Ego Test"),
     LINE("Line"),
-    PEN("Pen"),
+    PEN("Short Line"),
     STEP("Step"),
     FILL("Fill"),
     BRUSH("Brush"),
