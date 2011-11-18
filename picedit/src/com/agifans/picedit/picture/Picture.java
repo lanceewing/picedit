@@ -605,7 +605,7 @@ public class Picture {
                             addPictureCode(PictureCodeType.DRAW_BRUSH_POINT);
                             while (true) {
                                 if ((brushCode & 0x20) > 0) {
-                                    if ((pictureCode = pictureCodes.get(index++).getCode()) >= 0xF0) {
+                                    if ((pictureCode = rawPictureCodes[index++]) >= 0xF0) {
                                         break;
                                     }
                                     addPictureCode(PictureCodeType.BRUSH_PATTERN_DATA, pictureCode);
