@@ -368,8 +368,10 @@ public class Menu implements ActionListener, MenuListener {
                     JMenuItem pictureMenuItem = new JMenuItem(pictureFile.getName());
                     pictureMenuItem.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            if (application.getPicture().getPictureCodes().size() > 1) {
-                                // If the picture is not empty then launch a new picture frame.
+                            if ((!application.hasVisiblePictureFrame()) || 
+                                (application.getPicture().getPictureCodes().size() > 1)) {
+                                // If there are no picture frames, or if the current picture is not empty
+                                // then launch a new picture frame.
                                 newPicture();
                             } else {
                                 // Otherwise reuse the old frame. We need to clear off the background image
@@ -453,8 +455,10 @@ public class Menu implements ActionListener, MenuListener {
                 if (fileChooser.showOpenDialog(this.application) == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     if (selectedFile != null) {
-                        if (application.getPicture().getPictureCodes().size() > 1) {
-                            // If the picture is not empty then launch a new picture frame.
+                        if ((!application.hasVisiblePictureFrame()) ||
+                            (application.getPicture().getPictureCodes().size() > 1)) {
+                            // If there are no picture frames, or if the current picture is not empty
+                            // then launch a new picture frame.
                             newPicture();
                         } else {
                             // Otherwise reuse the old frame. We need to clear off the background image
