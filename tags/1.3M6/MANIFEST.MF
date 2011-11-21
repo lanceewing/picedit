@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Created-By: PICEDIT made by lance.ewing@gmail.com
-Main-Class: com.agifans.picedit.PicEditLauncher
