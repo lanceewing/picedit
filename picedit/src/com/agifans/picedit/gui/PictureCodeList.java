@@ -6,11 +6,15 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
@@ -50,6 +54,11 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
     private boolean pictureCodesAreAdjusting;
     
     /**
+     * The popup menu to display when someone right clicks on a PictureCodeList item.
+     */
+    private JPopupMenu popupMenu;
+    
+    /**
      * Constructor for PictureCodeList.
      * 
      * @param picture The Picture whose picture codes will be displayed in this JList.
@@ -71,6 +80,10 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         // codes within the middle of the list.
         this.setPrototypeCellValue("Start");
         this.setFixedCellWidth(130);
+        
+        // Set up the popup menu.
+        popupMenu = new JPopupMenu();
+        popupMenu.add(new JMenuItem("Delete"));
     }
     
     /**
@@ -382,6 +395,44 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             }
     
             return this;
+        }
+    }
+
+    /**
+     * 
+     */
+    class PictureCodeListMouseListener extends MouseAdapter {
+      
+        /**
+         * Invoked when a mouse pressed event occurs on the PictureCodeList JList.
+         * 
+         * @param e The MouseEvent.
+         */
+        public void mousePressed(MouseEvent e) {
+            checkPopup(e);
+        }
+  
+        /**
+         * Invoked when a mouse released event occurs on the PictureCodeList JList.
+         * 
+         * @param e The MouseEvent.
+         */
+        public void mouseReleased(MouseEvent e) {
+            checkPopup(e);
+        }
+        
+        /**
+         * Checks if the mouse event is the popup event. This is the platform 
+         * independent way of implementing this.
+         *  
+         * @param e The MouseEvent to check.
+         */
+        private void checkPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                //jList.setSelectedIndex(jList.locationToIndex(e.getPoint()));
+              
+                popupMenu.show(PictureCodeList.this, e.getX(), e.getY());
+            }
         }
     }
 }
