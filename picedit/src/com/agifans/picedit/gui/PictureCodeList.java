@@ -84,6 +84,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         // Set up the popup menu.
         popupMenu = new JPopupMenu();
         popupMenu.add(new JMenuItem("Delete"));
+        this.addMouseListener(new PictureCodeListMouseListener());
     }
     
     /**
@@ -429,8 +430,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
          */
         private void checkPopup(MouseEvent e) {
             if (e.isPopupTrigger()) {
-                //jList.setSelectedIndex(jList.locationToIndex(e.getPoint()));
-              
+                setSelectedIndex(locationToIndex(e.getPoint()));
                 popupMenu.show(PictureCodeList.this, e.getX(), e.getY());
             }
         }
