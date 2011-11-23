@@ -830,10 +830,12 @@ public class Picture {
      * @return the index of the next picture action.
      */
     public int drawPictureYCorner(List<PictureCode> pictureCodes, int index) {
-        int x1, x2, y1, y2;
-
-        x1 = pictureCodes.get(index++).getCode();
-        y1 = pictureCodes.get(index++).getCode();
+        int code, x1, x2, y1, y2;
+        
+        PictureCode pictureCode = pictureCodes.get(index++);
+        code = pictureCode.getCode();
+        x1 = (code & 0xFF00) >> 8;
+        y1 = (code & 0x00FF);
 
         // A line must always have a least one point.
         putPixel(x1, y1);
@@ -868,10 +870,12 @@ public class Picture {
      * @return the index of the next picture action.
      */
     public int drawPictureXCorner(List<PictureCode> pictureCodes, int index) {
-        int x1, x2, y1, y2;
+        int code, x1, x2, y1, y2;
 
-        x1 = pictureCodes.get(index++).getCode();
-        y1 = pictureCodes.get(index++).getCode();
+        PictureCode pictureCode = pictureCodes.get(index++);
+        code = pictureCode.getCode();
+        x1 = (code & 0xFF00) >> 8;
+        y1 = (code & 0x00FF);
 
         // A line must always have a least one point.
         putPixel(x1, y1);
