@@ -65,6 +65,7 @@ public class PictureCode {
      * @return true if this is an action code; otherwise false.
      */
     public boolean isActionCode() {
+        // TODO: This may not be safe for SCI0. Needs investigation over a selection of SCI0 pictures.
         return ((code >= 0xF0) && (code < 0xFF));
     }
 
