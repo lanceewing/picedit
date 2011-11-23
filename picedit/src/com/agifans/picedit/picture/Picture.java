@@ -812,7 +812,8 @@ public class Picture {
                 
                 // Add the current picture state to the picture cache.
                 if (isCacheable) {
-                    if ((cacheEntry == null) || ((index - cacheEntry.getPicturePosition()) > 100)) {
+                    // Cache only if a gap of at least 100 has been reached and the next picture code is an action code.
+                    if (((cacheEntry == null) || ((index - cacheEntry.getPicturePosition()) > 100)) && pictureCodes.get(index).isActionCode()) {
                         cacheEntry = pictureCache.addCacheEntry(index, visualScreen, priorityScreen, controlScreen);
                     }
                 }
@@ -837,13 +838,16 @@ public class Picture {
         // A line must always have a least one point.
         putPixel(x1, y1);
         
-        while (true) {
+        while (index <= picturePosition) {
             y2 = pictureCodes.get(index++).getCode();
             if (y2 >= 0xF0) {
                 break;
             }
             drawLine(x1, y1, x1, y2);
             y1 = y2;
+            if (index > picturePosition) {
+                break;
+            }
             x2 = pictureCodes.get(index++).getCode();
             if (x2 >= 0xF0) {
                 break;
@@ -872,13 +876,16 @@ public class Picture {
         // A line must always have a least one point.
         putPixel(x1, y1);
         
-        while (true) {
+        while (index <= picturePosition) {
             x2 = pictureCodes.get(index++).getCode();
             if (x2 >= 0xF0) {
                 break;
             }
             drawLine(x1, y1, x2, y1);
             x1 = x2;
+            if (index > picturePosition) {
+                break;
+            }
             y2 = pictureCodes.get(index++).getCode();
             if (y2 >= 0xF0) {
                 break;
@@ -909,7 +916,7 @@ public class Picture {
         // A line must always have a least one point.
         putPixel(x1, y1);
         
-        while (true) {
+        while (index <= picturePosition) {
             pictureCode = pictureCodes.get(index++);
             if (pictureCode.getType() != PictureCodeType.ABSOLUTE_POINT_DATA) {
                 break;
@@ -946,7 +953,7 @@ public class Picture {
         // A line must always have a least one point.
         putPixel(x1, y1);
         
-        while (true) {
+        while (index <= picturePosition) {
             disp = pictureCodes.get(index++).getCode();
             if (disp >= 0xF0) {
                 break;
@@ -978,7 +985,7 @@ public class Picture {
     public int drawPictureFill(List<PictureCode> pictureCodes, int index) {
         int code, x1, y1;
 
-        while (true) {
+        while (index <= picturePosition) {
             PictureCode pictureCode = pictureCodes.get(index++);
             if (pictureCode.getType() != PictureCodeType.FILL_POINT_DATA) {
                 break;
@@ -1005,12 +1012,15 @@ public class Picture {
 
         int patCode = editStatus.getBrushCode();
 
-        while (true) {
+        while (index <= picturePosition) {
             if ((patCode & 0x20) > 0) {
                 if ((patNum = pictureCodes.get(index++).getCode()) >= 0xF0) {
                     break;
                 }
                 patNum = (patNum >> 1 & 0x7f);
+            }
+            if (index > picturePosition) {
+                break;
             }
             PictureCode pictureCode = pictureCodes.get(index++);
             if (pictureCode.getType() != PictureCodeType.BRUSH_POINT_DATA) {
