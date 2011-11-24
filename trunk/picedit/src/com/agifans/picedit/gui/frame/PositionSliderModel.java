@@ -237,13 +237,7 @@ public class PositionSliderModel implements BoundedRangeModel {
     public void setRangeProperties(int value, int extent, int min, int max, boolean adjusting) {
         // Since the state is determined by the EditStatus, we ignore everything 
         // except for the value.
-//        LinkedList<PictureCode> pictureCodes = picture.getPictureCodes();
-//        if (value < (pictureCodes.size() - 1)) {
-//            // Find the closest picture action to the entered position.
-//            while (pictureCodes.get(value).isDataCode()) {
-//                value = value - 1;
-//            }
-//        }
+
         // This first check is important for the slider to get updated for external position changes.
         if (value != lastSetValue) {
             // This second check is so that we don't redraw picture if picture is already at the position.
