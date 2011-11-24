@@ -268,21 +268,29 @@ public class Menu implements ActionListener, MenuListener {
         JMenuItem startMenuItem = new JMenuItem(MenuOption.START.getDisplayValue(), KeyEvent.VK_H);
         startMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
         JMenuItem prevMenuItem = new JMenuItem(MenuOption.PREV.getDisplayValue(), KeyEvent.VK_P);
-        prevMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
+        prevMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
+        JMenuItem prevActionMenuItem = new JMenuItem(MenuOption.PREV_TOOL.getDisplayValue());
+        prevActionMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
         JMenuItem nextMenuItem = new JMenuItem(MenuOption.NEXT.getDisplayValue(), KeyEvent.VK_N);
-        nextMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
+        nextMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
+        JMenuItem nextActionMenuItem = new JMenuItem(MenuOption.NEXT_TOOL.getDisplayValue());
+        nextActionMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
         JMenuItem endMenuItem = new JMenuItem(MenuOption.END.getDisplayValue(), KeyEvent.VK_E);
         endMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0));
         JMenuItem gotoMenuItem = new JMenuItem(MenuOption.GOTO.getDisplayValue(), KeyEvent.VK_G);
         gotoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, acceleratorKey));
         startMenuItem.addActionListener(this);
         prevMenuItem.addActionListener(this);
+        prevActionMenuItem.addActionListener(this);
         nextMenuItem.addActionListener(this);
+        nextActionMenuItem.addActionListener(this);
         endMenuItem.addActionListener(this);
         gotoMenuItem.addActionListener(this);
         navigateMenu.add(startMenuItem);
         navigateMenu.add(prevMenuItem);
         navigateMenu.add(nextMenuItem);
+        navigateMenu.add(prevActionMenuItem);
+        navigateMenu.add(nextActionMenuItem);
         navigateMenu.add(endMenuItem);
         navigateMenu.addSeparator();
         navigateMenu.add(gotoMenuItem);
@@ -610,10 +618,18 @@ public class Menu implements ActionListener, MenuListener {
                 break;
                 
             case PREV:
+                picture.moveBackOnePictureCode();
+                break;
+                
+            case PREV_TOOL:
                 picture.moveBackOnePictureAction();
                 break;
                 
             case NEXT:
+                picture.moveForwardOnePictureCode();
+                break;
+                
+            case NEXT_TOOL:
                 picture.moveForwardOnePictureAction();
                 break;
                 

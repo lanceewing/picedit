@@ -42,6 +42,8 @@ public enum MenuOption {
     AIRBRUSH("Airbrush"),
     START("Start"),
     NEXT("Next"),
+    NEXT_TOOL("Next Tool"),
+    PREV_TOOL("Previous Tool"),
     PREV("Previous"),
     END("End"),
     GOTO("Goto..."),

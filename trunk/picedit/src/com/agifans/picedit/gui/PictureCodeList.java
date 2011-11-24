@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
@@ -70,7 +72,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         this.setFont(new Font("Courier New", Font.BOLD, 10));
         this.setForeground(Color.BLACK);
         this.setFocusable(false);
-        this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         this.addListSelectionListener(this);
         
         FontMetrics metrics = this.getFontMetrics(this.getFont());
@@ -83,7 +85,9 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         
         // Set up the popup menu.
         popupMenu = new JPopupMenu();
-        popupMenu.add(new JMenuItem("Delete"));
+        JMenuItem deleteMenuItem = new JMenuItem("Delete");
+        deleteMenuItem.addActionListener(new PictureCodeListPopupMenuActionListener());
+        popupMenu.add(deleteMenuItem);
         this.addMouseListener(new PictureCodeListMouseListener());
     }
     
@@ -282,22 +286,25 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
     public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting() && !pictureCodesAreAdjusting) {
             int selectedIndex = this.getSelectedIndex();
-            int selectedPicturePosition = (selectedIndex > 0? selectedIndex - 1 : 0);
-            
-            // This check is so that we don't redraw picture if picture is already at the position.
-            if (selectedPicturePosition != picture.getPicturePosition()) {
-                picture.setPicturePosition(selectedPicturePosition);
-                picture.drawPicture();
-            } else {
-                setSelectedIndex(selectedPicturePosition + 1);
-            }
-            
-            // Auto-scroll the JList to show the selected picture code if it isn't visible.
-            if (selectedIndex < this.getFirstVisibleIndex() || selectedIndex > this.getLastVisibleIndex()) {
-                int numOfVisibleItems = (this.getLastVisibleIndex() - this.getFirstVisibleIndex()) - 1;
-                int topIndex = selectedIndex;
-                int bottomIndex = Math.min(selectedIndex + numOfVisibleItems, picture.getPictureCodes().size() + 1);
-                scrollRectToVisible(getCellBounds(topIndex, bottomIndex));
+            if (selectedIndex > -1) {
+                int selectedPicturePosition = (selectedIndex > 0? selectedIndex - 1 : 0);
+                
+                // This check is so that we don't redraw picture if picture is already at the position.
+                if (selectedPicturePosition != picture.getPicturePosition()) {
+                    picture.setPicturePosition(selectedPicturePosition);
+                    picture.drawPicture();
+                } else if (selectedIndex == 0) {
+                    // This takes care of moving the selection off the Start item.
+                    setSelectedIndex(selectedPicturePosition + 1);
+                }
+                
+                // Auto-scroll the JList to show the selected picture code if it isn't visible.
+                if (selectedIndex < this.getFirstVisibleIndex() || selectedIndex > this.getLastVisibleIndex()) {
+                    int numOfVisibleItems = (this.getLastVisibleIndex() - this.getFirstVisibleIndex()) - 1;
+                    int topIndex = selectedIndex;
+                    int bottomIndex = Math.min(selectedIndex + numOfVisibleItems, picture.getPictureCodes().size() + 1);
+                    scrollRectToVisible(getCellBounds(topIndex, bottomIndex));
+                }
             }
         }
     }
@@ -392,7 +399,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
     }
 
     /**
-     * 
+     * Mouse Listener for the PictureCodeList JList. Handles the popup menu for items in the list.
      */
     class PictureCodeListMouseListener extends MouseAdapter {
       
@@ -422,8 +429,41 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
          */
         private void checkPopup(MouseEvent e) {
             if (e.isPopupTrigger()) {
-                setSelectedIndex(locationToIndex(e.getPoint()));
-                popupMenu.show(PictureCodeList.this, e.getX(), e.getY());
+                // Convert the mouse event in to the corresponding picture position.
+                int itemIndex = locationToIndex(e.getPoint());
+                
+                // Only show the popup menu if the item is selected.
+                if ((itemIndex >= getMinSelectionIndex()) && (itemIndex <= getMaxSelectionIndex())) {
+                    popupMenu.show(PictureCodeList.this, e.getX(), e.getY());
+                }
+            }
+        }
+    }
+    
+    /**
+     * Enum representing the options in the popup menu.
+     */
+    private enum PopupMenuAction { 
+        DELETE,
+        COPY
+    };
+    
+    /**
+     * ActionListener for the popup menu that is activated for a selected item in the JList.
+     */
+    class PictureCodeListPopupMenuActionListener implements ActionListener {
+
+        /**
+         * Processes the given ActionEvent for the popup menu.
+         * 
+         * @param e The ActionEvent to process.
+         */
+        public void actionPerformed(ActionEvent e) {
+            PopupMenuAction action = PopupMenuAction.valueOf(e.getActionCommand().toUpperCase());
+            switch (action) {
+                case DELETE:
+                    //picture.deleteCurrentPictureAction();
+                    break;
             }
         }
     }
