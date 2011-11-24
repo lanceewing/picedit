@@ -383,7 +383,10 @@ public class Picture {
     }
     
     /**
-     * Process movement back one picture action through the picture code buffer.
+     * Process movement back one picture action through the picture code buffer. A
+     * picture action is the full set of codes for a tool, e.g. all the points for a 
+     * single draw absolute action. Picture actions are highlighted in black on the 
+     * picture code JList.
      */
     public void moveBackOnePictureAction() {
         // Move back through the codes until we find an Action code.
@@ -396,7 +399,18 @@ public class Picture {
     }
 
     /**
-     * Process movement forward one picture action through the picture code buffer.
+     * Process movement backward one picture code, i.e. picture position minus 1.
+     */
+    public void moveBackOnePictureCode() {
+        decrementPicturePosition();
+        drawPicture();
+    }
+    
+    /**
+     * Process movement forward one picture action through the picture code buffer. A
+     * picture action is the full set of codes for a tool, e.g. all the points for a 
+     * single draw absolute action. Picture actions are highlighted in black on the 
+     * picture code JList.
      */
     public void moveForwardOnePictureAction() {
         if (picturePosition < (pictureCodes.size() - 1)) {
@@ -409,6 +423,16 @@ public class Picture {
         }
     }
 
+    /**
+     * Process movement forward one picture code, i.e. picture position plus 1.
+     */
+    public void moveForwardOnePictureCode() {
+        if (picturePosition < (pictureCodes.size() - 1)) {
+            incrementPicturePosition();
+            drawPicture();
+        }
+    }
+    
     /**
      * Process movement to the start of the picture code buffer.
      */

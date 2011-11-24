@@ -61,6 +61,12 @@ public class KeyboardHandler implements KeyListener {
             if (key == KeyEvent.VK_RIGHT) {
                 picture.moveForwardOnePictureAction();
             }
+            if (key == KeyEvent.VK_UP) {
+                picture.moveBackOnePictureCode();
+            }
+            if (key == KeyEvent.VK_DOWN) {
+                picture.moveForwardOnePictureCode();
+            }
             if (key == KeyEvent.VK_END) {
                 picture.moveToEndOfPictureBuffer();
             }
