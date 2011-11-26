@@ -383,6 +383,26 @@ public class Picture {
     }
     
     /**
+     * Attempts to delete the pictures codes from the given 'from' picture code index to the
+     * give 'to' picture code index. It may be that the delete is not completely possible 
+     * since the outcome might leave the picture broken. So this is taken in to account so that
+     * the end result is always a working picture.
+     * 
+     * @param fromPosition The picture position to delete picture codes from.
+     * @param toPosition The picture position to delete picture codes to.
+     */
+    public void deletePictureCodes(int fromPosition, int toPosition) {
+        int numOfCodesToRemove = (toPosition - fromPosition) + 1;
+        for (int count = 0; count < numOfCodesToRemove; count++) {
+            pictureCodes.remove(fromPosition);
+            firePictureCodesRemoved(fromPosition, fromPosition);
+        }
+        editStatus.setUnsavedChanges(true);
+        pictureCache.clear(fromPosition);
+        drawPicture();
+    }
+    
+    /**
      * Process movement back one picture action through the picture code buffer. A
      * picture action is the full set of codes for a tool, e.g. all the points for a 
      * single draw absolute action. Picture actions are highlighted in black on the 

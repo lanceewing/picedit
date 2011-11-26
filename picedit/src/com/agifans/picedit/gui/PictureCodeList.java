@@ -462,7 +462,8 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             PopupMenuAction action = PopupMenuAction.valueOf(e.getActionCommand().toUpperCase());
             switch (action) {
                 case DELETE:
-                    //picture.deleteCurrentPictureAction();
+                    // Remember, picture position is always one less than the JList index.
+                    picture.deletePictureCodes(getMinSelectionIndex() - 1, getMaxSelectionIndex() - 1);
                     break;
             }
         }
