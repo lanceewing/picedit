@@ -196,41 +196,48 @@ public class PicturePanel extends JPanel {
         
         // Highlight the current selection if the zoom factor is big enough.
         if (editStatus.getZoomFactor() > 1) {
-            int firstSelectedPosition = picture.getFirstSelectedPosition();
-            int lastSelectedPosition = picture.getLastSelectedPosition();
-            if ((firstSelectedPosition > -1) && (lastSelectedPosition > -1)) {
-                List<PictureCode> pictureCodes = picture.getPictureCodes();
-                for (int picturePosition = firstSelectedPosition; picturePosition <= lastSelectedPosition; picturePosition++) {
-                    PictureCode pictureCode = pictureCodes.get(picturePosition);
-                    // It only makes sense to do something for data codes, and only if they're points.
-                    if (pictureCode.isDataCode()) {
-                        int x1, y1;
-                        int code = pictureCode.getCode();
-                        switch (pictureCode.getType()) {
-                            case ABSOLUTE_POINT_DATA:
-                                x1 = ((code & 0xFF00) >> 7) * editStatus.getZoomFactor();
-                                y1 = (code & 0x00FF) * editStatus.getZoomFactor();
-                                offScreenGC.setColor(Color.RED);
-                                offScreenGC.drawRect(x1-2, y1-2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                break;
-                            case BRUSH_POINT_DATA:
-                                break;
-                            case FILL_POINT_DATA:
-                                break;
-                            case RELATIVE_POINT_DATA:
-                                break;
-                            case X_POSITION_DATA:
-                                break;
-                            case Y_POSITION_DATA:
-                                break;
-                        }
-                    }
-                }
-            }
+            highlightSelection();
         }
 
         // Now display the screen to the user.
         g.drawImage(offScreenImage, 0, 0, this);
+    }
+    
+    /**
+     * Highlights the currently selected picture codes by drawing boxes around the points.
+     */
+    private void highlightSelection() {
+        int firstSelectedPosition = picture.getFirstSelectedPosition();
+        int lastSelectedPosition = picture.getLastSelectedPosition();
+        if ((firstSelectedPosition > -1) && (lastSelectedPosition > -1)) {
+            List<PictureCode> pictureCodes = picture.getPictureCodes();
+            for (int picturePosition = firstSelectedPosition; picturePosition <= lastSelectedPosition; picturePosition++) {
+                PictureCode pictureCode = pictureCodes.get(picturePosition);
+                // It only makes sense to do something for data codes, and only if they're points.
+                if (pictureCode.isDataCode()) {
+                    int x1, y1;
+                    int code = pictureCode.getCode();
+                    switch (pictureCode.getType()) {
+                        case ABSOLUTE_POINT_DATA:
+                            x1 = ((code & 0xFF00) >> 7) * editStatus.getZoomFactor();
+                            y1 = (code & 0x00FF) * editStatus.getZoomFactor();
+                            offScreenGC.setColor(Color.RED);
+                            offScreenGC.drawRect(x1-2, y1-2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                            break;
+                        case BRUSH_POINT_DATA:
+                            break;
+                        case FILL_POINT_DATA:
+                            break;
+                        case RELATIVE_POINT_DATA:
+                            break;
+                        case X_POSITION_DATA:
+                            break;
+                        case Y_POSITION_DATA:
+                            break;
+                    }
+                }
+            }
+        }
     }
     
     /**

@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JList;
@@ -290,6 +291,18 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             if (selectedIndex > -1) {
                 int selectedPicturePosition = (selectedIndex > 0? selectedIndex - 1 : 0);
                 
+                // If an action code is selected in isolation then auto-select the associated data codes.
+                List<PictureCode> pictureCodes = picture.getPictureCodes();
+                PictureCode pictureCode = pictureCodes.get(selectedPicturePosition);
+                if (pictureCode.isActionCode() && (getMinSelectionIndex() == getMaxSelectionIndex())) {
+                    int nextActionPosition = selectedPicturePosition + 1;
+                    do {
+                        pictureCode = pictureCodes.get(nextActionPosition++);
+                    } while ((pictureCode != null) && !pictureCode.isActionCode() && !pictureCode.isEndCode());
+                    setSelectionInterval(selectedIndex, nextActionPosition - 1);
+                    return;
+                }
+                
                 // This check is so that we don't redraw picture if picture is already at the position.
                 if (selectedPicturePosition != picture.getPicturePosition()) {
                     picture.setPicturePosition(selectedPicturePosition);
@@ -300,10 +313,11 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
                 }
                 
                 // Auto-scroll the JList to show the selected picture code if it isn't visible.
-                if (selectedIndex < this.getFirstVisibleIndex() || selectedIndex > this.getLastVisibleIndex()) {
-                    int numOfVisibleItems = (this.getLastVisibleIndex() - this.getFirstVisibleIndex()) - 1;
-                    int topIndex = selectedIndex;
-                    int bottomIndex = Math.min(selectedIndex + numOfVisibleItems, picture.getPictureCodes().size() + 1);
+                int minSelectionIndex = getMinSelectionIndex();
+                if (minSelectionIndex < getFirstVisibleIndex() || minSelectionIndex > getLastVisibleIndex()) {
+                    int numOfVisibleItems = (getLastVisibleIndex() - getFirstVisibleIndex()) - 1;
+                    int topIndex = minSelectionIndex;
+                    int bottomIndex = Math.min(minSelectionIndex + numOfVisibleItems, picture.getPictureCodes().size() + 1);
                     scrollRectToVisible(getCellBounds(topIndex, bottomIndex));
                 }
                 
