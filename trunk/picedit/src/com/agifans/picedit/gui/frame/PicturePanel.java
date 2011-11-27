@@ -200,7 +200,7 @@ public class PicturePanel extends JPanel {
             int lastSelectedPosition = picture.getLastSelectedPosition();
             if ((firstSelectedPosition > -1) && (lastSelectedPosition > -1)) {
                 List<PictureCode> pictureCodes = picture.getPictureCodes();
-                for (int picturePosition = firstSelectedPosition; picturePosition < lastSelectedPosition; picturePosition++) {
+                for (int picturePosition = firstSelectedPosition; picturePosition <= lastSelectedPosition; picturePosition++) {
                     PictureCode pictureCode = pictureCodes.get(picturePosition);
                     // It only makes sense to do something for data codes, any only if they're points.
                     if (pictureCode.isDataCode()) {
