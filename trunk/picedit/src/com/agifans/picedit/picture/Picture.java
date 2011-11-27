@@ -130,6 +130,9 @@ public class Picture {
         this.pictureChangeListeners = new ArrayList<PictureChangeListener>();
         
         clearPicture();
+        
+        this.firstSelectedPosition = -1;
+        this.lastSelectedPosition = -1;
     }
 
     /**

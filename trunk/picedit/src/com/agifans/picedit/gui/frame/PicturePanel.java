@@ -12,11 +12,14 @@ import java.awt.image.Raster;
 import java.awt.image.RescaleOp;
 import java.awt.image.WritableRaster;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
+import com.agifans.picedit.picture.PictureCode;
+import com.agifans.picedit.picture.PictureCodeType;
 import com.agifans.picedit.types.PictureType;
 import com.agifans.picedit.utils.EgaPalette;
 import com.agifans.picedit.view.EgoTestHandler;
@@ -193,7 +196,37 @@ public class PicturePanel extends JPanel {
         
         // Highlight the current selection if the zoom factor is big enough.
         if (editStatus.getZoomFactor() > 1) {
-            // TODO: Get min and max selection index from Picture.
+            int firstSelectedPosition = picture.getFirstSelectedPosition();
+            int lastSelectedPosition = picture.getLastSelectedPosition();
+            if ((firstSelectedPosition > -1) && (lastSelectedPosition > -1)) {
+                List<PictureCode> pictureCodes = picture.getPictureCodes();
+                for (int picturePosition = firstSelectedPosition; picturePosition < lastSelectedPosition; picturePosition++) {
+                    PictureCode pictureCode = pictureCodes.get(picturePosition);
+                    // It only makes sense to do something for data codes, any only if they're points.
+                    if (pictureCode.isDataCode()) {
+                        int x1, y1;
+                        int code = pictureCode.getCode();
+                        switch (pictureCode.getType()) {
+                            case ABSOLUTE_POINT_DATA:
+                                x1 = ((code & 0xFF00) >> 7) * editStatus.getZoomFactor();
+                                y1 = (code & 0x00FF) * editStatus.getZoomFactor();
+                                offScreenGC.setColor(Color.RED);
+                                offScreenGC.drawRect(x1, y1, 4, 4);
+                                break;
+                            case BRUSH_POINT_DATA:
+                                break;
+                            case FILL_POINT_DATA:
+                                break;
+                            case RELATIVE_POINT_DATA:
+                                break;
+                            case X_POSITION_DATA:
+                                break;
+                            case Y_POSITION_DATA:
+                                break;
+                        }
+                    }
+                }
+            }
         }
 
         // Now display the screen to the user.
