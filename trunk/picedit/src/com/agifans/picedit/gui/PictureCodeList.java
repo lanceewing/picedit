@@ -275,7 +275,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
      */
     public void stateChanged(ChangeEvent e) {
         int pictureIndex = picture.getPicturePosition() + 1;
-        if (pictureIndex != getSelectedIndex()) {
+        if (pictureIndex != getMaxSelectionIndex()) {
             setSelectedIndex(pictureIndex);
         }
     }
@@ -285,7 +285,8 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
      */
     public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting() && !pictureCodesAreAdjusting) {
-            int selectedIndex = this.getSelectedIndex();
+            // Makes sense to use the max selection since then the whole selection is also rendered.
+            int selectedIndex = this.getMaxSelectionIndex();
             if (selectedIndex > -1) {
                 int selectedPicturePosition = (selectedIndex > 0? selectedIndex - 1 : 0);
                 
