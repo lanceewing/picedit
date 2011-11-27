@@ -572,6 +572,9 @@ public class Picture {
                             
                         case 0xF4:
                             addPictureCode(PictureCodeType.DRAW_VERTICAL_STEP_LINE);
+                            x = pictureCode = rawPictureCodes[index++];
+                            y = pictureCode = rawPictureCodes[index++];
+                            addPictureCode(x, y);
                             while (true) {
                                 if ((y = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
@@ -587,6 +590,9 @@ public class Picture {
                             
                         case 0xF5:
                             addPictureCode(PictureCodeType.DRAW_HORIZONTAL_STEP_LINE);
+                            x = pictureCode = rawPictureCodes[index++];
+                            y = pictureCode = rawPictureCodes[index++];
+                            addPictureCode(x, y);
                             while (true) {
                                 if ((x = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
