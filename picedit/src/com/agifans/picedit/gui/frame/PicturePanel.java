@@ -202,7 +202,7 @@ public class PicturePanel extends JPanel {
                 List<PictureCode> pictureCodes = picture.getPictureCodes();
                 for (int picturePosition = firstSelectedPosition; picturePosition <= lastSelectedPosition; picturePosition++) {
                     PictureCode pictureCode = pictureCodes.get(picturePosition);
-                    // It only makes sense to do something for data codes, any only if they're points.
+                    // It only makes sense to do something for data codes, and only if they're points.
                     if (pictureCode.isDataCode()) {
                         int x1, y1;
                         int code = pictureCode.getCode();
@@ -211,7 +211,7 @@ public class PicturePanel extends JPanel {
                                 x1 = ((code & 0xFF00) >> 7) * editStatus.getZoomFactor();
                                 y1 = (code & 0x00FF) * editStatus.getZoomFactor();
                                 offScreenGC.setColor(Color.RED);
-                                offScreenGC.drawRect(x1, y1, 4, 4);
+                                offScreenGC.drawRect(x1-2, y1-2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
                                 break;
                             case BRUSH_POINT_DATA:
                                 break;
