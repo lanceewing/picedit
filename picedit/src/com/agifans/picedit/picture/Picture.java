@@ -98,6 +98,16 @@ public class Picture {
     private boolean isLoading;
     
     /**
+     * The picture position where the current selection starts.
+     */
+    private int firstSelectedPosition;
+    
+    /**
+     * The picture position where the current selection ends.
+     */
+    private int lastSelectedPosition;
+    
+    /**
      * Constructor for Picture.
      * 
      * @param editStatus the EditStatus containing current editing status.
@@ -279,6 +289,37 @@ public class Picture {
         editStatus.setUnsavedChanges(true);
     }
 
+    /**
+     * Sets the selection interval for the Picture, which is the start and end of the 
+     * picture positions that are currently selected. Selection can occur either by using
+     * the selection tool or by using the left hand side "Commands" JList.
+     * 
+     * @param firstSelectedPosition The start of the interval.
+     * @param lastSelectedPosition The end of the interval.
+     */
+    public void setSelectionInterval(int firstSelectedPosition, int lastSelectedPosition) {
+        this.firstSelectedPosition = firstSelectedPosition;
+        this.lastSelectedPosition = lastSelectedPosition;
+    }
+    
+    /**
+     * Gets the first picture position in the selection interval.
+     * 
+     * @return The first picture position in the selection interval.
+     */
+    public int getFirstSelectedPosition() {
+        return firstSelectedPosition;
+    }
+    
+    /**
+     * Gets the last picture position in the selection interval.
+     * 
+     * @return The last picture position in the selection interval.
+     */
+    public int getLastSelectedPosition() {
+        return lastSelectedPosition;
+    }
+    
     /**
      * Processes the setting of a new visual colour.
      * 

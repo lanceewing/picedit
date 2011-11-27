@@ -305,6 +305,9 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
                     int bottomIndex = Math.min(selectedIndex + numOfVisibleItems, picture.getPictureCodes().size() + 1);
                     scrollRectToVisible(getCellBounds(topIndex, bottomIndex));
                 }
+                
+                // Keeps Picture in sync with currently selected items.
+                picture.setSelectionInterval(getMinSelectionIndex() - 1, getMaxSelectionIndex() - 1);
             }
         }
     }
@@ -369,6 +372,8 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             int index,
             boolean isSelected,
             boolean cellHasFocus) {
+            
+            // TODO: The index gives us an opportunity to get hold of the PictureCode to get extra info.
             
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
