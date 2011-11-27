@@ -190,6 +190,11 @@ public class PicturePanel extends JPanel {
         	// Clear temporary line if line is no longer being drawn.
         	clearTemporaryLine();
         }
+        
+        // Highlight the current selection if the zoom factor is big enough.
+        if (editStatus.getZoomFactor() > 1) {
+            // TODO: Get min and max selection index from Picture.
+        }
 
         // Now display the screen to the user.
         g.drawImage(offScreenImage, 0, 0, this);
