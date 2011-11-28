@@ -455,10 +455,10 @@ public class Picture {
     public void moveBackOnePictureAction() {
         // Move back through the codes until we find an Action code.
         PictureCode pictureCode = null;
+        picturePosition = firstSelectedPosition;
         do {
             pictureCode = decrementPicturePosition();
         } while ((pictureCode != null) && !pictureCode.isActionCode() && (picturePosition > 0));
-
         drawPicture();
     }
 
@@ -466,6 +466,7 @@ public class Picture {
      * Process movement backward one picture code, i.e. picture position minus 1.
      */
     public void moveBackOnePictureCode() {
+        picturePosition = firstSelectedPosition;
         decrementPicturePosition();
         drawPicture();
     }
@@ -492,6 +493,7 @@ public class Picture {
      */
     public void moveForwardOnePictureCode() {
         if (picturePosition < (pictureCodes.size() - 1)) {
+            picturePosition = firstSelectedPosition;
             incrementPicturePosition();
             drawPicture();
         }
