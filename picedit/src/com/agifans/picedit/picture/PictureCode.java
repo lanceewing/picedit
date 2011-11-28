@@ -44,10 +44,12 @@ public class PictureCode {
      * 
      * @param type The type of PictureCode.
      * @param code The raw code value.
+     * @param point Optional Point indicating absolute location that the picture code relates to.
      */
-    public PictureCode(PictureCodeType type, int code) {
+    public PictureCode(PictureCodeType type, int code, Point point) {
         this.type = type;
         this.code = code;
+        this.point = point;
     }
 
     /**

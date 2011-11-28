@@ -476,7 +476,7 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                             } else {
                                 disp |= dY;
                             }
-                            picture.addPictureCode(PictureCodeType.RELATIVE_POINT_DATA, disp);
+                            picture.addPictureCode(PictureCodeType.RELATIVE_POINT_DATA, disp, new Point(x, y));
                             picture.drawLine(previousX, previousY, x, y);
                             editStatus.setClickPoint(new Point(x, y));
                             break;
@@ -511,13 +511,13 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                                 editStatus.setStepType(StepType.XCORNER);
                                 picture.addPictureCode(PictureCodeType.DRAW_HORIZONTAL_STEP_LINE);
                                 picture.addPictureCode(previousX, previousY);
-                                picture.addPictureCode(PictureCodeType.X_POSITION_DATA, x);
+                                picture.addPictureCode(PictureCodeType.X_POSITION_DATA, x, new Point(x, y));
                             } else {
                                 x = previousX;
                                 editStatus.setStepType(StepType.YCORNER);
                                 picture.addPictureCode(PictureCodeType.DRAW_VERTICAL_STEP_LINE);
                                 picture.addPictureCode(previousX, previousY);
-                                picture.addPictureCode(PictureCodeType.Y_POSITION_DATA, y);
+                                picture.addPictureCode(PictureCodeType.Y_POSITION_DATA, y, new Point(x, y));
                             }
                             picture.drawLine(previousX, previousY, x, y);
                             editStatus.setClickPoint(new Point(x, y));
@@ -527,10 +527,10 @@ public class MouseHandler implements MouseMotionListener, MouseListener, MouseWh
                             if ((editStatus.isXCornerActive() && ((editStatus.getNumOfClicks() % 2) > 0)) || (editStatus.isYCornerActive() && ((editStatus.getNumOfClicks() % 2) == 0))) {
                                 // X and Y corners toggle different direction based on number of clicks.	
                                 x = previousX;
-                                picture.addPictureCode(PictureCodeType.Y_POSITION_DATA, y);
+                                picture.addPictureCode(PictureCodeType.Y_POSITION_DATA, y, new Point(x, y));
                             } else {
                                 y = previousY;
-                                picture.addPictureCode(PictureCodeType.X_POSITION_DATA, x);
+                                picture.addPictureCode(PictureCodeType.X_POSITION_DATA, x, new Point(x, y));
                             }
                             picture.drawLine(previousX, previousY, x, y);
                             editStatus.setClickPoint(new Point(x, y));

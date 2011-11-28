@@ -1,6 +1,7 @@
 package com.agifans.picedit.picture;
 
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBufferInt;
@@ -254,7 +255,7 @@ public class Picture {
      * @param type The type of PictureCode.
      */
     public void addPictureCode(PictureCodeType type) {
-        addPictureCode(type, type.getActionCode());
+        addPictureCode(type, type.getActionCode(), null);
     }
     
     /**
@@ -264,7 +265,7 @@ public class Picture {
      * @param y The y position of the point.
      */
     public void addPictureCode(int x, int y) {
-        addPictureCode(PictureCodeType.ABSOLUTE_POINT_DATA, ((x << 8) | y));
+        addPictureCode(PictureCodeType.ABSOLUTE_POINT_DATA, ((x << 8) | y), new Point(x, y));
     }
     
     /**
@@ -275,7 +276,7 @@ public class Picture {
      * @param y The y position of the point.
      */
     public void addPictureCode(PictureCodeType pointType, int x, int y) {
-        addPictureCode(pointType, ((x << 8) | y));
+        addPictureCode(pointType, ((x << 8) | y), new Point(x, y));
     }
     
     /**
@@ -285,8 +286,19 @@ public class Picture {
      * @param code The code to add to the picture code buffer.
      */
     public void addPictureCode(PictureCodeType type, int code) {
+        addPictureCode(type, code, null);
+    }
+    
+    /**
+     * Adds a code to the picture code buffer.
+     * 
+     * @param type The type of PictureCode.
+     * @param code The code to add to the picture code buffer.
+     * @param point Optional Point specifying absolute location that the picture code relates to.
+     */
+    public void addPictureCode(PictureCodeType type, int code, Point point) {
         pictureCache.clear(picturePosition);
-        pictureCodes.add(picturePosition, new PictureCode(type, code));
+        pictureCodes.add(picturePosition, new PictureCode(type, code, point));
         firePictureCodesAdded(picturePosition, picturePosition);
         picturePosition = picturePosition + 1;
         editStatus.setUnsavedChanges(true);
@@ -625,11 +637,11 @@ public class Picture {
                                 if ((y = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
                                 }
-                                addPictureCode(PictureCodeType.Y_POSITION_DATA, y);
+                                addPictureCode(PictureCodeType.Y_POSITION_DATA, y, new Point(x, y));
                                 if ((x = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
                                 }
-                                addPictureCode(PictureCodeType.X_POSITION_DATA, x);
+                                addPictureCode(PictureCodeType.X_POSITION_DATA, x, new Point(x, y));
                             }
                             index--;
                             break;
@@ -643,11 +655,11 @@ public class Picture {
                                 if ((x = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
                                 }
-                                addPictureCode(PictureCodeType.X_POSITION_DATA, x);
+                                addPictureCode(PictureCodeType.X_POSITION_DATA, x, new Point(x, y));
                                 if ((y = rawPictureCodes[index++]) >= 0xF0) {
                                     break;
                                 }
-                                addPictureCode(PictureCodeType.Y_POSITION_DATA, y);
+                                addPictureCode(PictureCodeType.Y_POSITION_DATA, y, new Point(x, y));
                             }
                             index--;
                             break;
@@ -672,7 +684,17 @@ public class Picture {
                             y = pictureCode = rawPictureCodes[index++];
                             addPictureCode(x, y);
                             while ((pictureCode = rawPictureCodes[index++]) < 0xF0) {
-                                addPictureCode(PictureCodeType.RELATIVE_POINT_DATA, pictureCode);
+                                int dx = ((pictureCode & 0xF0) >> 4) & 0x0F;
+                                int dy = (pictureCode & 0x0F);
+                                if ((dx & 0x08) > 0) {
+                                    dx = (-1) * (dx & 0x07);
+                                }
+                                if ((dy & 0x08) > 0) {
+                                    dy = (-1) * (dy & 0x07);
+                                }
+                                x = x + dx;
+                                y = y + dy;
+                                addPictureCode(PictureCodeType.RELATIVE_POINT_DATA, pictureCode, new Point(x, y));
                             }
                             index--;
                             break;
