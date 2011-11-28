@@ -1,5 +1,7 @@
 package com.agifans.picedit.picture;
 
+import java.awt.Point;
+
 /**
  * This class holds a single picture code, which is a single value within the 
  * picture code buffer. A picture code can be either a data code or a action 
@@ -20,6 +22,13 @@ public class PictureCode {
      */
     private int code;
 
+    /**
+     * The absolute location within the Picture that this code is related to. Only
+     * applicable to data codes that represent a point. For other types of picture
+     * code, the value will be null.
+     */
+    private Point point;
+    
     /**
      * Constructor for PictureCode.
      * 
@@ -57,6 +66,17 @@ public class PictureCode {
      */
     public PictureCodeType getType() {
         return type;
+    }
+    
+    /**
+     * Gets he absolute location within the Picture that this code is related to. Only
+     * applicable to data codes that represent a point. For other types of picture
+     * code, the value returned will be null.
+     * 
+     * @return The absolute location within the Picture that this code is related to.
+     */
+    public Point getPoint() {
+      return point;
     }
     
     /**
