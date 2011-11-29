@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBufferInt;
@@ -207,33 +208,49 @@ public class PicturePanel extends JPanel {
      * Highlights the currently selected picture codes by drawing boxes around the points.
      */
     private void highlightSelection() {
+        // TODO: This falls over if the selection is at the end of the picture and the selection is deleted.
         int firstSelectedPosition = picture.getFirstSelectedPosition();
         int lastSelectedPosition = picture.getLastSelectedPosition();
+        
+        // Set the highlight colour for the selection.
+        offScreenGC.setColor(Color.RED);
+        
         if ((firstSelectedPosition > -1) && (lastSelectedPosition > -1)) {
             List<PictureCode> pictureCodes = picture.getPictureCodes();
             for (int picturePosition = firstSelectedPosition; picturePosition <= lastSelectedPosition; picturePosition++) {
                 PictureCode pictureCode = pictureCodes.get(picturePosition);
                 // It only makes sense to do something for data codes, and only if they're points.
                 if (pictureCode.isDataCode()) {
-                    int x1, y1;
-                    int code = pictureCode.getCode();
-                    switch (pictureCode.getType()) {
-                        case ABSOLUTE_POINT_DATA:
-                            x1 = ((code & 0xFF00) >> 7) * editStatus.getZoomFactor();
-                            y1 = (code & 0x00FF) * editStatus.getZoomFactor();
-                            offScreenGC.setColor(Color.RED);
-                            offScreenGC.drawRect(x1-2, y1-2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                            break;
-                        case BRUSH_POINT_DATA:
-                            break;
-                        case FILL_POINT_DATA:
-                            break;
-                        case RELATIVE_POINT_DATA:
-                            break;
-                        case X_POSITION_DATA:
-                            break;
-                        case Y_POSITION_DATA:
-                            break;
+                    Point point = pictureCode.getPoint();
+
+                    if (point != null) {
+                        // Calculate the x and y position of the point, scaling for zoom factor.
+                        // TODO: Need to adjust this code for SCI0.
+                        int x = (point.x << 1) * editStatus.getZoomFactor();
+                        int y = (point.y) * editStatus.getZoomFactor();
+                      
+                        // Different tools might be highlighted in different ways, so this is 
+                        // deliberately written as a switch to allow for this.
+                        switch (pictureCode.getType()) {
+                            case ABSOLUTE_POINT_DATA:
+                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                break;
+                            case BRUSH_POINT_DATA:
+                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                break;
+                            case FILL_POINT_DATA:
+                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                break;
+                            case RELATIVE_POINT_DATA:
+                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                break;
+                            case X_POSITION_DATA:
+                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                break;
+                            case Y_POSITION_DATA:
+                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                break;
+                        }
                     }
                 }
             }
