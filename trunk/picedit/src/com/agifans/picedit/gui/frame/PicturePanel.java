@@ -212,9 +212,6 @@ public class PicturePanel extends JPanel {
         int firstSelectedPosition = picture.getFirstSelectedPosition();
         int lastSelectedPosition = picture.getLastSelectedPosition();
         
-        // Set the highlight colour for the selection.
-        offScreenGC.setColor(Color.RED);
-        
         if ((firstSelectedPosition > -1) && (lastSelectedPosition > -1)) {
             List<PictureCode> pictureCodes = picture.getPictureCodes();
             for (int picturePosition = firstSelectedPosition; picturePosition <= lastSelectedPosition; picturePosition++) {
@@ -233,22 +230,40 @@ public class PicturePanel extends JPanel {
                         // deliberately written as a switch to allow for this.
                         switch (pictureCode.getType()) {
                             case ABSOLUTE_POINT_DATA:
-                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(Color.RED);
+                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(EgaPalette.WHITE);
+                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case BRUSH_POINT_DATA:
-                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(Color.RED);
+                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(EgaPalette.WHITE);
+                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case FILL_POINT_DATA:
-                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(Color.RED);
+                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(EgaPalette.WHITE);
+                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case RELATIVE_POINT_DATA:
-                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(Color.RED);
+                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(EgaPalette.WHITE);
+                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case X_POSITION_DATA:
-                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(Color.RED);
+                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(EgaPalette.WHITE);
+                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case Y_POSITION_DATA:
-                                offScreenGC.drawRect(x, y, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(Color.RED);
+                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                offScreenGC.setColor(EgaPalette.WHITE);
+                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                         }
                     }
@@ -485,7 +500,7 @@ public class PicturePanel extends JPanel {
 
         // Make the end of the temporary line flash so that it is obvious where the mouse is.
         int brightness = (int) ((System.currentTimeMillis() >> 1) & 0xFF);
-        overlayScreen[flashIndex] = (new Color(brightness, brightness, brightness)).getRGB();;
+        overlayScreen[flashIndex] = (new Color(brightness, brightness, brightness)).getRGB();
         
         // Store the length of the stored pixel data in first slot.
         bgLineData[0] = bgIndex;
