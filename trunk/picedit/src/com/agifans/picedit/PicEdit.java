@@ -3,7 +3,6 @@ package com.agifans.picedit;
 import java.awt.*;
 import java.awt.event.HierarchyBoundsAdapter;
 import java.awt.event.HierarchyEvent;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
@@ -18,7 +17,6 @@ import javax.swing.*;
 
 import com.agifans.picedit.gui.PicEditDesktopManager;
 import com.agifans.picedit.gui.PictureCodeList;
-import com.agifans.picedit.gui.PictureList;
 import com.agifans.picedit.gui.StatusBarPanel;
 import com.agifans.picedit.gui.frame.PictureFrame;
 import com.agifans.picedit.gui.frame.PicturePanel;
@@ -190,6 +188,8 @@ public final class PicEdit extends JApplet {
     public void startRepaintTimer() {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
+        	int repaintCounter;
+        	
             public void run() {
                 // Check if selected PictureFrame needs to process mouse motion.
                 PictureFrame selectedPictureFrame = (PictureFrame)getDesktopPane().getSelectedFrame();
@@ -197,13 +197,20 @@ public final class PicEdit extends JApplet {
                     selectedPictureFrame.getMouseHandler().checkForMouseMotion();
                 }
                 
-                // Repaints the changing parts of the PICEDIT screen 25 times a second.
+                // The off screen parts of the picture panel rendering don't need to be refreshed as often.
+                if ((repaintCounter++ % 2) == 0) {
+                	// TODO: Use EditStatus changes to determine if paintOffscreenImage call is required (more often). 
+                	// TODO: Background/Dual Mode/Bands/Priority/Visual/Position changed, Ego Enabled.
+                	getPictureFrame().getPicturePanel().paintOffscreenImage();
+                }
+                
+                // Repaints the changing parts of the PICEDIT screen 20 times a second.
                 getPictureFrame().repaint();
                 toolPanel.repaint();
                 statusBarPanel.repaint();
             }
         };
-        timer.scheduleAtFixedRate(timerTask, 40, 40);
+        timer.scheduleAtFixedRate(timerTask, 50, 50);
     }
     
     /**
