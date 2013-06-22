@@ -276,7 +276,6 @@ public class PictureFrame extends JInternalFrame implements InternalFrameListene
         
         // Update the size of the picture according to new zoom factor.
         picturePanel.setPreferredSize(new Dimension(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor()));
-        picturePanel.resizeOffscreenImage();
         
         // Apply the new maximum size to the frame.
         Dimension maximumSize = maximumSizeMap.get(editStatus.getZoomFactor());

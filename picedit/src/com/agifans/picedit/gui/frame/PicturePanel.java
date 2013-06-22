@@ -20,7 +20,6 @@ import javax.swing.JPanel;
 import com.agifans.picedit.picture.EditStatus;
 import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.picture.PictureCode;
-import com.agifans.picedit.picture.PictureCodeType;
 import com.agifans.picedit.types.PictureType;
 import com.agifans.picedit.utils.EgaPalette;
 import com.agifans.picedit.view.EgoTestHandler;
@@ -73,14 +72,9 @@ public class PicturePanel extends JPanel {
     private EditStatus editStatus;
 
     /**
-     * The offscreen image used to prepare the PICEDIT screen before displaying it.
+     * Holds two off screen images that are used interchangeably for offscreen rendering.
      */
-    private Image offScreenImage;
-
-    /**
-     * The Graphics instance associated with the offscreen image.
-     */
-    private Graphics2D offScreenGC;
+    private OffScreenGraphics offScreenGraphics;
     
     /**
      * The handler for managing the Ego Test mode.
@@ -114,12 +108,75 @@ public class PicturePanel extends JPanel {
     }
     
     /**
-     * Invoked by resizeScreen when the offscreen image needs to be recreated at
-     * a new screen size.
+     * Invoked when a new background image is loaded.
      */
-    public void resizeOffscreenImage() {
-        // If we remove it then paint will recreate it at the new size.
-        this.offScreenImage = null;
+    public void clearOffscreenGraphics() {
+        offScreenGraphics.clear();
+    }
+    
+    /**
+     * Paints the picture panel on the offscreen Graphics. This is kept separate from the 
+     * paint() method for performance reasons. The screen refresh timer invokes this method
+     * at regular intervals.
+     */
+    public void paintOffscreenImage() {
+    	if (offScreenGraphics != null) {
+	    	Graphics2D offScreenGC = offScreenGraphics.getActiveGraphics();
+	    	
+	        // Draw the background image (if there is one) to the offscreen image.
+	        if ((this.backgroundImage != null) && (editStatus.isBackgroundEnabled())) {
+	            offScreenGC.drawImage(this.backgroundImage, 0, 0, 320, editStatus.getPictureType().getHeight(), this);
+	        } else {
+	            // Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
+	            if (editStatus.isDualModeEnabled()) {
+	                offScreenGC.setColor(EgaPalette.RED);
+	            } else if (!editStatus.isPriorityShowing()) {
+	                offScreenGC.setColor(EgaPalette.WHITE);
+	            } else if (editStatus.isBandsOn()) {
+	                offScreenGC.setColor(EgaPalette.DARKGREY);
+	            } else {
+	                offScreenGC.setColor(EgaPalette.RED);
+	            }
+	            offScreenGC.fillRect(0, 0, 320, editStatus.getPictureType().getHeight());
+	        }
+	
+	        if (editStatus.isDualModeEnabled()) {
+	            // Dual mode is when the priority and visual screens mix.
+	            offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320, editStatus.getPictureType().getHeight(), this);
+	
+	            // To create the effect demonstrated by Joakim in APE, we need a solid white.
+	            BufferedImage tmpVisualImage = new BufferedImage(320, editStatus.getPictureType().getHeight(), BufferedImage.TYPE_INT_ARGB);
+	            Graphics tmpVisualGraphics = tmpVisualImage.getGraphics();
+	            tmpVisualGraphics.setColor(EgaPalette.WHITE);
+	            tmpVisualGraphics.fillRect(0, 0, 320, editStatus.getPictureType().getHeight());
+	            tmpVisualGraphics.drawImage(picture.getVisualImage(), 0, 0, 320, editStatus.getPictureType().getHeight(), this);
+	
+	            // Build a RescapeOp to perform the 50% transparency.
+	            float[] scales = { 1f, 1f, 1f, 0.5f };
+	            float[] offsets = new float[4];
+	            RescaleOp rop = new RescaleOp(scales, offsets, null);
+	
+	            // Draw the visual screen on top of the priority screen with 50% transparency.
+	            offScreenGC.drawImage(tmpVisualImage, rop, 0, 0);
+	
+	        } else {
+	            if (editStatus.isPriorityShowing()) {
+	                offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320, editStatus.getPictureType().getHeight(), this);
+	            } else {
+	                offScreenGC.drawImage(picture.getVisualImage(), 0, 0, 320, editStatus.getPictureType().getHeight(), this);
+	            }
+	        }
+	
+	        if (editStatus.isBandsOn()) {
+	            offScreenGC.drawImage(this.bandsImage, 0, 0, 320, editStatus.getPictureType().getHeight(), this);
+	        }
+	        
+	        if (editStatus.isEgoTestEnabled()) {
+	            egoTestHandler.drawEgo(offScreenGC, 1);
+	        }
+	        
+	        offScreenGraphics.toggle();
+    	}
     }
     
     /**
@@ -129,67 +186,16 @@ public class PicturePanel extends JPanel {
      * @param g the Graphics object to paint on.
      */
     public void paint(Graphics g) {
-        // Create the offscreen image the first time.
-        if (offScreenImage == null) {
-            offScreenImage = createImage(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
-            offScreenGC = (Graphics2D) offScreenImage.getGraphics();
-        }
-
-        // Draw the background image (if there is one) to the offscreen image.
-        if ((this.backgroundImage != null) && (editStatus.isBackgroundEnabled())) {
-            offScreenGC.drawImage(this.backgroundImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-        } else {
-            // Otherwise use the default background colour for the corresponding AGI screen (visual/priority).
-            if (editStatus.isDualModeEnabled()) {
-                offScreenGC.setColor(EgaPalette.RED);
-            } else if (!editStatus.isPriorityShowing()) {
-                offScreenGC.setColor(EgaPalette.WHITE);
-            } else if (editStatus.isBandsOn()) {
-                offScreenGC.setColor(EgaPalette.DARKGREY);
-            } else {
-                offScreenGC.setColor(EgaPalette.RED);
-            }
-            offScreenGC.fillRect(0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
-        }
-
-        if (editStatus.isDualModeEnabled()) {
-            // Dual mode is when the priority and visual screens mix.
-            offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-
-            // To create the effect demonstrated by Joakim in APE, we need a solid white.
-            BufferedImage tmpVisualImage = new BufferedImage(320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), BufferedImage.TYPE_INT_ARGB);
-            Graphics tmpVisualGraphics = tmpVisualImage.getGraphics();
-            tmpVisualGraphics.setColor(EgaPalette.WHITE);
-            tmpVisualGraphics.fillRect(0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor());
-            tmpVisualGraphics.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-
-            // Build a RescapeOp to perform the 50% transparency.
-            float[] scales = { 1f, 1f, 1f, 0.5f };
-            float[] offsets = new float[4];
-            RescaleOp rop = new RescaleOp(scales, offsets, null);
-
-            // Draw the visual screen on top of the priority screen with 50% transparency.
-            offScreenGC.drawImage(tmpVisualImage, rop, 0, 0);
-
-        } else {
-            if (editStatus.isPriorityShowing()) {
-                offScreenGC.drawImage(picture.getPriorityImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-            } else {
-                offScreenGC.drawImage(picture.getVisualImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-            }
-        }
-
-        if (editStatus.isBandsOn()) {
-            offScreenGC.drawImage(this.bandsImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
-        }
-        
-        if (editStatus.isEgoTestEnabled()) {
-            egoTestHandler.drawEgo(offScreenGC, editStatus.getZoomFactor());
-        }
+    	if (offScreenGraphics == null) {
+    		offScreenGraphics = new OffScreenGraphics();
+    	}
+    	
+        // Display the off screen image to the user, stretched by the zoom factor.
+        g.drawImage(offScreenGraphics.getImage(), 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
         
         // Draw the overlay screen on top of everything else. This is mainly for the temporary lines.
         if (editStatus.isLineBeingDrawn()) {
-        	offScreenGC.drawImage(this.overlayScreenImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
+        	g.drawImage(this.overlayScreenImage, 0, 0, 320 * editStatus.getZoomFactor(), editStatus.getPictureType().getHeight() * editStatus.getZoomFactor(), this);
         } else if (bgLineData[0] != 0) {
         	// Clear temporary line if line is no longer being drawn.
         	clearTemporaryLine();
@@ -197,17 +203,16 @@ public class PicturePanel extends JPanel {
         
         // Highlight the current selection if the zoom factor is big enough.
         if (editStatus.getZoomFactor() > 1) {
-            highlightSelection();
+            highlightSelection(g);
         }
-
-        // Now display the screen to the user.
-        g.drawImage(offScreenImage, 0, 0, this);
     }
     
     /**
      * Highlights the currently selected picture codes by drawing boxes around the points.
+     * 
+     * @param graphics The Graphics2D to draw the highlight boxes on.
      */
-    private void highlightSelection() {
+    private void highlightSelection(Graphics graphics) {
         // TODO: This falls over if the selection is at the end of the picture and the selection is deleted.
         int firstSelectedPosition = picture.getFirstSelectedPosition();
         int lastSelectedPosition = picture.getLastSelectedPosition();
@@ -230,40 +235,40 @@ public class PicturePanel extends JPanel {
                         // deliberately written as a switch to allow for this.
                         switch (pictureCode.getType()) {
                             case ABSOLUTE_POINT_DATA:
-                                offScreenGC.setColor(Color.RED);
-                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                offScreenGC.setColor(EgaPalette.WHITE);
-                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+                                graphics.setColor(Color.RED);
+                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                graphics.setColor(EgaPalette.WHITE);
+                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case BRUSH_POINT_DATA:
-                                offScreenGC.setColor(Color.RED);
-                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                offScreenGC.setColor(EgaPalette.WHITE);
-                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+                                graphics.setColor(Color.RED);
+                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                graphics.setColor(EgaPalette.WHITE);
+                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case FILL_POINT_DATA:
-                                offScreenGC.setColor(Color.RED);
-                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                offScreenGC.setColor(EgaPalette.WHITE);
-                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+                                graphics.setColor(Color.RED);
+                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                graphics.setColor(EgaPalette.WHITE);
+                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case RELATIVE_POINT_DATA:
-                                offScreenGC.setColor(Color.RED);
-                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                offScreenGC.setColor(EgaPalette.WHITE);
-                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+                                graphics.setColor(Color.RED);
+                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                graphics.setColor(EgaPalette.WHITE);
+                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case X_POSITION_DATA:
-                                offScreenGC.setColor(Color.RED);
-                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                offScreenGC.setColor(EgaPalette.WHITE);
-                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+                                graphics.setColor(Color.RED);
+                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                graphics.setColor(EgaPalette.WHITE);
+                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                             case Y_POSITION_DATA:
-                                offScreenGC.setColor(Color.RED);
-                                offScreenGC.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                offScreenGC.setColor(EgaPalette.WHITE);
-                                offScreenGC.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+                                graphics.setColor(Color.RED);
+                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+                                graphics.setColor(EgaPalette.WHITE);
+                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
                                 break;
                         }
                     }
@@ -504,5 +509,53 @@ public class PicturePanel extends JPanel {
         
         // Store the length of the stored pixel data in first slot.
         bgLineData[0] = bgIndex;
+    }
+    
+    /**
+     * Holds two off screen images that are used interchangeably for offscreen rendering of 
+     * the PicturePanel content.
+     */
+    class OffScreenGraphics {
+    	
+        /**
+         * The offscreen images used to prepare the PICEDIT screen before displaying it.
+         */
+    	private Image[] offScreenImages;
+
+        /**
+         * The Graphics instances associated with each offscreen image.
+         */
+        private Graphics2D[] offScreenGCs;
+
+        /**
+         * The currently active offscreen Image/Graphics index.
+         */
+        private int activeGraphics;
+        
+        OffScreenGraphics() {
+        	clear();
+        }
+        
+        void clear() {
+            this.offScreenImages = new Image[2];
+            this.offScreenGCs = new Graphics2D[2];
+            this.offScreenImages[0] = PicturePanel.this.createImage(320, editStatus.getPictureType().getHeight());
+            this.offScreenImages[1] = PicturePanel.this.createImage(320, editStatus.getPictureType().getHeight());
+            this.offScreenGCs[0] = (Graphics2D) offScreenImages[0].getGraphics();
+            this.offScreenGCs[1] = (Graphics2D) offScreenImages[1].getGraphics();
+            this.activeGraphics = 0;
+        }
+        
+        Image getImage() {
+        	return offScreenImages[(activeGraphics + 1) % 2];
+        }
+        
+        Graphics2D getActiveGraphics() {
+        	return offScreenGCs[activeGraphics];
+        }
+        
+        void toggle() {
+        	activeGraphics = ((activeGraphics + 1) % 2);
+        }
     }
 }

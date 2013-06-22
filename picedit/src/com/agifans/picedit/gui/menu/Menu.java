@@ -798,7 +798,7 @@ public class Menu implements ActionListener, MenuListener {
         
         // This will cause the offscreen image to be recreated, which will remove
         // any rendering artifacts of the previous background.
-        application.getPicturePanel().resizeOffscreenImage();
+        application.getPicturePanel().clearOffscreenGraphics();
     }
 
     /**
