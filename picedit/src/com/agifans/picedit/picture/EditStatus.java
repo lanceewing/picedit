@@ -94,6 +94,11 @@ public class EditStatus {
     private boolean unsavedChanges;
     
     /**
+     * Whether the EditStatus has changes that have not been rendered yet.
+     */
+    private boolean unrenderedChanges;
+    
+    /**
      * Constructor for EditStatus.
      */
     public EditStatus() {
@@ -183,6 +188,7 @@ public class EditStatus {
      */
     public void toggleScreen() {
         priorityShowing = !priorityShowing;
+        unrenderedChanges = true;
     }
 
     /**
@@ -468,6 +474,7 @@ public class EditStatus {
 
     public void setBackgroundEnabled(boolean backgroundEnabled) {
         this.backgroundEnabled = backgroundEnabled;
+        this.unrenderedChanges = true;
     }
 
     public boolean isMenuActive() {
@@ -502,6 +509,7 @@ public class EditStatus {
 
     public void setBandsOn(boolean bandsOn) {
         this.bandsOn = bandsOn;
+        this.unrenderedChanges = true;
     }
 
     public boolean isDualModeEnabled() {
@@ -510,6 +518,7 @@ public class EditStatus {
 
     public void setDualModeEnabled(boolean dualModeEnabled) {
         this.dualModeEnabled = dualModeEnabled;
+        this.unrenderedChanges = true;
     }
     
     public boolean isEgoTestEnabled() {
@@ -553,6 +562,22 @@ public class EditStatus {
      */
     public boolean isLineBeingDrawn() {
         return (isLineActive() || isPenActive() || isStepActive()) && (numOfClicks > 0);
+    }
+    
+    /**
+     * Clears flag that says whether this EditStatus has changes that haven't been rendered. 
+     */
+    public void clearUnrenderedChanges() {
+    	this.unrenderedChanges = false;
+    }
+    
+    /**
+     * Returns true if this EditStatus has changes that haven't been rendered yet.
+     * 
+     * @return true if this EditStatus has changes that haven't been rendered yet; otherwise false.
+     */
+    public boolean hasUnrenderedChanges() {
+    	return unrenderedChanges;
     }
     
     /**
