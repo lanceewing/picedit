@@ -189,6 +189,19 @@ public final class PicEdit extends JApplet {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
         	int repaintCounter;
+        	int lastPosition;
+        	
+        	boolean shouldPaintOffscreenImage() {
+        		boolean shouldPaintOffscreenImage = false;
+        		EditStatus editStatus = getEditStatus();
+        		Picture picture = getPicture();
+        		if (((repaintCounter++ % 20) == 0) || (editStatus.hasUnrenderedChanges()) || editStatus.isEgoTestEnabled() || (lastPosition != picture.getPicturePosition())) {
+        			shouldPaintOffscreenImage = true;
+        		}
+        		editStatus.clearUnrenderedChanges();
+        		lastPosition = picture.getPicturePosition();
+        		return shouldPaintOffscreenImage;
+        	}
         	
             public void run() {
                 // Check if selected PictureFrame needs to process mouse motion.
@@ -198,9 +211,7 @@ public final class PicEdit extends JApplet {
                 }
                 
                 // The off screen parts of the picture panel rendering don't need to be refreshed as often.
-                if ((repaintCounter++ % 2) == 0) {
-                	// TODO: Use EditStatus changes to determine if paintOffscreenImage call is required (more often). 
-                	// TODO: Background/Dual Mode/Bands/Priority/Visual/Position changed, Ego Enabled.
+                if (shouldPaintOffscreenImage()) {
                 	getPictureFrame().getPicturePanel().paintOffscreenImage();
                 }
                 
