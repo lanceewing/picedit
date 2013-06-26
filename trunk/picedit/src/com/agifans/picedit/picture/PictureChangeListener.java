@@ -23,4 +23,11 @@ public interface PictureChangeListener {
      * @param toIndex The index at which the codes finished being removed.
      */
     void pictureCodesRemoved(int fromIndex, int toIndex);
+    
+    /**
+     * Invoked when there was a multi position selection interval in play
+     * and a picture navigation action is forcing this to be collapsed to 
+     * a single position, which will always be the end of the interval.
+     */
+    void selectionIntervalCollapsed();
 }
