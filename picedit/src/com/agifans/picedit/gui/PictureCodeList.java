@@ -244,6 +244,12 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         public void pictureCodesRemoved(int fromIndex, int toIndex) {
             fireIntervalRemoved(this, fromIndex, toIndex);
         }
+
+        /**
+         * The List Model is not interested in this event.
+         */
+        public void selectionIntervalCollapsed() {
+        }
     }
 
     /**
@@ -272,6 +278,13 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
     }
 
     /**
+     * Invoked when the picture has forced a collapse of the selection interval.
+     */
+    public void selectionIntervalCollapsed() {
+        setSelectedIndex(getMaxSelectionIndex());
+    }
+
+    /**
      * Invoked when the position slider value changes. Keeps the picture code list selected index in sync.
      */
     public void stateChanged(ChangeEvent e) {
@@ -288,28 +301,31 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         if (!e.getValueIsAdjusting() && !pictureCodesAreAdjusting) {
             // Makes sense to use the max selection since then the whole selection is also rendered.
             int selectedIndex = this.getMaxSelectionIndex();
-            if (selectedIndex > -1) {
-                int selectedPicturePosition = (selectedIndex > 0? selectedIndex - 1 : 0);
+            if (selectedIndex > 0) {
+                int selectedPicturePosition = selectedIndex - 1;
                 
                 // If an action code is selected in isolation then auto-select the associated data codes.
                 List<PictureCode> pictureCodes = picture.getPictureCodes();
                 PictureCode pictureCode = pictureCodes.get(selectedPicturePosition);
                 if (pictureCode.isActionCode() && (getMinSelectionIndex() == getMaxSelectionIndex())) {
-                    int nextActionPosition = selectedPicturePosition + 1;
+                    // Find the end of the data codes.
+                    int position = selectedPicturePosition + 1;
                     do {
-                        pictureCode = pictureCodes.get(nextActionPosition++);
-                    } while ((pictureCode != null) && !pictureCode.isActionCode() && !pictureCode.isEndCode());
-                    setSelectionInterval(selectedIndex, nextActionPosition - 1);
-                    return;
+                        pictureCode = pictureCodes.get(position++);
+                    } while ((pictureCode != null) && pictureCode.isDataCode());
+                    
+                    // Only if there is at least one data code do we auto-select them.
+                    int dataCodeCount = ((position - selectedIndex) - 1); 
+                    if (dataCodeCount > 0) {
+                        setSelectionInterval(selectedIndex, position - 1);
+                        return;
+                    }
                 }
                 
                 // This check is so that we don't redraw picture if picture is already at the position.
                 if (selectedPicturePosition != picture.getPicturePosition()) {
                     picture.setPicturePosition(selectedPicturePosition);
                     picture.drawPicture();
-                } else if (selectedIndex == 0) {
-                    // This takes care of moving the selection off the Start item.
-                    setSelectedIndex(selectedPicturePosition + 1);
                 }
                 
                 // Auto-scroll the JList to show the selected picture code if it isn't visible.
@@ -321,10 +337,16 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
                     scrollRectToVisible(getCellBounds(topIndex, bottomIndex));
                 }
                 
-                // Keeps Picture in sync with currently selected items.
-                picture.setSelectionInterval(getMinSelectionIndex() - 1, getMaxSelectionIndex() - 1);
+            } else {
+                // This takes care of moving the selection off the Start item. We don't want that
+                // to be selectable.
+                setSelectedIndex(1);
+                return;
             }
         }
+        
+        // Keeps Picture in sync with currently selected items.
+        picture.setSelectionInterval(getMinSelectionIndex() - 1, getMaxSelectionIndex() - 1);
     }
     
     /** 

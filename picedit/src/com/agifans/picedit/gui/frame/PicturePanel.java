@@ -230,47 +230,51 @@ public class PicturePanel extends JPanel {
                         // TODO: Need to adjust this code for SCI0.
                         int x = (point.x << 1) * editStatus.getZoomFactor();
                         int y = (point.y) * editStatus.getZoomFactor();
+                        
+                        graphics.setColor(Color.RED);
+                        graphics.drawLine(x - 2, y - 2, (x - 2) + (editStatus.getZoomFactor() << 1) + 3, (y - 2) + editStatus.getZoomFactor() + 3);
+                        graphics.drawLine(x - 2, (y - 2) + editStatus.getZoomFactor() + 3, (x - 2) + (editStatus.getZoomFactor() << 1) + 3, y - 2);
                       
-                        // Different tools might be highlighted in different ways, so this is 
-                        // deliberately written as a switch to allow for this.
-                        switch (pictureCode.getType()) {
-                            case ABSOLUTE_POINT_DATA:
-                                graphics.setColor(Color.RED);
-                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                graphics.setColor(EgaPalette.WHITE);
-                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
-                                break;
-                            case BRUSH_POINT_DATA:
-                                graphics.setColor(Color.RED);
-                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                graphics.setColor(EgaPalette.WHITE);
-                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
-                                break;
-                            case FILL_POINT_DATA:
-                                graphics.setColor(Color.RED);
-                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                graphics.setColor(EgaPalette.WHITE);
-                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
-                                break;
-                            case RELATIVE_POINT_DATA:
-                                graphics.setColor(Color.RED);
-                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                graphics.setColor(EgaPalette.WHITE);
-                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
-                                break;
-                            case X_POSITION_DATA:
-                                graphics.setColor(Color.RED);
-                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                graphics.setColor(EgaPalette.WHITE);
-                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
-                                break;
-                            case Y_POSITION_DATA:
-                                graphics.setColor(Color.RED);
-                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
-                                graphics.setColor(EgaPalette.WHITE);
-                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
-                                break;
-                        }
+//                        // Different tools might be highlighted in different ways, so this is 
+//                        // deliberately written as a switch to allow for this.
+//                        switch (pictureCode.getType()) {
+//                            case ABSOLUTE_POINT_DATA:
+//                                graphics.setColor(Color.RED);
+//                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+//                                graphics.setColor(EgaPalette.WHITE);
+//                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+//                                break;
+//                            case BRUSH_POINT_DATA:
+//                                graphics.setColor(Color.RED);
+//                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+//                                graphics.setColor(EgaPalette.WHITE);
+//                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+//                                break;
+//                            case FILL_POINT_DATA:
+//                                graphics.setColor(Color.RED);
+//                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+//                                graphics.setColor(EgaPalette.WHITE);
+//                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+//                                break;
+//                            case RELATIVE_POINT_DATA:
+//                                graphics.setColor(Color.RED);
+//                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+//                                graphics.setColor(EgaPalette.WHITE);
+//                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+//                                break;
+//                            case X_POSITION_DATA:
+//                                graphics.setColor(Color.RED);
+//                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+//                                graphics.setColor(EgaPalette.WHITE);
+//                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+//                                break;
+//                            case Y_POSITION_DATA:
+//                                graphics.setColor(Color.RED);
+//                                graphics.drawRect(x - 2, y - 2, (editStatus.getZoomFactor() << 1) + 3, editStatus.getZoomFactor() + 3);
+//                                graphics.setColor(EgaPalette.WHITE);
+//                                graphics.drawRect(x - 1, y - 1, (editStatus.getZoomFactor() << 1) + 1, editStatus.getZoomFactor() + 1);
+//                                break;
+//                        }
                     }
                 }
             }

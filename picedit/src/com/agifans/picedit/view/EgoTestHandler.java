@@ -78,7 +78,7 @@ public class EgoTestHandler {
         
         // Load the VIEW resource for Ego.
         try {
-            this.egoView = new View(ClassLoader.getSystemResourceAsStream("com/agifans/picedit/view/view.000"));
+            this.egoView = new View(ClassLoader.getSystemResourceAsStream("com/agifans/picedit/view/view.001"));
         } catch (Exception e) {
             //Should never happen since we know that this VIEW is present in the JAR.
         }

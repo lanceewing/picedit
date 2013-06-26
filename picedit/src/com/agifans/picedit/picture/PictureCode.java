@@ -106,7 +106,7 @@ public class PictureCode {
      * @return true if this is a data code; otherwise false.
      */
     public boolean isDataCode() {
-        return !isActionCode();
+        return !isActionCode() && !isEndCode();
     }
     
     /**

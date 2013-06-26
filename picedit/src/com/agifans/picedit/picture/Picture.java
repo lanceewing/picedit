@@ -173,6 +173,15 @@ public class Picture {
     }
     
     /**
+     * Fires a selection interval collapsed event to all PictureChangeListeners.
+     */
+    public void fireSelectionIntervalCollapsed() {
+        for (PictureChangeListener listener : pictureChangeListeners) {
+            listener.selectionIntervalCollapsed();
+        }
+    }
+    
+    /**
      * Creates a BufferedImage of the given size using the given data array to hold
      * the pixel data.
      * 
@@ -250,6 +259,15 @@ public class Picture {
     }
     
     /**
+     * Gets the size of the picture (number of picture codes, excluding the end code 0xFF).
+     * 
+     * @return The size of the picture (number of picture codes, excluding the end code 0xFF).
+     */
+    public int getSize() {
+    	return (getPictureCodes().size() - 1);
+    }
+    
+    /**
      * Adds a code to the picture code buffer.
      * 
      * @param type The type of PictureCode.
@@ -315,6 +333,16 @@ public class Picture {
     public void setSelectionInterval(int firstSelectedPosition, int lastSelectedPosition) {
         this.firstSelectedPosition = firstSelectedPosition;
         this.lastSelectedPosition = lastSelectedPosition;
+    }
+    
+    /**
+     * Collapses the selection interval by setting the start and end to the current
+     * position, which would normally be what the end of the selection would have been
+     * set to.
+     */
+    public void collapseSelectionInterval() {
+        this.firstSelectedPosition = this.lastSelectedPosition = this.picturePosition;
+        fireSelectionIntervalCollapsed();
     }
     
     /**
@@ -505,9 +533,17 @@ public class Picture {
      */
     public void moveForwardOnePictureCode() {
         if (picturePosition < (pictureCodes.size() - 1)) {
-            picturePosition = firstSelectedPosition;
-            incrementPicturePosition();
-            drawPicture();
+            if ((lastSelectedPosition - firstSelectedPosition) != 1) {
+                picturePosition = firstSelectedPosition;
+                incrementPicturePosition();
+                drawPicture();
+            } else {
+                // If there is a selection interval in place and it is only two
+                // picture codes long, then we're already where we need to be  as 
+                // far as picture position is concerned, but we need the selection interval
+                // be collapsed to a single position, i.e. the end of the interval.
+                collapseSelectionInterval();
+            }
         }
     }
     

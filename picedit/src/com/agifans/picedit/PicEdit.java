@@ -188,21 +188,27 @@ public final class PicEdit extends JApplet {
     public void startRepaintTimer() {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
-        	int repaintCounter;
-        	int lastPosition;
-        	
-        	boolean shouldPaintOffscreenImage() {
-        		boolean shouldPaintOffscreenImage = false;
-        		EditStatus editStatus = getEditStatus();
-        		Picture picture = getPicture();
-        		if (((repaintCounter++ % 20) == 0) || (editStatus.hasUnrenderedChanges()) || editStatus.isEgoTestEnabled() || (lastPosition != picture.getPicturePosition())) {
-        			shouldPaintOffscreenImage = true;
-        		}
-        		editStatus.clearUnrenderedChanges();
-        		lastPosition = picture.getPicturePosition();
-        		return shouldPaintOffscreenImage;
-        	}
-        	
+            int repaintCounter;
+            int lastPicturePosition;
+            int lastPictureSize;
+
+            boolean shouldPaintOffscreenImage() {
+                boolean shouldPaintOffscreenImage = false;
+                EditStatus editStatus = getEditStatus();
+                Picture picture = getPicture();
+                
+                // We return true at least every second, but there are other updates that trigger a render immediately.
+                if (((repaintCounter++ % 20) == 0) || (editStatus.hasUnrenderedChanges()) || editStatus.isEgoTestEnabled() || 
+                    ((lastPicturePosition != picture.getPicturePosition()) || (lastPictureSize != picture.getSize()))) {
+                    shouldPaintOffscreenImage = true;
+                }
+                
+                editStatus.clearUnrenderedChanges();
+                lastPicturePosition = picture.getPicturePosition();
+                lastPictureSize = picture.getSize();
+                return shouldPaintOffscreenImage;
+            }
+
             public void run() {
                 // Check if selected PictureFrame needs to process mouse motion.
                 PictureFrame selectedPictureFrame = (PictureFrame)getDesktopPane().getSelectedFrame();
