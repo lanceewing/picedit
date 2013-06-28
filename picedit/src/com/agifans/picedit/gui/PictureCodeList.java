@@ -299,8 +299,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
      */
     public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting() && !pictureCodesAreAdjusting) {
-            // Makes sense to use the max selection since then the whole selection is also rendered.
-            int selectedIndex = this.getMaxSelectionIndex();
+            int selectedIndex = this.getMinSelectionIndex();
             if (selectedIndex > 0) {
                 int selectedPicturePosition = selectedIndex - 1;
                 
@@ -424,6 +423,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             if (text.startsWith("    ")) {
                 if (isSelected) {
                     setForeground(Color.WHITE);
+                    setBackground(Color.LIGHT_GRAY);
                 } else {
                     setForeground(Color.GRAY);
                 }
@@ -474,8 +474,8 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
                 // Convert the mouse event in to the corresponding picture position.
                 int itemIndex = locationToIndex(e.getPoint());
                 
-                // Only show the popup menu if the item is selected.
-                if ((itemIndex >= getMinSelectionIndex()) && (itemIndex <= getMaxSelectionIndex())) {
+                // Only show the popup menu if the item is selected and it isn't the end code.
+                if ((itemIndex >= getMinSelectionIndex()) && (itemIndex <= getMaxSelectionIndex()) && !picture.getCurrentPictureCode().isEndCode()) {
                     popupMenu.show(PictureCodeList.this, e.getX(), e.getY());
                 }
             }
@@ -504,8 +504,18 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
             PopupMenuAction action = PopupMenuAction.valueOf(e.getActionCommand().toUpperCase());
             switch (action) {
                 case DELETE:
-                    // Remember, picture position is always one less than the JList index.
-                    picture.deletePictureCodes(getMinSelectionIndex() - 1, getMaxSelectionIndex() - 1);
+                    // Store some details about what is being deleted so we can decide what to do after it has been deleted.
+                    int minSelectionIndex = getMinSelectionIndex();
+                    PictureCode codeToDelete = picture.getCurrentPictureCode();
+
+                    // Allow any code other than the end code to be deleted. There must always be an end code.
+                    if (!codeToDelete.isEndCode()) {
+                        // Remember, picture position is always one less than the JList index.
+                        picture.deletePictureCodes(getMinSelectionIndex() - 1, getMaxSelectionIndex() - 1);
+                    }
+                    
+                    // Reselect the current picture position after delete since JList will have lowered index by 1. 
+                    setSelectedIndex(minSelectionIndex);
                     break;
             }
         }
