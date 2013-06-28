@@ -410,6 +410,23 @@ public class Picture {
         return pictureCodes;
     }
     
+    /**
+     * Gets the PictureCode at the current picture position.
+     * 
+     * @return The PictureCode at the current picture position.
+     */
+    public PictureCode getCurrentPictureCode() {
+        return pictureCodes.get(picturePosition);
+    }
+    
+    
+    /**
+     * Works backwards if necessary to work out what the current picture action or tool
+     * is, i.e. if the current position is on a data code rather than an action code then
+     * it will navigation backwards to find the association action code.
+     * 
+     * @return The current action code that the current picture position is within.
+     */
     public PictureCode getCurrentPictureAction() {
       if (pictureCodes.size() == 1) {
           return null;
@@ -478,8 +495,10 @@ public class Picture {
     public void deletePictureCodes(int fromPosition, int toPosition) {
         int numOfCodesToRemove = (toPosition - fromPosition) + 1;
         for (int count = 0; count < numOfCodesToRemove; count++) {
-            pictureCodes.remove(fromPosition);
-            firePictureCodesRemoved(fromPosition, fromPosition);
+            if (!getCurrentPictureCode().isEndCode()) {
+                pictureCodes.remove(fromPosition);
+                firePictureCodesRemoved(fromPosition, fromPosition);
+            }
         }
         editStatus.setUnsavedChanges(true);
         pictureCache.clear(fromPosition);
