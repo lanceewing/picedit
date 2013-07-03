@@ -49,11 +49,50 @@ public class EgaPalette {
     public final static int white = WHITE.getRGB();
     public final static int transparent = TRANSPARENT.getRGB();
 
+    public final static Color TRANSPARENT_BLACK = new Color(0x80000000, true);
+    public final static Color TRANSPARENT_BLUE = new Color(0x800000AA, true);
+    public final static Color TRANSPARENT_GREEN = new Color(0x8000AA00, true);
+    public final static Color TRANSPARENT_CYAN = new Color(0x8000AAAA, true);
+    public final static Color TRANSPARENT_RED = new Color(0x80AA0000, true);
+    public final static Color TRANSPARENT_MAGENTA = new Color(0x80AA00AA, true);
+    public final static Color TRANSPARENT_BROWN = new Color(0x80AA5500, true);
+    public final static Color TRANSPARENT_GREY = new Color(0x80AAAAAA, true);
+    public final static Color TRANSPARENT_DARKGREY = new Color(0x80555555, true);
+    public final static Color TRANSPARENT_LIGHTBLUE = new Color(0x805555FF, true);
+    public final static Color TRANSPARENT_LIGHTGREEN = new Color(0x8055FF55, true);
+    public final static Color TRANSPARENT_LIGHTCYAN = new Color(0x8055FFFF, true);
+    public final static Color TRANSPARENT_PINK = new Color(0x80FF5555, true);
+    public final static Color TRANSPARENT_LIGHTMAGENTA = new Color(0x80FF55FF, true);
+    public final static Color TRANSPARENT_YELLOW = new Color(0x80FFFF55, true);
+    public final static Color TRANSPARENT_WHITE = new Color(0x80FFFFFF, true);
+    
+    public final static int transparent_black = TRANSPARENT_BLACK.getRGB();
+    public final static int transparent_blue = TRANSPARENT_BLUE.getRGB();
+    public final static int transparent_green = TRANSPARENT_GREEN.getRGB();
+    public final static int transparent_cyan = TRANSPARENT_CYAN.getRGB();
+    public final static int transparent_red = TRANSPARENT_RED.getRGB();
+    public final static int transparent_magenta = TRANSPARENT_MAGENTA.getRGB();
+    public final static int transparent_brown = TRANSPARENT_BROWN.getRGB();
+    public final static int transparent_grey = TRANSPARENT_GREY.getRGB();
+    public final static int transparent_darkgrey = TRANSPARENT_DARKGREY.getRGB();
+    public final static int transparent_lightblue = TRANSPARENT_LIGHTBLUE.getRGB();
+    public final static int transparent_lightgreen = TRANSPARENT_LIGHTGREEN.getRGB();
+    public final static int transparent_lightcyan = TRANSPARENT_LIGHTCYAN.getRGB();
+    public final static int transparent_pink = TRANSPARENT_PINK.getRGB();
+    public final static int transparent_lightmagenta = TRANSPARENT_LIGHTMAGENTA.getRGB();
+    public final static int transparent_yellow = TRANSPARENT_YELLOW.getRGB();
+    public final static int transparent_white = TRANSPARENT_WHITE.getRGB();
+    
     /**
      * Holds the RGB values for the 16 EGA colours.
      */
     public final static int[] colours = { black, blue, green, cyan, red, magenta, brown, grey, darkgrey, lightblue, lightgreen, lightcyan, pink, lightmagenta, yellow, white, transparent };
 
+    /**
+     * Holds the RGB values for the transparent version of the 16 EGA colours.
+     */
+    public final static int[] transparent_colours = { transparent_black, transparent_blue, transparent_green, transparent_cyan, transparent_red, transparent_magenta, transparent_brown, transparent_grey, transparent_darkgrey, transparent_lightblue, transparent_lightgreen, transparent_lightcyan, transparent_pink, transparent_lightmagenta, transparent_yellow, transparent_white, transparent };
+    
     /**
      * Holds a reverse mapping from RGB value to EGI colour index.
      */
@@ -61,6 +100,7 @@ public class EgaPalette {
     static {
         for (int i=0; i<colours.length; i++) {
             reverseColours.put(colours[i], i);
+            reverseColours.put(transparent_colours[i], i);
         }
     }
     

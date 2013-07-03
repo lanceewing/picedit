@@ -99,6 +99,11 @@ public class Picture {
     private boolean isLoading;
     
     /**
+     * Says whether the picture is currently being drawn.
+     */
+    private boolean isDrawing;
+    
+    /**
      * The picture position where the current selection starts.
      */
     private int firstSelectedPosition;
@@ -890,6 +895,9 @@ public class Picture {
     	int action = 0;
         int index = 0;
 
+        // Tells other parts of the application that want to ask that we're drawing the picture now.
+        isDrawing = true;
+        
         PictureCacheEntry cacheEntry = this.pictureCache.getCacheEntry(picturePosition);
         if (cacheEntry != null) {
         	// Copy the cached screen arrays into the main picture images.
@@ -992,8 +1000,20 @@ public class Picture {
                 }
             } while ((index < picturePosition) && (action != 0xFF));
         }
+        
+        // Tells other parts of the application that want to ask that we are not longer drawing the picture.
+        isDrawing = false;
     }
 
+    /**
+     * Returns true if the picture is currently being drawn; otherwise false.
+     * 
+     * @return true if the picture is currently being drawn; otherwise false.
+     */
+    public boolean isBeingDrawn() {
+        return isDrawing;
+    }
+    
     /**
      * Draws a yCorner (drawing action 0xF4).
      * 
@@ -1456,12 +1476,23 @@ public class Picture {
         int index = (y << 7) + (y << 5) + x;
         int white = EgaPalette.transparent;
         int red = EgaPalette.transparent;
-
+        int[] fillColours = colours;
+        
+        // The fill type determines how we fill.
+        switch (editStatus.getFillType()) {
+            case NONE:
+                // No fill so return immediately.
+                return;
+            case TRANSPARENT:
+                fillColours = EgaPalette.transparent_colours;
+                break;
+        }
+        
         if (editStatus.isVisualDrawEnabled()) {
             if (editStatus.isPriorityDrawEnabled()) {
                 // Fill both visual and priority.
-                int visualRGBCode = colours[editStatus.getVisualColour()];
-                int priorityRGBCode = colours[editStatus.getPriorityColour()];
+                int visualRGBCode = fillColours[editStatus.getVisualColour()];
+                int priorityRGBCode = fillColours[editStatus.getPriorityColour()];
 
                 fillQueue[spos++] = index;
 
@@ -1529,7 +1560,7 @@ public class Picture {
                 }
             } else {
                 // Visual only fill.
-                int visualRGBCode = colours[editStatus.getVisualColour()];
+                int visualRGBCode = fillColours[editStatus.getVisualColour()];
 
                 fillQueue[spos++] = index;
 
@@ -1596,7 +1627,7 @@ public class Picture {
             }
         } else if (editStatus.isPriorityDrawEnabled()) {
             // Priority only fill.
-            int priorityRGBCode = colours[editStatus.getPriorityColour()];
+            int priorityRGBCode = fillColours[editStatus.getPriorityColour()];
 
             fillQueue[spos++] = index;
 

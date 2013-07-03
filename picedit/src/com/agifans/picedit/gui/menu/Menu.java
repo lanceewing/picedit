@@ -40,6 +40,7 @@ import com.agifans.picedit.picture.Picture;
 import com.agifans.picedit.picture.PictureCode;
 import com.agifans.picedit.types.BrushShape;
 import com.agifans.picedit.types.BrushTexture;
+import com.agifans.picedit.types.FillType;
 import com.agifans.picedit.types.ToolType;
 
 /**
@@ -217,6 +218,14 @@ public class Menu implements ActionListener, MenuListener {
         egoTestMenuItem = new JCheckBoxMenuItem(MenuOption.EGO_TEST.getDisplayValue());
         egoTestMenuItem.setMnemonic(KeyEvent.VK_E);
         egoTestMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, acceleratorKey));
+        ButtonGroup fillGroup = new ButtonGroup();
+        JRadioButtonMenuItem normalFillMenuItem = new JRadioButtonMenuItem(MenuOption.NORMAL_FILL.getDisplayValue());
+        fillGroup.add(normalFillMenuItem);
+        normalFillMenuItem.setSelected(true);
+        JRadioButtonMenuItem transparentFillMenuItem = new JRadioButtonMenuItem(MenuOption.TRANSPARENT_FILL.getDisplayValue());
+        fillGroup.add(transparentFillMenuItem);
+        JRadioButtonMenuItem noFillMenuItem = new JRadioButtonMenuItem(MenuOption.NO_FILL.getDisplayValue());
+        fillGroup.add(noFillMenuItem);
         JMenuItem zoomInMenuItem = new JMenuItem(MenuOption.ZOOM_IN.getDisplayValue());
         zoomInMenuItem.setAccelerator(KeyStroke.getKeyStroke('+'));
         JMenuItem zoomOutMenuItem = new JMenuItem(MenuOption.ZOOM_OUT.getDisplayValue());
@@ -232,6 +241,9 @@ public class Menu implements ActionListener, MenuListener {
         bandsMenuItem.addActionListener(this);
         dualModeMenuItem.addActionListener(this);
         egoTestMenuItem.addActionListener(this);
+        normalFillMenuItem.addActionListener(this);
+        transparentFillMenuItem.addActionListener(this);
+        noFillMenuItem.addActionListener(this);
         zoomInMenuItem.addActionListener(this);
         zoomOutMenuItem.addActionListener(this);
         zoomx1MenuItem.addActionListener(this);
@@ -246,6 +258,10 @@ public class Menu implements ActionListener, MenuListener {
         viewMenu.add(bandsMenuItem);
         viewMenu.add(dualModeMenuItem);
         viewMenu.add(egoTestMenuItem);
+        viewMenu.addSeparator();
+        viewMenu.add(noFillMenuItem);
+        viewMenu.add(normalFillMenuItem);
+        viewMenu.add(transparentFillMenuItem);
         viewMenu.addSeparator();
         JMenu zoomMenu = new JMenu("Zoom");
         zoomMenu.setMnemonic(KeyEvent.VK_Z);
@@ -569,6 +585,24 @@ public class Menu implements ActionListener, MenuListener {
                 
             case EGO_TEST:
                 editStatus.setEgoTestEnabled(!editStatus.isEgoTestEnabled());
+                break;
+                
+            case NORMAL_FILL:
+                editStatus.setFillType(FillType.NORMAL);
+                picture.clearPictureCache();
+                picture.drawPicture();
+                break;
+            
+            case TRANSPARENT_FILL:
+                editStatus.setFillType(FillType.TRANSPARENT);
+                picture.clearPictureCache();
+                picture.drawPicture();
+                break;
+                
+            case NO_FILL:
+                editStatus.setFillType(FillType.NONE);
+                picture.clearPictureCache();
+                picture.drawPicture();
                 break;
                 
             case LINE:

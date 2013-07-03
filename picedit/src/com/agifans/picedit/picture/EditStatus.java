@@ -5,6 +5,7 @@ import java.io.File;
 
 import com.agifans.picedit.types.BrushShape;
 import com.agifans.picedit.types.BrushTexture;
+import com.agifans.picedit.types.FillType;
 import com.agifans.picedit.types.PictureType;
 import com.agifans.picedit.types.StepType;
 import com.agifans.picedit.types.ToolType;
@@ -89,6 +90,11 @@ public class EditStatus {
     private int zoomFactor;
     
     /**
+     * The type of fill to use when rendering a filled area in the picture panel.
+     */
+    private FillType fillType;
+    
+    /**
      * Whether the picture has unsaved changes or not.
      */
     private boolean unsavedChanges;
@@ -136,6 +142,7 @@ public class EditStatus {
             // These are the bits that get cleared for a new picture.
             priorityShowing = false;
             pictureType = PictureType.AGI;
+            fillType = FillType.NORMAL;
             backgroundEnabled = false;
             pictureFile = null;
             unsavedChanges = true;
@@ -537,6 +544,25 @@ public class EditStatus {
         this.zoomFactor = zoomFactor;
     }
     
+    /**
+     * Gets the type of fill to use when rendering filled areas in the picture panel.
+     *  
+     * @return The type of fill to use when rendering filled areas in the picture panel.
+     */
+    public FillType getFillType() {
+        return fillType;
+    }
+
+    /**
+     * Sets the type of fill to use when rendering filled areas in the picture panel.
+     * 
+     * @param fillType The type of fill to use when rendering filled areas in the picture panel.
+     */
+    public void setFillType(FillType fillType) {
+        this.fillType = fillType;
+        this.unrenderedChanges = true;
+    }
+
     /**
      * Returns true if the picture has unsaved changes.
      * 
