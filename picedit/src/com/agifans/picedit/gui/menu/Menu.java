@@ -606,31 +606,31 @@ public class Menu implements ActionListener, MenuListener {
                 break;
                 
             case LINE:
-                if (application.hasVisiblePictureFrame()) {
+                if (application.hasVisiblePictureFrame() && !picture.getCurrentPictureCode().isDataCode()) {
                     processToolSelect(ToolType.LINE);
                 }
                 break;
                 
             case PEN:
-                if (application.hasVisiblePictureFrame()) {
+                if (application.hasVisiblePictureFrame() && !picture.getCurrentPictureCode().isDataCode()) {
                     processToolSelect(ToolType.SHORTLINE);
                 }
                 break;
                 
             case STEP:
-                if (application.hasVisiblePictureFrame()) {
+                if (application.hasVisiblePictureFrame() && !picture.getCurrentPictureCode().isDataCode()) {
                     processToolSelect(ToolType.STEPLINE);
                 }
                 break;
             
             case FILL:
-                if (application.hasVisiblePictureFrame()) {
+                if (application.hasVisiblePictureFrame() && !picture.getCurrentPictureCode().isDataCode()) {
                     processToolSelect(ToolType.FILL);
                 }
                 break;
             
             case BRUSH:
-                if (application.hasVisiblePictureFrame()) {
+                if (application.hasVisiblePictureFrame() && !picture.getCurrentPictureCode().isDataCode()) {
                     processToolSelect(ToolType.BRUSH);
                     application.getEditStatus().setBrushShape(BrushShape.CIRCLE);
                     application.getEditStatus().setBrushTexture(BrushTexture.SOLID);
@@ -639,7 +639,7 @@ public class Menu implements ActionListener, MenuListener {
                 break;
                 
             case AIRBRUSH:
-                if (application.hasVisiblePictureFrame()) {
+                if (application.hasVisiblePictureFrame() && !picture.getCurrentPictureCode().isDataCode()) {
                     processToolSelect(ToolType.AIRBRUSH);
                     application.getEditStatus().setBrushShape(BrushShape.CIRCLE);
                     application.getEditStatus().setBrushTexture(BrushTexture.SPRAY);

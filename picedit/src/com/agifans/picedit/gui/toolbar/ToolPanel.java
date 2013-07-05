@@ -25,7 +25,6 @@ import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -319,8 +318,10 @@ public class ToolPanel extends JToolBar {
                 boolean enabled = false;
                 
                 if (application != null) {
-                    // Tools are only active when at least one picture frame is displayed.
-                    enabled = application.hasVisiblePictureFrame();
+                    // Tools are only active when at least one picture frame is displayed,
+                    // and the current position is not on a data code. We don't want the
+                    // user to use the tools within the middle of an existing action.
+                    enabled = application.hasVisiblePictureFrame() && !application.getPicture().getCurrentPictureCode().isDataCode();
                 }
                 
                 return enabled;
@@ -339,8 +340,9 @@ public class ToolPanel extends JToolBar {
              */
             public void mousePressed(MouseEvent event) {
                 // We will only process mouse clicks if at least one picture frame is
-                // being displayed.
-                if (application.hasVisiblePictureFrame()) {
+                // being displayed and the current position is not on a data code. We 
+                // don't want the user to use the tools within the middle of an existing action.
+                if (application.hasVisiblePictureFrame() && !application.getPicture().getCurrentPictureCode().isDataCode()) {
                     Point mousePoint = event.getPoint();
                     Rectangle colourBox = new Rectangle(30, 5, 30, 23);
                     boolean clickInColourBox = colourBox.contains(mousePoint);
@@ -512,12 +514,14 @@ public class ToolPanel extends JToolBar {
                     tool.equals(ToolType.SHORTLINE) || 
                     tool.equals(ToolType.STEPLINE)) {
                   
-                  // Tools are only active when at least one picture frame is displayed.
-                  enabled = application.hasVisiblePictureFrame();
+                    // Tools are only active when at least one picture frame is displayed,
+                    // and the current position is not on a data code. We don't want the
+                    // user to use the tools within the middle of an existing action.
+                    enabled = application.hasVisiblePictureFrame() && !application.getPicture().getCurrentPictureCode().isDataCode();
                 }
             }
           
-          return enabled;
+            return enabled;
         }
     }
     

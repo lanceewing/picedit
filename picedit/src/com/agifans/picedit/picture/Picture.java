@@ -1001,6 +1001,11 @@ public class Picture {
             } while ((index < picturePosition) && (action != 0xFF));
         }
         
+        // If the current picture position is on a data code, then clear the selected tool. We don't allow inserts within a picture action.
+        if (getCurrentPictureCode().isDataCode()) {
+            editStatus.setTool(ToolType.NONE);
+        }
+        
         // Tells other parts of the application that want to ask that we are not longer drawing the picture.
         isDrawing = false;
     }
