@@ -199,7 +199,6 @@ public final class PicEdit extends JApplet {
                 Picture picture = getPicture();
                 
                 // We return true at least every second, but there are other updates that trigger a render immediately.
-                //if ((((repaintCounter++ % 20) == 0) || (editStatus.hasUnrenderedChanges()) || editStatus.isEgoTestEnabled() ||
                 if (((editStatus.hasUnrenderedChanges()) || editStatus.isEgoTestEnabled() || !lastPictureBeingDrawn ||
                     ((lastPicturePosition != picture.getPicturePosition()) || (lastPictureSize != picture.getSize()))) && 
                       !picture.isBeingDrawn()) {

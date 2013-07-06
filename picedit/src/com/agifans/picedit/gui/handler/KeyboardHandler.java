@@ -74,7 +74,7 @@ public class KeyboardHandler implements KeyListener {
         
         // Handle picture action delete key.
         if (key == KeyEvent.VK_DELETE) {
-            picture.deleteCurrentPictureAction();
+            picture.deleteSelectedPictureCodes();
         }
     }
 

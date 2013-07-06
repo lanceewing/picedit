@@ -676,7 +676,7 @@ public class Menu implements ActionListener, MenuListener {
                 break;
                 
             case DELETE:
-                picture.deleteCurrentPictureAction();
+                picture.deleteSelectedPictureCodes();
                 break;
                 
             case VISUAL:
