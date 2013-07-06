@@ -511,6 +511,13 @@ public class Picture {
     }
     
     /**
+     * Deletes the currently selected picture codes.
+     */
+    public void deleteSelectedPictureCodes() {
+        deletePictureCodes(firstSelectedPosition, lastSelectedPosition);
+    }
+    
+    /**
      * Process movement back one picture action through the picture code buffer. A
      * picture action is the full set of codes for a tool, e.g. all the points for a 
      * single draw absolute action. Picture actions are highlighted in black on the 
