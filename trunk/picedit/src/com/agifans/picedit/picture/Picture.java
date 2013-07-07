@@ -505,6 +505,9 @@ public class Picture {
                 firePictureCodesRemoved(fromPosition, fromPosition);
             }
         }
+        
+        // TODO: Detect when the starting point has been removed for a relative or step line action and convert the next point in to an absolute starting point.
+        
         editStatus.setUnsavedChanges(true);
         pictureCache.clear(fromPosition);
         drawPicture();

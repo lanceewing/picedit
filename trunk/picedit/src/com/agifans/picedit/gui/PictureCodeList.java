@@ -59,7 +59,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
     /**
      * The popup menu to display when someone right clicks on a PictureCodeList item.
      */
-    private JPopupMenu popupMenu;
+    private PictureCodeListPopupMenu popupMenu;
     
     /**
      * Constructor for PictureCodeList.
@@ -85,11 +85,34 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
         this.setFixedCellWidth(130);
         
         // Set up the popup menu.
-        popupMenu = new JPopupMenu();
-        JMenuItem deleteMenuItem = new JMenuItem("Delete");
-        deleteMenuItem.addActionListener(new PictureCodeListPopupMenuActionListener());
-        popupMenu.add(deleteMenuItem);
+        popupMenu = new PictureCodeListPopupMenu();
         this.addMouseListener(new PictureCodeListMouseListener());
+    }
+    
+    /**
+     * Popup menu that appears over the picture code list when the right mouse button is clicked.
+     */
+    class PictureCodeListPopupMenu extends JPopupMenu {
+        
+        private JMenuItem deleteMenuItem;
+        
+        /**
+         * Constructor for PictureCodeListPopupMenu.
+         */
+        PictureCodeListPopupMenu() {
+            deleteMenuItem = new JMenuItem("Delete");
+            deleteMenuItem.addActionListener(new PictureCodeListPopupMenuActionListener());
+            add(deleteMenuItem);
+        }
+        
+        /**
+         * Refreshes the state of the menu items.
+         */
+        public void refreshState() {
+            boolean deleteEnabledStatus = !picture.getCurrentPictureCode().getType().equals(PictureCodeType.COLOR_DATA);
+            // TODO: Add more checks for delete enabled status, e.g. cannot delete if it would create a corrupt picture.
+            deleteMenuItem.setEnabled(deleteEnabledStatus);
+        }
     }
     
     /**
@@ -476,6 +499,7 @@ public class PictureCodeList extends JList implements PictureChangeListener, Cha
                 
                 // Only show the popup menu if the item is selected and it isn't the end code.
                 if ((itemIndex >= getMinSelectionIndex()) && (itemIndex <= getMaxSelectionIndex()) && !picture.getCurrentPictureCode().isEndCode()) {
+                    popupMenu.refreshState();
                     popupMenu.show(PictureCodeList.this, e.getX(), e.getY());
                 }
             }
